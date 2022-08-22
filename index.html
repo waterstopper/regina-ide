@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Regina</title>
+    <script type="text/javascript" src="js/event.js"></script>
+    <script src="https://kit.fontawesome.com/fcd79d1b18.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="styles.css">
+    <!-- <script src="kotlin_kotlin.js" type="text/javascript"></script> -->
+    <!-- <script src="regina_interpreter.js" type="text/javascript"></script> -->
+    <script type="text/javascript" src="monaco-editor/min/vs/loader.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="container__left">
+            <div class="stacked">
+                <ul id="filetree" style="margin-left: 20px;">
+                </ul>
+            </div>
+            <div class="horizontal-resizer">
+                <button id="hide-console" style="font-family: 'Fira Code'; bottom: 2px; font-size:var(--font-size)">
+                    Settings
+                </button>
+                <button style="position:relative; bottom: 2px;">
+                    <i class="fas fa-trash" aria-hidden="true" style="font-size:bigger;"></i>
+                </button>
+            </div>
+            <div class="stacked">
+                <div class="grid-container">
+                    <div class="grid-item">Theme
+                        <div class='description'></div>
+                    </div>
+                    <div class="grid-item">
+                        <button id='languageButton' onclick='changeTheme(this)' style="font-family: 'Fira Code';">initial</button>
+                    </div>
+                    <div class="grid-item">Autosave, seconds
+                        <div class='description'>0 to disable</div>
+                    </div>
+                    <div class="grid-item">
+                        <input id="save-seconds" type="number" min="0" max="1000" onchange="changeSaveSeconds(this)"> </input>
+                    </div>
+                    <div class="grid-item">Console entries
+                        <div class='description'>qty before overflow</div>
+                    </div>
+                    <div class="grid-item">
+                        <input id="save-seconds" type="number" min="0" max="1000" onchange="changeSaveSeconds(this)"> </input>
+                    </div>
+
+
+                    <!-- Not implemented -->
+                    <div class="grid-item" style='display: none;'>Texture
+                        <div class='description'></div>
+                    </div>
+                    <div class="grid-item" style='display: none;'>
+                        <!-- Rough means there is a texture on every svg.Incredibels 2 titles for reference -->
+                        <button id='textureButton' onclick='changeTexture(this)'>rough</button>
+                    </div>
+                    <div class="grid-item">Rotate
+                        <div class='description'></div>
+                    </div>
+                    <div class="grid-item">
+                        <input type='range' min="0" max="100" value="70" oninput=changeSize(this)>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <div class="resizer wide">
+            <button id="leftPanelButton" class="rotate" style="font-family: 'Fira Code'; font-size:var(--font-size)">
+                Filetree&nbsp;&&nbsp;Settings
+            </button>
+        </div>
+        <div class="container__middle">
+            <div class="top-gutter">
+                <div class="tabs">
+                    <div class="button-list">
+                        <button title="run" id="startButton"><i class="fas fa-play"
+                                style="color:var(--green);"></i></button>
+                        <button title="terminate" id="haltButton"><i class="fas fa-stop"
+                                style="color:var(--red);"></i></button>
+                        <button title="save manually (autosave happens every 3 seconds)" id="saveButton">
+                            <i class="fas fa-floppy-disk" style="color:var(--middle-color);"></i>
+                        </button>
+                    </div>
+                    <div class="tabs scrollable">
+                        <div class="tab tab-opaque" hidden>
+                            <p class="tab-child tab-opaque">sdmain.pgdd</p>
+                        </div>
+                        <div class="tab" draggable="true">
+                            <p class="tab-child">main.pg</p>
+                            <button class=" tab-child close">✕</button>
+                        </div>
+                        <div class="tab">
+                            <p class="tab-child">main.pg</p>
+                            <button class=" tab-child close">✕</button>
+                        </div>
+                        <div class="tab">
+                            <p class="tab-child">defaults.pg</p>
+                            <button class=" tab-child close">✕</button>
+                        </div>
+                        <div class="tab">
+                            <p class="tab-child">functions.pg</p>
+                            <button class=" tab-child close">✕</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="container" style="width:100%;height:90%;"></div>
+        </div>
+        <div class="resizer"></div>
+        <div class="container__right">
+            <div id="svg-result" class="stacked">SVG Result</div>
+            <div class="horizontal-resizer">
+                <button id="hide-console" style="font-family: 'Fira Code'; bottom: 2px; font-size:var(--font-size)">
+                    Console
+                </button>
+                <button id="clear-console" style="position:relative; bottom: 2px;">
+                    <i class="fas fa-trash" aria-hidden="true" style="font-size:bigger;"></i>
+                </button>
+            </div>
+            <div id="console" class="stacked">
+                <div class="console-record" style="display:none">
+                    <p class="console-record-text">Record</p>
+                    <hr class="console-record-divider" noshade>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/editor.js" type="module"></script>
+    <script src="js/index.js" type="module"></script>
+    <script src="js/resizer.js" type="module"></script>
+    <script type="module" defer src="js/filetree.js"></script>
+    <script type="module" defer src="js/storage.js"></script>
+    <script type="module" defer src="js/debug.js"></script>
+</body>
+
+</html>
