@@ -168,8 +168,7 @@ require(["vs/editor/editor.main"], function() {
                 // fontStyle: 'bold'
             }, {
                 token: 'string',
-                foreground: 'c29580',
-                fontStyle: 'italic'
+                foreground: 'c29580'
             },
             {
                 token: 'number',

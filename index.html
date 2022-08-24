@@ -10,12 +10,13 @@
     <!-- <script src="kotlin_kotlin.js" type="text/javascript"></script> -->
     <!-- <script src="regina_interpreter.js" type="text/javascript"></script> -->
     <script type="text/javascript" src="monaco-editor/min/vs/loader.js"></script>
+    <script type="text/javascript" src="js/def.js"></script>
 </head>
 
 <body>
     <div class="container">
         <div class="container__left">
-            <div class="stacked">
+            <div class="stacked" id="file-panel">
                 <ul id="filetree" style="margin-left: 20px;">
                 </ul>
             </div>
@@ -27,7 +28,7 @@
                     Debug
                 </button>
             </div>
-            <div class="stacked" style="display:none">
+            <div id="settings-panel" class="stacked">
                 <div class="grid-container">
                     <div class="grid-item">Theme
                         <div class='description'></div>
@@ -63,14 +64,12 @@
                     <div class="grid-item">
                         <input type='range' min="0" max="100" value="70" oninput=changeSize(this)>
                     </div>
-
                 </div>
-
             </div>
-            <div id="debug" style="display:block">
+            <div id="debug-panel" style="display:block">
                 <div class="button-list">
-                    <button title="previous breakpoint" <i class="fa-solid fa-arrow-left-long"></i></button>
-                    <button title="next breakpoint"><i class="fa-solid fa-arrow-right-long"></i></button>
+                    <button title="previous breakpoint" <i class="fa-solid fa-arrow-left-long" onclick="previousBreakpoint()"></i></button>
+                    <button title="next breakpoint"><i class="fa-solid fa-arrow-right-long" onclick="nextBreakpoint()"></i></button>
                 </div>
             </div>
         </div>

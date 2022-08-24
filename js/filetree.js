@@ -2,6 +2,10 @@ var toggler = document.getElementsByClassName("caret");
 //console.log(toggler);
 let i;
 
+function nextBreakpoint() {
+    console.log("next")
+}
+
 for (i = 0; i < toggler.length; i++) {
     toggler[i].addEventListener("click", function() {
         this.parentElement.querySelector(".nested").classList.toggle("active");
@@ -76,3 +80,5 @@ function createFolder(name = "myFolder", folderName = "") {
 // createFile("er", "myFold")
 
 createTree()
+
+export { createFolder, createFile };

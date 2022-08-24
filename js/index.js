@@ -1,9 +1,10 @@
+import { createFolder, createFile } from "./filetree.js";
+
 var worker;
 var breakpointsList = [];
 var currentBreakpointIndex = 0;
 
 document.getElementById("startButton").onclick = (e) => {
-    console.log(breakpointsList)
     breakpointsList = [];
     changeBreakpointColor();
     // allow only one instance running
@@ -24,6 +25,7 @@ document.getElementById("startButton").onclick = (e) => {
             case "finished":
                 worker = null
                 button.style["-webkit-text-fill-color"] = bodyStyles.getPropertyValue('--green')
+                startDebugging()
                 break;
             case "log":
                 console.log(e.data.content)
@@ -32,19 +34,15 @@ document.getElementById("startButton").onclick = (e) => {
                 showException(e.data.content)
                 break;
             case "debug":
-                //console.log(e.data.content)
-                console.log(convertLinkedHashMap(e.data.content))
-                breakpointsList.push(e.data.content)
+                let a = traverseMap(e.data.content)
+                console.log(a)
+                breakpointsList.push(a)
                 break;
             case "breakpoint":
                 changeBreakpointColor(parseInt(e.data.content.second_1) + 1)
                 break;
         }
     }
-}
-
-function showBreakpointInfo() {
-
 }
 
 function changeBreakpointColor(lineNumber) {
@@ -62,58 +60,7 @@ function changeBreakpointColor(lineNumber) {
     window.editor.setBreakpoints(breakpoints)
 }
 
-function convertLinkedHashMap(map, root = true) {
-    return traverseMap(map)
-        // if (root) {
-        //     console.log(map)
-        //     return map
-        // }
-        // if (map == null) {
-        //     return map
-        // }
-        // let res = {}
-        // let next = map.head_1
-        // if (next == null && map.equality_1 == null) {
-        //     res = map
-        //     if (typeof res === 'object') {
-        //         for (const [key, value] of Object.entries(res)) {
-        //             res[key] = convertLinkedHashMap(value, false)
-        //         }
-        //     }
-        //     return res
-        // }
-        // if (next == null)
-        //     return {}
-        // let index = 0
-        // while (res[next.key_1] == null) {
-        //     if (typeof next.key_1 == 'object') {
-        //         res["@entry" + index] = {}
-        //         res["@entry" + index].key = next.key_1
-        //         res["@entry" + index].value = next._value_1
-        //         index++
-        //         console.log(index)
-        //     }
-        //     res[next.key_1] = next._value_1
-        //     next = next.next_1
-        //     if (index == 1)
-        //         console.log(next, typeof next.key_1, res)
-        // }
-        // if (root) {
-        //     delete res.queue_1
-        // }
-        // // if (root) {
-        // //     res["@references"].types_1 = convertLinkedHashMap(res["@references"].types_1, false)
-        // //     res["@references"].dictionaries_1 = convertLinkedHashMap(res["@references"].dictionaries_1, false)
-        // //     res["@references"].arrays_1 = convertLinkedHashMap(res["@references"].arrays_1, false)
-        // // }
-        // for (const [key, value] of Object.entries(res)) {
-        //     res[key] = convertLinkedHashMap(value, false)
-        // }
-        // return res;
-}
-
 function traverseMap(map) {
-    // console.log(map)
     // non-map
     if (typeof map != 'object')
         return map
@@ -154,6 +101,87 @@ function transformLinkedHashMap(map) {
     }
     return res
 }
+
+function startDebugging() {
+    let debugPanel = document.getElementById("debug-panel");
+    let settingsPanel = document.getElementById("settings-panel");
+    debugPanel.style = "display:block;";
+    settingsPanel.style = "display:none;";
+    showDebuggingScope(breakpointsList[currentBreakpointIndex]);
+}
+
+function showDebuggingScope(scope) {
+    console.log(scope)
+    highlightBreakpointLine(parseInt(scope["@position"].second_1) + 1)
+    for (const [key, value] of Object.entries(scope)) {
+        if (key[0] == "@")
+            continue
+        if (typeof value == 'object') {
+            createFolder(key + ": " + getCollectionString(scope, value))
+        } else createFile(key + ": " + value)
+    }
+    // empty debug panel
+    // create all elements
+}
+
+function getCollectionString(scope, collection) {
+    switch (collection.first_1) {
+        case "type":
+            return collection.second_1
+        case "array":
+            return getArrayById(collection.second_1, scope["@references"].arrays_1)
+        case "dictionary":
+            return getDictionaryById(collection.second_1, scope["@references"].dictionaries_1)
+    }
+}
+
+function getArrayById(id, arrays) {
+    let array = arrays[id].properties_1.array_1
+    return "[" + array.slice(0, 4).map(e => shortenedString(e)).join(', ') +
+        (array.length > 4 ? ",..]" : "]");
+}
+
+function shortenedString(e) {
+    return typeof e == 'object' ? shortenedCollectionString(e) : e
+}
+
+function shortenedCollectionString(collection) {
+    switch (collection.first_1) {
+        case "type":
+            return collection.second_1
+        case "array":
+            return "[..]"
+        case "dictionary":
+            return "{..}"
+    }
+}
+
+function getDictionaryById(id, dictionaries) {
+    let dict = dictionaries[id].properties_1
+    return "{" + Object.entries(dict).slice(0, 3).map(([key, value], i) => {
+        console.log(i)
+        if (key[0] == "@") {
+            return shortenedString(dict[key].key) + ":" + shortenedString(dict[key].value)
+        }
+        return key + ":" + shortenedString(value)
+    }).join(', ') + (Object.keys(dict).length > 2 ? ",..}" : "}");
+}
+
+function highlightBreakpointLine(lineNumber) {
+    let breakpoints = window.editor.getBreakpoints()
+    for (let i = 0; i < breakpoints.length; i++) {
+        if (breakpoints[i].range.startLineNumber == lineNumber) {
+            breakpoints[i].options.className = "highlight-breakpoint-line";
+            break;
+        }
+
+    }
+    window.editor.setBreakpoints(breakpoints)
+    window.editor.setPosition({ lineNumber: lineNumber, column: 1 });
+    window.editor.revealLine(lineNumber);
+}
+
+function loadDebuggingFold(foldElement, scope, elementId) {}
 
 
 function addBreakpointsToCode() {
