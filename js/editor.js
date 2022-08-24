@@ -314,6 +314,7 @@ require(["vs/editor/editor.main"], function() {
                 bList = bList.filter(breakpoint =>
                     breakpoint.range.startLineNumber != e.target.position.lineNumber)
             } else {
+
                 let pos = e.target.position
                 bList.push({
                     range: new monaco.Range(pos.lineNumber, 1, pos.lineNumber, 1),
@@ -327,6 +328,14 @@ require(["vs/editor/editor.main"], function() {
         }
         breakpoints = window.editor.deltaDecorations(breakpoints, bList)
     })
+
+    window.editor.getBreakpoints = function() {
+        return bList
+    }
+
+    window.editor.setBreakpoints = function(list) {
+        breakpoints = window.editor.deltaDecorations(breakpoints, list)
+    }
 
     monaco.languages.registerCodeLensProvider('Regina', {
         provideCodeLenses: function(model, token) {

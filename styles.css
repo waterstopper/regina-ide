@@ -51,6 +51,10 @@ html[data-theme='dark'] {
     color: var(--red);
 }
 
+.inactive-breakpoint {
+    color: var(--gray);
+}
+
 .fa-octagon {
     color: var(--red);
 }
@@ -58,8 +62,13 @@ html[data-theme='dark'] {
 button {
     border: none;
     background-color: rgba(0, 0, 0, 0);
+    border-radius: 1em;
     /* font-family: JetBrains Mono; */
     /* color: var(--main-color); */
+}
+
+button:hover {
+    background-color: var(--light-gray);
 }
 
 .menu {
@@ -153,7 +162,8 @@ button {
     -webkit-text-fill-color: var(--red);
 }
 
-.fa-play {
+.fa-play,
+.fa-bug {
     -webkit-text-fill-color: var(--green);
 }
 

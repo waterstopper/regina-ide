@@ -1,6 +1,11 @@
 var worker;
+var breakpointsList = [];
+var currentBreakpointIndex = 0;
 
 document.getElementById("startButton").onclick = (e) => {
+    console.log(breakpointsList)
+    breakpointsList = [];
+    changeBreakpointColor();
     // allow only one instance running
     if (worker != null)
         return
@@ -14,7 +19,7 @@ document.getElementById("startButton").onclick = (e) => {
     worker.onmessage = e => {
         switch (e.data.type) {
             case "ready":
-                worker.postMessage([window.editor.getValue(), ""])
+                worker.postMessage([addBreakpointsToCode(), ""])
                 break;
             case "finished":
                 worker = null
@@ -27,10 +32,139 @@ document.getElementById("startButton").onclick = (e) => {
                 showException(e.data.content)
                 break;
             case "debug":
-                console.log(e.data.content)
+                //console.log(e.data.content)
+                console.log(convertLinkedHashMap(e.data.content))
+                breakpointsList.push(e.data.content)
+                break;
+            case "breakpoint":
+                changeBreakpointColor(parseInt(e.data.content.second_1) + 1)
                 break;
         }
     }
+}
+
+function showBreakpointInfo() {
+
+}
+
+function changeBreakpointColor(lineNumber) {
+    let breakpoints = window.editor.getBreakpoints()
+    if (lineNumber == null) {
+        breakpoints.forEach(point => {
+            point.options.glyphMarginClassName = "fas fa-ban inactive-breakpoint"
+        })
+    } else
+        breakpoints.forEach(point => {
+            if (point.range.startLineNumber == lineNumber) {
+                point.options.glyphMarginClassName = "fas fa-circle"
+            }
+        })
+    window.editor.setBreakpoints(breakpoints)
+}
+
+function convertLinkedHashMap(map, root = true) {
+    return traverseMap(map)
+        // if (root) {
+        //     console.log(map)
+        //     return map
+        // }
+        // if (map == null) {
+        //     return map
+        // }
+        // let res = {}
+        // let next = map.head_1
+        // if (next == null && map.equality_1 == null) {
+        //     res = map
+        //     if (typeof res === 'object') {
+        //         for (const [key, value] of Object.entries(res)) {
+        //             res[key] = convertLinkedHashMap(value, false)
+        //         }
+        //     }
+        //     return res
+        // }
+        // if (next == null)
+        //     return {}
+        // let index = 0
+        // while (res[next.key_1] == null) {
+        //     if (typeof next.key_1 == 'object') {
+        //         res["@entry" + index] = {}
+        //         res["@entry" + index].key = next.key_1
+        //         res["@entry" + index].value = next._value_1
+        //         index++
+        //         console.log(index)
+        //     }
+        //     res[next.key_1] = next._value_1
+        //     next = next.next_1
+        //     if (index == 1)
+        //         console.log(next, typeof next.key_1, res)
+        // }
+        // if (root) {
+        //     delete res.queue_1
+        // }
+        // // if (root) {
+        // //     res["@references"].types_1 = convertLinkedHashMap(res["@references"].types_1, false)
+        // //     res["@references"].dictionaries_1 = convertLinkedHashMap(res["@references"].dictionaries_1, false)
+        // //     res["@references"].arrays_1 = convertLinkedHashMap(res["@references"].arrays_1, false)
+        // // }
+        // for (const [key, value] of Object.entries(res)) {
+        //     res[key] = convertLinkedHashMap(value, false)
+        // }
+        // return res;
+}
+
+function traverseMap(map) {
+    // console.log(map)
+    // non-map
+    if (typeof map != 'object')
+        return map
+    if (isLinkedHashMap(map))
+        map = transformLinkedHashMap(map)
+        // normal map
+    for (const [key, value] of Object.entries(map)) {
+        map[key] = traverseMap(value)
+    }
+    return map
+}
+
+function isLinkedHashMap(map) {
+    return map.equality_1 != null &&
+        map.map_1 != null &&
+        map.isReadOnly_1 != null &&
+        map.internalMap_1 != null
+}
+
+function transformLinkedHashMap(map) {
+    let res = {}
+    let entry = map.head_1
+    if (entry == null)
+        return res
+    let firstObject = null
+    let index = 0
+    while (res[entry.key_1] == null && entry.key_1 != firstObject) {
+        if (typeof entry.key_1 == 'object') {
+            if (firstObject == null)
+                firstObject = entry.key_1
+            res["@entry_" + index] = {}
+            res["@entry_" + index].key = entry.key_1
+            res["@entry_" + index].value = entry._value_1
+            index++
+        } else
+            res[entry.key_1] = entry._value_1
+        entry = entry.next_1
+    }
+    return res
+}
+
+
+function addBreakpointsToCode() {
+    let code = window.editor.getValue().split("\n")
+    let i = 0;
+    let breakpoints = window.editor.getBreakpoints()
+    breakpoints.sort((a, b) => parseInt(a.range.startLineNumber) - parseInt(b.range.startLineNumber))
+    breakpoints.forEach(point => {
+        code[point.range.startLineNumber - 1] = "#stop; " + code[point.range.startLineNumber - 1]
+    });
+    return code.join("\n")
 }
 
 function showException(exception) {
@@ -150,7 +284,7 @@ function hookConsole() {
         console.stdlog.apply(console, arguments);
     }
 }
-hookConsole();
+//hookConsole();
 
 class Tab {
     constructor(name) {

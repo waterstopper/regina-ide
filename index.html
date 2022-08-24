@@ -20,14 +20,14 @@
                 </ul>
             </div>
             <div class="horizontal-resizer">
-                <button id="hide-console" style="font-family: 'Fira Code'; bottom: 2px; font-size:var(--font-size)">
+                <button id="hide-settings" style="font-family: 'Fira Code'; bottom: 2px; font-size:var(--font-size)">
                     Settings
                 </button>
-                <button style="position:relative; bottom: 2px;">
-                    <i class="fas fa-trash" aria-hidden="true" style="font-size:bigger;"></i>
+                <button id="hide-settings" style="font-family: 'Fira Code'; bottom: 2px; font-size:var(--font-size)">
+                    Debug
                 </button>
             </div>
-            <div class="stacked">
+            <div class="stacked" style="display:none">
                 <div class="grid-container">
                     <div class="grid-item">Theme
                         <div class='description'></div>
@@ -67,6 +67,12 @@
                 </div>
 
             </div>
+            <div id="debug" style="display:block">
+                <div class="button-list">
+                    <button title="previous breakpoint" <i class="fa-solid fa-arrow-left-long"></i></button>
+                    <button title="next breakpoint"><i class="fa-solid fa-arrow-right-long"></i></button>
+                </div>
+            </div>
         </div>
         <div class="resizer wide">
             <button id="leftPanelButton" class="rotate" style="font-family: 'Fira Code'; font-size:var(--font-size)">
@@ -79,6 +85,7 @@
                     <div class="button-list">
                         <button title="run" id="startButton"><i class="fas fa-play"
                                 style="color:var(--green);"></i></button>
+                        <button title="debug" id="debugButton"><i class="fa-solid fa-bug"></i></button>
                         <button title="terminate" id="haltButton"><i class="fas fa-stop"
                                 style="color:var(--red);"></i></button>
                         <button title="save manually (autosave happens every 3 seconds)" id="saveButton">
