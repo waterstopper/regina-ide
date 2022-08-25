@@ -1,5 +1,3 @@
-localStorage.setItem("notFirst", null)
-
 require.config({
     paths: {
         "vs": "monaco-editor/min/vs"
