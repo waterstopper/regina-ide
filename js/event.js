@@ -1,5 +1,3 @@
-console.log("A")
-
 function changeSaveSeconds(input) {
     console.log(input.value)
     let value = parseInt(input.value)

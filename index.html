@@ -10,12 +10,12 @@
     <!-- <script src="kotlin_kotlin.js" type="text/javascript"></script> -->
     <!-- <script src="regina_interpreter.js" type="text/javascript"></script> -->
     <script type="text/javascript" src="monaco-editor/min/vs/loader.js"></script>
-    <script type="text/javascript" src="js/def.js"></script>
+    <script type="module" src="js/execution.js"></script>
 </head>
 
 <body>
     <div class="container">
-        <div class="container__left">
+        <div class="container-left">
             <div class="stacked" id="file-panel">
                 <ul id="filetree" style="margin-left: 20px;">
                 </ul>
@@ -34,7 +34,7 @@
                         <div class='description'></div>
                     </div>
                     <div class="grid-item">
-                        <button id='languageButton' onclick='changeTheme(this)' style="font-family: 'Fira Code';">initial</button>
+                        <button id='language-button' onclick='changeTheme(this)' style="font-family: 'Fira Code';">initial</button>
                     </div>
                     <div class="grid-item">Autosave, seconds
                         <div class='description'>0 to disable</div>
@@ -56,7 +56,7 @@
                     </div>
                     <div class="grid-item" style='display: none;'>
                         <!-- Rough means there is a texture on every svg.Incredibels 2 titles for reference -->
-                        <button id='textureButton' onclick='changeTexture(this)'>rough</button>
+                        <button id='texture-button' onclick='changeTexture(this)'>rough</button>
                     </div>
                     <div class="grid-item">Rotate
                         <div class='description'></div>
@@ -74,20 +74,20 @@
             </div>
         </div>
         <div class="resizer wide">
-            <button id="leftPanelButton" class="rotate" style="font-family: 'Fira Code'; font-size:var(--font-size)">
+            <button id="left-panel-button" class="rotate" style="font-family: 'Fira Code'; font-size:var(--font-size)">
                 Filetree&nbsp;&&nbsp;Settings
             </button>
         </div>
-        <div class="container__middle">
+        <div class="container-middle">
             <div class="top-gutter">
                 <div class="tabs">
                     <div class="button-list">
-                        <button title="run" id="startButton"><i class="fas fa-play"
+                        <button title="run" id="start-button" onclick=startExecution(false)><i class="fas fa-play"
                                 style="color:var(--green);"></i></button>
-                        <button title="debug" id="debugButton"><i class="fa-solid fa-bug"></i></button>
-                        <button title="terminate" id="haltButton"><i class="fas fa-stop"
+                        <button title="debug" id="debug-button" onclick=startExecution(true)><i class="fa-solid fa-bug"></i></button>
+                        <button title="terminate" id="halt-button" onclick=terminateExecution()><i class="fas fa-stop"
                                 style="color:var(--red);"></i></button>
-                        <button title="save manually (autosave happens every 3 seconds)" id="saveButton">
+                        <button title="save manually (autosave happens every 3 seconds)" id="save-button">
                             <i class="fas fa-floppy-disk" style="color:var(--middle-color);"></i>
                         </button>
                     </div>
@@ -117,7 +117,7 @@
             <div id="container" style="width:100%;height:90%;"></div>
         </div>
         <div class="resizer"></div>
-        <div class="container__right">
+        <div class="container-right">
             <div id="svg-result" class="stacked">SVG Result</div>
             <div class="horizontal-resizer">
                 <button id="hide-console" style="font-family: 'Fira Code'; bottom: 2px; font-size:var(--font-size)">

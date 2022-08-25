@@ -289,7 +289,7 @@ li {
     width: 100%;
 }
 
-.container__left {
+.container-left {
     /* Initially, the left takes 3/4 width */
     width: 33%;
     /* Misc */
@@ -342,7 +342,7 @@ li {
     height: 48%;
 }
 
-.container__middle {
+.container-middle {
     /* Take the remaining width */
     /* flex: 0; */
     /* Misc */
@@ -352,7 +352,7 @@ li {
     justify-content: center;
 }
 
-.container__right {
+.container-right {
     /* Take the remaining width */
     /* flex: 1; */
     /* Misc */

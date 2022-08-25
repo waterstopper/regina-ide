@@ -236,7 +236,7 @@ class MouseDownOperation extends Disposable {
     start(targetType, e) {
         this._lastMouseEvent = e;
         this._mouseState.setStartedOnLineNumbers(targetType === 3 /* GUTTER_LINE_NUMBERS */);
-        this._mouseState.setStartButtons(e);
+        this._mouseState.setstart-buttons(e);
         this._mouseState.setModifiers(e);
         const position = this._findMousePosition(e, true);
         if (!position || !position.position) {
@@ -434,7 +434,7 @@ class MouseDownState {
         this._metaKey = source.metaKey;
         this._shiftKey = source.shiftKey;
     }
-    setStartButtons(source) {
+    setstart-buttons(source) {
         this._leftButton = source.leftButton;
         this._middleButton = source.middleButton;
     }

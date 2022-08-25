@@ -15,6 +15,6 @@ setInterval(function() {
     autosave();
 }, 3000);
 
-document.getElementById("saveButton").onclick = () => {
+document.getElementById("save-button").onclick = () => {
     autosave()
 }
