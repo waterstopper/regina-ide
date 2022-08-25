@@ -44,18 +44,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 leftSide.style.height = `${newLeftWidth}%`;
                 rightSide.style.height = `${newRightWidth}%`;
             }
+            resizer.style.cursor = 'ns-resize';
+            document.body.style.cursor = 'ns-resize';
         } else {
-
             const newLeftWidth = ((leftWidth + dx) * 100) / resizer.parentNode.getBoundingClientRect().width;
             const newRightWidth = ((rightWidth - dx) * 100) / resizer.parentNode.getBoundingClientRect().width;
-            if (newRightWidth > 10 && newLeftWidth > 10) {
+            // 12 is to prevent Debug button moving under Settings button
+            if (newRightWidth > 10 && newLeftWidth > 12) {
                 leftSide.style.width = `${newLeftWidth}%`;
                 rightSide.style.width = `${newRightWidth}%`;
             }
+            resizer.style.cursor = 'ew-resize';
+            document.body.style.cursor = 'ew-resize';
         }
 
-        resizer.style.cursor = 'col-resize';
-        document.body.style.cursor = 'col-resize';
+
 
         leftSide.style.display = "block";
         rightSide.style.display = "block";

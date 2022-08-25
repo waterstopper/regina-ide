@@ -138,15 +138,3 @@ function highlightBreakpointLine(lineNumber) {
 }
 
 function loadDebuggingFold(foldElement, scope, elementId) {}
-
-
-function addBreakpointsToCode() {
-    let code = window.editor.getValue().split("\n")
-    let i = 0;
-    let breakpoints = window.editor.getBreakpoints()
-    breakpoints.sort((a, b) => parseInt(a.range.startLineNumber) - parseInt(b.range.startLineNumber))
-    breakpoints.forEach(point => {
-        code[point.range.startLineNumber - 1] = "#stop; " + code[point.range.startLineNumber - 1]
-    });
-    return code.join("\n")
-}

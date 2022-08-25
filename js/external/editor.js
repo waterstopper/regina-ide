@@ -1,11 +1,12 @@
+import dracula from "/js/external/themes.js";
+
 require.config({
     paths: {
         "vs": "monaco-editor/min/vs"
     }
 });
 require(["vs/editor/editor.main"], function() {
-    mona = monaco
-        // Register a new language
+    // Register a new language
     monaco.languages.register({
         id: 'Regina'
     });
@@ -152,7 +153,7 @@ require(["vs/editor/editor.main"], function() {
     });
 
     // Define a new theme that contains only rules that match this language
-    monaco.editor.defineTheme('reginaTheme', {
+    monaco.editor.defineTheme('regina-light', {
         base: 'vs',
         inherit: false,
         rules: [{
@@ -186,6 +187,11 @@ require(["vs/editor/editor.main"], function() {
             // 'editor.background': '#2b2b2b'
         }
     });
+    console.log(dracula)
+    console.log(dracula.dracula)
+    monaco.editor.defineTheme('regina-dark', dracula.dracula)
+
+
 
     // Register a completion item provider for the new language
     monaco.languages.registerCompletionItemProvider('Regina', {
@@ -291,7 +297,7 @@ require(["vs/editor/editor.main"], function() {
         fontFamily: "Fira Code",
         fontSize: 16,
         fontLigatures: true,
-        theme: "reginaTheme",
+        theme: "regina-light",
         automaticLayout: true,
         minimap: {
             enabled: false

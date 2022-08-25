@@ -1,12 +1,26 @@
 var worker;
+var breakpointsList = [];
+var currentBreakpointIndex = 0;
+
 
 function nextBreakpoint() {
     console.log("next")
 }
 
+function addBreakpointsToCode() {
+    let code = window.editor.getValue().split("\n")
+    let i = 0;
+    let breakpoints = window.editor.getBreakpoints()
+    breakpoints.sort((a, b) => parseInt(a.range.startLineNumber) - parseInt(b.range.startLineNumber))
+    breakpoints.forEach(point => {
+        code[point.range.startLineNumber - 1] = "#stop; " + code[point.range.startLineNumber - 1]
+    });
+    return code.join("\n")
+}
+
 function startExecution(withDebug) {
-    breakpointsList = [];
-    changeBreakpointColor();
+    // breakpointsList = [];
+    // changeBreakpointColor();
     // allow only one instance running
     if (worker != null)
         return
@@ -16,7 +30,7 @@ function startExecution(withDebug) {
     let bodyStyles = window.getComputedStyle(document.body);
     let button = document.getElementById(withDebug ? "debug-button" : "start-button").getElementsByTagName("i")[0]
     button.style["-webkit-text-fill-color"] = bodyStyles.getPropertyValue('--gray')
-    worker = new Worker("js/regina_interpreter.js");
+    worker = new Worker("js/external/regina_interpreter.js");
     worker.onmessage = e => {
         switch (e.data.type) {
             case "ready":
@@ -83,3 +97,5 @@ function showException(exception) {
 
     console.log(exception)
 }
+
+export default startExecution

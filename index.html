@@ -7,17 +7,15 @@
     <script type="text/javascript" src="js/event.js"></script>
     <script src="https://kit.fontawesome.com/fcd79d1b18.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="styles.css">
-    <!-- <script src="kotlin_kotlin.js" type="text/javascript"></script> -->
-    <!-- <script src="regina_interpreter.js" type="text/javascript"></script> -->
     <script type="text/javascript" src="monaco-editor/min/vs/loader.js"></script>
-    <script type="module" src="js/execution.js"></script>
+    <script type="module" src="js/external/themes.js"></script>
 </head>
 
-<body>
+<body style="background-color: var(--bg-color);">
     <div class="container">
         <div class="container-left">
             <div class="stacked" id="file-panel">
-                <ul id="filetree" style="margin-left: 20px;">
+                <ul id="file-tree" style="margin-left: 20px;">
                 </ul>
             </div>
             <div class="horizontal-resizer">
@@ -34,19 +32,25 @@
                         <div class='description'></div>
                     </div>
                     <div class="grid-item">
-                        <button id='language-button' onclick='changeTheme(this)' style="font-family: 'Fira Code';">initial</button>
+                        <button id='theme-button' onclick='changeTheme(this)'>light</button>
                     </div>
                     <div class="grid-item">Autosave, seconds
                         <div class='description'>0 to disable</div>
                     </div>
                     <div class="grid-item">
-                        <input id="save-seconds" type="number" min="0" max="1000" onchange="changeSaveSeconds(this)"> </input>
+                        <input id="save-seconds" type="number" min="0" max="1000"> </input>
                     </div>
                     <div class="grid-item">Console entries
                         <div class='description'>qty before overflow</div>
                     </div>
                     <div class="grid-item">
-                        <input id="save-seconds" type="number" min="0" max="1000" onchange="changeSaveSeconds(this)"> </input>
+                        <input id="console-entries" type="number" min="0" max="1000"> </input>
+                    </div>
+                    <div class="grid-item">Reset all
+                        <div class='description'>all settings to defaults, all code to default</div>
+                    </div>
+                    <div class="grid-item">
+                        <button id="reset-all">do reset</button>
                     </div>
 
 
@@ -58,11 +62,10 @@
                         <!-- Rough means there is a texture on every svg.Incredibels 2 titles for reference -->
                         <button id='texture-button' onclick='changeTexture(this)'>rough</button>
                     </div>
-                    <div class="grid-item">Rotate
+                    <div class="grid-item"><a href="https://docs.google.com/forms/d/e/1FAIpQLScqsdD7BmKWK_GJgfmLQ1V8e8mvegwPUHe-TxpnOGZP95Y-xQ/viewform" target="_blank">Leave feedback</a>
                         <div class='description'></div>
                     </div>
                     <div class="grid-item">
-                        <input type='range' min="0" max="100" value="70" oninput=changeSize(this)>
                     </div>
                 </div>
             </div>
@@ -74,15 +77,13 @@
             </div>
         </div>
         <div class="resizer wide">
-            <button id="left-panel-button" class="rotate" style="font-family: 'Fira Code'; font-size:var(--font-size)">
-                Filetree&nbsp;&&nbsp;Settings
-            </button>
+            <input id="left-panel-button" type="button" value="Filetree Settings Debug" style="font-family: 'Fira Code'; font-size:var(--font-size)" />
         </div>
         <div class="container-middle">
             <div class="top-gutter">
                 <div class="tabs">
                     <div class="button-list">
-                        <button title="run" id="start-button" onclick=startExecution(false)><i class="fas fa-play"
+                        <button title="run" id="start-button"><i class="fas fa-play"
                                 style="color:var(--green);"></i></button>
                         <button title="debug" id="debug-button" onclick=startExecution(true)><i class="fa-solid fa-bug"></i></button>
                         <button title="terminate" id="halt-button" onclick=terminateExecution()><i class="fas fa-stop"
@@ -122,6 +123,8 @@
             <div class="horizontal-resizer">
                 <button id="hide-console" style="font-family: 'Fira Code'; bottom: 2px; font-size:var(--font-size)">
                     Console
+                    <i class="fa-solid fa-arrow-down" style="color:var(--light-gray);"></i>
+                    <i class="fa-solid fa-arrow-up" style="color:var(--light-gray); display:none;"></i>
                 </button>
                 <button id="clear-console" style="position:relative; bottom: 2px;">
                     <i class="fas fa-trash" aria-hidden="true" style="font-size:bigger;"></i>
@@ -135,8 +138,13 @@
             </div>
         </div>
     </div>
-    <script src="js/editor.js" type="module"></script>
+    <div id="file-tree-menu" style="display:none;">
+        <p>add file</p>
+        <p>delete file</p>
+    </div>
+    <script src="js/external/editor.js" type="module"></script>
     <script src="js/index.js" type="module"></script>
+    <script type="module" src="js/execution.js"></script>
     <script src="js/resizer.js" type="module"></script>
     <script type="module" defer src="js/filetree.js"></script>
     <script type="module" defer src="js/storage.js"></script>
