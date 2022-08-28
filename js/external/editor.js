@@ -1,4 +1,4 @@
-import dracula from "/js/external/themes.js";
+import * as themes from "/js/external/themes.js";
 
 require.config({
     paths: {
@@ -152,46 +152,9 @@ require(["vs/editor/editor.main"], function() {
         }
     });
 
-    // Define a new theme that contains only rules that match this language
-    monaco.editor.defineTheme('regina-light', {
-        base: 'vs',
-        inherit: false,
-        rules: [{
-                token: 'keyword',
-                foreground: '6197d3'
-            }, {
-                token: 'identifier',
-                foreground: '820d7c'
-            }, {
-                token: 'type.identifier',
-                // fontStyle: 'bold'
-            }, {
-                token: 'string',
-                foreground: 'c29580'
-            },
-            {
-                token: 'number',
-                foreground: '6a8759'
-            }, {
-                token: 'link',
-                foreground: '820D7C',
-                fontStyle: 'underline'
-            }, {
-                token: 'comment',
-                foreground: '6a8759',
-                fontStyle: 'italic'
-            }
-        ],
-        colors: {
-            // 'editor.foreground': '#d4d4d4',
-            // 'editor.background': '#2b2b2b'
-        }
-    });
-    console.log(dracula)
-    console.log(dracula.dracula)
-    monaco.editor.defineTheme('regina-dark', dracula.dracula)
+    monaco.editor.defineTheme('regina-light', themes.light);
 
-
+    monaco.editor.defineTheme('regina-dark', themes.dracula)
 
     // Register a completion item provider for the new language
     monaco.languages.registerCompletionItemProvider('Regina', {

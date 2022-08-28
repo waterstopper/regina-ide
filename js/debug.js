@@ -1,9 +1,12 @@
+import { createFolder, createLeaf, createParent } from "./filetree.js";
+
 var breakpointsList = [];
 var currentBreakpointIndex = 0;
 
 function changeBreakpointColor(lineNumber) {
     let breakpoints = window.editor.getBreakpoints()
     if (lineNumber == null) {
+        breakpointsList = [];
         breakpoints.forEach(point => {
             point.options.glyphMarginClassName = "fas fa-ban inactive-breakpoint"
         })
@@ -14,6 +17,11 @@ function changeBreakpointColor(lineNumber) {
             }
         })
     window.editor.setBreakpoints(breakpoints)
+}
+
+function addBreakpoint(point) {
+    console.log(point)
+    breakpointsList.push(traverseMap(point));
 }
 
 function traverseMap(map) {
@@ -59,6 +67,8 @@ function transformLinkedHashMap(map) {
 }
 
 function startDebugging() {
+    if (breakpointsList.length == 0)
+        return
     let debugPanel = document.getElementById("debug-panel");
     let settingsPanel = document.getElementById("settings-panel");
     debugPanel.style = "display:block;";
@@ -72,23 +82,213 @@ function showDebuggingScope(scope) {
     for (const [key, value] of Object.entries(scope)) {
         if (key[0] == "@")
             continue
-        if (typeof value == 'object') {
-            createFolder(key + ": " + getCollectionString(scope, value))
-        } else createFile(key + ": " + value)
+        if (isCollection(value)) {
+            createCollection(key, value.second_1, value.first_1, scope)
+        } else { createNonCollection(key, value.second_1, value.first_1) }
     }
     // empty debug panel
     // create all elements
 }
 
+function createCollection(name, value, type, scope, parent = document.getElementById("debug-panel")) {
+    let parentText = createParent(parent)
+
+    let ident = createIdentifier(parentText, name)
+
+    let valueSpan;
+    valueSpan = getValueSpan(value, type, scope)
+    let i = 0;
+    // for (let child of valueSpan.getElementsByTagName("span")) {
+    //     let inParentSpan = document.createElement("ul");
+    //     inParentSpan.style.marginLeft = '-60px'
+    //     let ident = createIdentifier(inParentSpan, i)
+    //     parentText.parentElement.getElementsByTagName("ul")[0].appendChild(inParentSpan)
+    //     inParentSpan.appendChild(ident)
+    //     ident.insertAdjacentText('afterend', ": ")
+    //     inParentSpan.appendChild(child.cloneNode(true))
+    //     i++;
+    // }
+
+    parentText.appendChild(valueSpan)
+    parentText.setAttribute("cType", type)
+    parentText.setAttribute("cValue", value)
+    ident.insertAdjacentText('afterend', ": ")
+    parentText.onclick = (e) => {
+        if (parentText.getAttribute("added") != null)
+            return
+        let tree = parentText.parentElement.getElementsByTagName("ul")[0]
+        if (parentText.getAttribute("cType") == 'Array')
+            addChildrenToArray(tree, scope, parentText.getAttribute("cValue"))
+        else if (parentText.getAttribute("cType") == 'Dictionary')
+            addChildrenToDictionary(tree, scope, parentText.getAttribute("cValue"))
+        else if (parentText.getAttribute("cType") == 'Type')
+            addChildrenToType(tree, scope, parentText.getAttribute("cValue"))
+    }
+}
+
+function getValueSpan(value, type, scope, isSimple) {
+    let simpleSpan = isSimple ? document.createElement("span") : null;
+    switch (type) {
+        case "Dictionary":
+            if (isSimple) {
+                simpleSpan.innerText = "{..}"
+                return simpleSpan
+            }
+            return getDictionarySpan(value, scope);
+        case "Array":
+            if (isSimple) {
+                simpleSpan.innerText = "[..]"
+                return simpleSpan
+            }
+            return getArraySpan(value, scope);
+        default:
+            return createSimpleSpan(value, type)
+    }
+}
+
+function addChildrenToArray(arrayElement, scope, id) {
+    let arrayChildren = getArray(id, scope)
+    let i = 0;
+    for (const child of arrayChildren) {
+        if (isCollection(child))
+            createCollection(i, child.second_1, child.first_1, scope, arrayElement)
+        else createNonCollection(i, child.second_1, child.first_1, arrayElement)
+        i++
+        // let childSpan = document.createElement("ul")
+        // createIdentifier(childSpan, i)
+        // let valueSpan = getValueSpan(child.second_1, child.first_1, scope, true)
+        // childSpan.appendChild(valueSpan)
+        // arrayElement.appendChild(childSpan)
+    }
+    arrayElement.parentElement.getElementsByClassName("caret")[0].setAttribute("added", "true")
+}
+
+function treeFromCaret(caret) {
+    return caret.parentElement.getElementsByTagName("ul")[0]
+}
+
+function addChildrenToDictionary(dictElement, scope, id) {
+    let dictChildren = getDictionary(id, scope)
+    let i = 0;
+    for (const [entry, keyVal] of Object.entries(dictChildren)) {
+        let entryElement = createParent(dictElement);
+        createIdentifier(entryElement, 'entry' + i) //'entry'+i)
+        let tree = treeFromCaret(entryElement)
+        if (isCollection(keyVal.key))
+            createCollection('key', keyVal.key.second_1, keyVal.key.first_1, scope, tree)
+        else createNonCollection('key', keyVal.key.second_1, keyVal.key.first_1, tree)
+        if (isCollection(keyVal.value))
+            createCollection('value', keyVal.value.second_1, keyVal.value.first_1, scope, tree)
+        else createNonCollection('value', keyVal.value.second_1, keyVal.value.first_1, tree)
+        i++
+    }
+    dictElement.parentElement.getElementsByClassName("caret")[0].setAttribute("added", "true")
+}
+
+function addChildrenToType(typeElement, scope, id) {
+    let typeChildren = getType(id, scope)
+    let i = 0;
+    for (const [ident, property] of Object.entries(typeChildren)) {
+        let tree = treeFromCaret(typeElement)
+        if (isCollection(property))
+            createCollection(ident, property.second_1, property.first_1, scope, tree)
+        else createNonCollection(ident, property.second_1, property.first_1, tree)
+        i++
+    }
+    typeElement.parentElement.getElementsByClassName("caret")[0].setAttribute("added", "true")
+}
+
+function getType(id, scope) {
+    return scope["@references"].types_1[id].properties_1
+}
+
+function getArray(id, scope) {
+    return scope["@references"].arrays_1[id].properties_1.array_1
+}
+
+function getDictionary(id, scope) {
+    return scope["@references"].dictionaries_1[id].properties_1
+}
+
+function getDictionarySpan(id, scope) {
+    let res = document.createElement("span");
+    res.innerText = "{"
+    let entries = Object.entries(getDictionary(id, scope))
+    for (const [_, entry] of entries.slice(0, 3)) {
+        let key = entry.key;
+        let value = entry.value;
+        let keySpan = getValueSpan(key.second_1, key.first_1, scope, true)
+        let valueSpan = getValueSpan(value.second_1, value.first_1, scope, true)
+        res.appendChild(keySpan)
+        keySpan.insertAdjacentText('afterend', ":")
+        res.appendChild(valueSpan)
+        valueSpan.insertAdjacentText('afterend', ", ")
+    }
+    res.insertAdjacentText('beforeend', entries.length > 3 ? "..}" : "}")
+    if (entries.length <= 3 && entries.length != 0)
+        res.removeChild(res.childNodes[res.childNodes.length - 2])
+    return res;
+}
+
+function getArraySpan(id, scope) {
+    let res = document.createElement("span");
+    res.innerText = "["
+    let elements = getArray(id, scope)
+    for (const value of elements.slice(0, 5)) {
+        let valueSpan = getValueSpan(value.second_1, value.first_1, scope, true)
+        res.appendChild(valueSpan)
+        valueSpan.insertAdjacentText('afterend', ", ")
+    }
+    res.insertAdjacentText('beforeend', elements.length > 5 ? "..]" : "]")
+    if (elements.length <= 5 && elements.length != 0)
+        res.removeChild(res.childNodes[res.childNodes.length - 2])
+    return res;
+}
+
+function createSimpleSpan(value, type) {
+    let res = document.createElement("span")
+    res.textContent = type == 'String' ? '"' + value + '"' : value
+    if (type != 'Type')
+        res.style.color = (type == 'String' ? "var(--string-color)" : "var(--number-color)")
+    return res;
+}
+
+function createNonCollection(name, value, type, parent = document.getElementById("debug-panel")) {
+    let parentText = createLeaf(parent);
+    parentText.style.marginLeft = '-40px'
+    let ident = createIdentifier(parentText, name)
+    createValue(parentText, value, type)
+    ident.insertAdjacentText('afterend', ": ")
+}
+
+function createValue(parent, value, type) {
+    let valueSpan = document.createElement("span")
+    valueSpan.textContent = type == 'String' ? '"' + value + '" ' : value + ' '
+    valueSpan.style.color = (type == 'String' ? "var(--string-color)" : "var(--number-color)")
+    parent.appendChild(valueSpan)
+}
+
+function createIdentifier(parent, name) {
+    let nameSpan = document.createElement("span")
+    nameSpan.textContent = name
+    nameSpan.style.color = "var(--ident-color)"
+    parent.appendChild(nameSpan)
+    return nameSpan
+}
+
 function getCollectionString(scope, collection) {
     switch (collection.first_1) {
-        case "type":
+        case "Type":
             return collection.second_1
-        case "array":
+        case "Array":
             return getArrayById(collection.second_1, scope["@references"].arrays_1)
-        case "dictionary":
+        case "Dictionary":
             return getDictionaryById(collection.second_1, scope["@references"].dictionaries_1)
     }
+}
+
+function isCollection(e) {
+    return e.first_1 == 'Type' || e.first_1 == 'Array' || e.first_1 == 'Dictionary'
 }
 
 function getArrayById(id, arrays) {
@@ -103,11 +303,11 @@ function shortenedString(e) {
 
 function shortenedCollectionString(collection) {
     switch (collection.first_1) {
-        case "type":
+        case "Type":
             return collection.second_1
-        case "array":
+        case "Array":
             return "[..]"
-        case "dictionary":
+        case "Dictionary":
             return "{..}"
     }
 }
@@ -115,7 +315,6 @@ function shortenedCollectionString(collection) {
 function getDictionaryById(id, dictionaries) {
     let dict = dictionaries[id].properties_1
     return "{" + Object.entries(dict).slice(0, 3).map(([key, value], i) => {
-        console.log(i)
         if (key[0] == "@") {
             return shortenedString(dict[key].key) + ":" + shortenedString(dict[key].value)
         }
@@ -138,3 +337,6 @@ function highlightBreakpointLine(lineNumber) {
 }
 
 function loadDebuggingFold(foldElement, scope, elementId) {}
+
+export default {};
+export { changeBreakpointColor, addBreakpoint, startDebugging }

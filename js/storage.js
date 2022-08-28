@@ -63,11 +63,11 @@ document.getElementById("console-entries").onchange = (e) =>
 
 function changeNumberInput(target, storageName, bounds) {
     let value = target.value
-    console.log(value)
     if (value < bounds[0])
-        target.value = bounds[0]
+        value = bounds[0]
     else if (value > bounds[1])
-        target.value = bounds[1]
+        value = bounds[1]
+    target.value = value
     localStorage.setItem(storageName, parseInt(value))
 }
 

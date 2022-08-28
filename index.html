@@ -9,13 +9,14 @@
     <link rel="stylesheet" href="styles.css">
     <script type="text/javascript" src="monaco-editor/min/vs/loader.js"></script>
     <script type="module" src="js/external/themes.js"></script>
+    <link rel="icon" type="image/svg+xml" href="/regina.svg">
 </head>
 
 <body style="background-color: var(--bg-color);">
     <div class="container">
         <div class="container-left">
             <div class="stacked" id="file-panel">
-                <ul id="file-tree" style="margin-left: 20px;">
+                <ul id="file-tree" style="margin-left: 0px;">
                 </ul>
             </div>
             <div class="horizontal-resizer">
@@ -52,6 +53,15 @@
                     <div class="grid-item">
                         <button id="reset-all">do reset</button>
                     </div>
+                    <div class="grid-item">Save lib files to local
+                        <div class='description'>if there is no internet, local files will be used</div>
+                    </div>
+                    <div class="grid-item">
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider round"></span>
+                          </label>
+                    </div>
 
 
                     <!-- Not implemented -->
@@ -69,11 +79,11 @@
                     </div>
                 </div>
             </div>
-            <div id="debug-panel" style="display:block">
-                <div class="button-list">
+            <div id="debug-panel" class="stacked" style="display:block">
+                <!-- <div class="button-list">
                     <button title="previous breakpoint" <i class="fa-solid fa-arrow-left-long" onclick="previousBreakpoint()"></i></button>
                     <button title="next breakpoint"><i class="fa-solid fa-arrow-right-long" onclick="nextBreakpoint()"></i></button>
-                </div>
+                </div> -->
             </div>
         </div>
         <div class="resizer wide">
@@ -142,13 +152,13 @@
         <p>add file</p>
         <p>delete file</p>
     </div>
-    <script src="js/external/editor.js" type="module"></script>
-    <script src="js/index.js" type="module"></script>
+    <script type="module" src="js/external/editor.js"></script>
+    <script type="module" src="js/index.js"></script>
     <script type="module" src="js/execution.js"></script>
-    <script src="js/resizer.js" type="module"></script>
+    <script type="module" src="js/resizer.js"></script>
+    <script type="module" src="js/debug.js"></script>
     <script type="module" defer src="js/filetree.js"></script>
     <script type="module" defer src="js/storage.js"></script>
-    <script type="module" defer src="js/debug.js"></script>
 </body>
 
 </html>

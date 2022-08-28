@@ -6417,7 +6417,7 @@ var evaluateJS;
         return id;
     };
     Type.prototype.getDebugId_sdwqy0_k$ = function() {
-        return new Pair('type', this.toString());
+        return new Pair('Type', this.toString());
     };
     Type.prototype.getPropertyOrNull_191djg_k$ = function(name) {
         var tmp0_subject = name;
@@ -7061,7 +7061,7 @@ var evaluateJS;
         return id;
     };
     PArray.prototype.getDebugId_sdwqy0_k$ = function() {
-        return new Pair('array', this.id_1);
+        return new Pair('Array', this.id_1);
     };
     PArray.prototype.set_1fwgy9_k$ = function(index, value, nodeIndex, nodeValue) {
         var tmp = this.getPValue_berniv_k$();
@@ -7327,7 +7327,7 @@ var evaluateJS;
         return id;
     };
     PDictionary.prototype.getDebugId_sdwqy0_k$ = function() {
-        return new Pair('dictionary', this.id_1);
+        return new Pair('Dictionary', this.id_1);
     };
     PDictionary.prototype.checkIndexType_1ovz24_k$ = function(index) {
         return true;
@@ -7392,7 +7392,7 @@ var evaluateJS;
         return typeof tmp === 'number' ? tmp : THROW_CCE();
     };
     PDouble.prototype.toDebugClass_971qih_k$ = function(references) {
-        return this.getPValue_berniv_k$();
+        return new Pair('Double', this.getPValue_berniv_k$());
     };
     PDouble.$metadata$ = {
         simpleName: 'PDouble',
@@ -7451,7 +7451,7 @@ var evaluateJS;
         return typeof tmp === 'number' ? tmp : THROW_CCE();
     };
     PInt.prototype.toDebugClass_971qih_k$ = function(references) {
-        return this.getPValue_berniv_k$();
+        return new Pair('Int', this.getPValue_berniv_k$());
     };
     PInt.$metadata$ = {
         simpleName: 'PInt',
@@ -7840,7 +7840,7 @@ var evaluateJS;
         return new Char(charSequenceGet(this.getPValue_berniv_k$(), index));
     };
     PString.prototype.toDebugClass_971qih_k$ = function(references) {
-        return this.getPValue_berniv_k$();
+        return new Pair('String', this.getPValue_berniv_k$());
     };
     PString.prototype.set_1fwgy9_k$ = function(index, value, nodeIndex, nodeValue) {
         throw PositionalException_init_$Create$('Set is not implemented for String', nodeValue, null, 0, null, 28, null);
@@ -10545,13 +10545,35 @@ onmessage = e => {
         resume = true;
         return;
     }
-    // try {
-    evaluateJS(e.data)
-        // } catch (exception) {
-        //     postMessage({ type: "exception", content: exception })
-        // }
+    try {
+        evaluateJS(e.data)
+    } catch (exception) {
+        exception.node_1 = exception.token_1
+        postMessage({ type: "exception", content: createCloneableException(exception) })
+    }
     postMessage({ type: "finished" })
     close();
+}
+
+function createCloneableException(exception) {
+    let length;
+    let position;
+    if (exception.node_1.symbol_1 != "") {
+        length = exception.node_1.value_1.length;
+        position = exception.node_1.position_1;
+
+    } else {
+        length = exception.length_1;
+        position = exception.position_1;
+    }
+    let message = exception.name == "NotFoundException" ? exception.node_1.value_1 + " not found" :
+        (exception.errorMessage_1 == "" ? "ABC" : exception.errorMessage_1)
+    return {
+        message: message,
+        position: { x: parseInt(position.first_1) + 1, y: parseInt(position.second_1) + 1 },
+        length: length
+    }
+
 }
 
 //# sourceMappingURL=regina_interpreter.js.map

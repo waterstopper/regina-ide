@@ -22,6 +22,9 @@ html[data-theme='light'] {
     --gray: #929292;
     --light-gray: LightGray;
     color: var(--main-color);
+    --ident-color: #820d7c;
+    --string-color: #c29580;
+    --number-color: #6a8759;
 }
 
 html[data-theme='dark'] {
@@ -44,6 +47,9 @@ html[data-theme='dark'] {
     --gray: #929292;
     --light-gray: gray;
     color: var(--main-color);
+    --ident-color: #cfcfc2;
+    --string-color: #f1fa8c;
+    --number-color: #e69749;
 }
 
 .monaco-editor {
@@ -64,6 +70,11 @@ html[data-theme='dark'] {
 #settings-panel {
     overflow-y: scroll;
     overflow-x: hidden;
+}
+
+#debug-panel {
+    overflow-y: scroll;
+    overflow-x: scroll;
 }
 
 .highlight-breakpoint-line {
@@ -163,12 +174,18 @@ button:hover {
     overflow-x: scroll;
     overflow-y: hidden;
     -webkit-text-fill-color: var(--main-color);
-    color: rgba(0, 0, 0, 0);
+    color: transparent;
+    transition: color .3s ease;
+}
+
+#settings-panel {
+    color: transparent;
     transition: color .3s ease;
 }
 
 .top-gutter:hover,
-#console:hover {
+#console:hover,
+#settings-panel:hover {
     color: var(--gray);
 }
 
@@ -273,22 +290,24 @@ button:hover {
 
 /* Remove default bullets */
 
-ul,
-#file-tree {
+ul {
     list-style-type: none;
+    margin: 0px;
 }
 
 
 /* Remove margins and padding from the parent ul */
 
-#file-tree {
+#file-tree,
+#debug-panel {
     margin: 0;
     /* margin-top: 30vh; */
     padding: 0;
 }
 
 li {
-    margin-left: -20px;
+    list-style-type: none;
+    margin-left: 0px;
 }
 
 .caret {
@@ -500,4 +519,72 @@ input[type=number]:hover::-webkit-inner-spin-button {
 
 input[type=number]::-webkit-inner-spin-button:hover {
     opacity: 0.2;
+}
+
+
+/* Toggle */
+
+#settings-panel .switch {
+    position: relative;
+    display: inline-block;
+    width: 2em;
+    height: 1em;
+}
+
+#settings-panel .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+
+/* The slider */
+
+#settings-panel .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 4px;
+    right: -4px;
+    bottom: 0;
+    background-color: var(--light-gray);
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+#settings-panel .slider:before {
+    position: absolute;
+    content: "";
+    height: 0.7em;
+    width: 0.7em;
+    left: 0.2em;
+    bottom: 0.15em;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+#settings-panel input:checked+.slider {
+    background-color: var(--middle-color);
+}
+
+#settings-panel input:checked+.slider:before {
+    -webkit-transform: translateX(0.9em);
+    -ms-transform: translateX(0.9em);
+    transform: translateX(0.9em);
+}
+
+
+/* Rounded sliders */
+
+#settings-panel .slider.round {
+    border-radius: 1em;
+}
+
+#settings-panel .slider.round:before {
+    border-radius: 1em;
+}
+
+a {
+    color: var(--middle-color)
 }

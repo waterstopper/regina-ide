@@ -3,12 +3,10 @@ var dracula = {
     inherit: true,
     rules: [{
             "token": 'type.identifier',
-            // fontStyle: 'bold'
             "foreground": "26d07e"
         },
         {
             "token": 'number',
-            // fontStyle: 'bold'
             "foreground": "e69749"
         }, {
             "background": "282a36",
@@ -222,4 +220,40 @@ var dracula = {
     }
 }
 
+var light = {
+    base: 'vs',
+    inherit: false,
+    rules: [{
+            token: 'identifier',
+            foreground: '820d7c'
+        }, {
+            token: 'keyword',
+            foreground: '6197d3'
+        }, {
+            token: 'type.identifier',
+            // fontStyle: 'bold'
+        }, {
+            token: 'string',
+            foreground: 'c29580'
+        },
+        {
+            token: 'number',
+            foreground: '6a8759'
+        }, {
+            token: 'link',
+            foreground: '820D7C',
+            fontStyle: 'underline'
+        }, {
+            token: 'comment',
+            foreground: '6a8759',
+            fontStyle: 'italic'
+        }
+    ],
+    colors: {
+        // 'editor.foreground': '#d4d4d4',
+        // 'editor.background': '#2b2b2b'
+    }
+}
+
 export default { dracula };
+export { light, dracula };

@@ -5,6 +5,11 @@ document.getElementById("start-button").onclick = (e) => {
     startExecution(false)
 }
 
+document.getElementById("debug-button").onclick = (e) => {
+    console.log("debug")
+    startExecution(true)
+}
+
 oncontextmenu = (event) => {
     let fileMenu = document.getElementById("file-tree-menu")
     fileMenu.style.display = "none";
