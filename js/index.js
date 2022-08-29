@@ -1,12 +1,24 @@
-import { createFolder, createFile } from "./filetree.js";
 import startExecution from "./execution.js"
+import { nextBreakpoint, previousBreakpoint, toCaretBreakpoint } from "./debug.js"
 
 document.getElementById("start-button").onclick = (e) => {
     startExecution(false)
 }
 
+let debugArrows = document.getElementById("debug-button-panel").getElementsByTagName("button")
+debugArrows[0].onclick = (e) => {
+    previousBreakpoint()
+}
+
+debugArrows[1].onclick = (e) => {
+    nextBreakpoint()
+}
+
+debugArrows[2].onclick = (e) => {
+    toCaretBreakpoint()
+}
+
 document.getElementById("debug-button").onclick = (e) => {
-    console.log("debug")
     startExecution(true)
 }
 

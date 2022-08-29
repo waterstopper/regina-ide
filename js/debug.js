@@ -1,12 +1,21 @@
-import { createFolder, createLeaf, createParent } from "./filetree.js";
+import { createLeaf, createParent } from "./filetree.js";
 
-var breakpointsList = [];
-var currentBreakpointIndex = 0;
+var breakpointsList = []
+var currentBreakpointIndex = 0
+var outputList = []
+
+function addConsoleOutput(output) {
+    breakpointsList[breakpointsList.length - 1].output.push(output)
+}
+
+function removeConsoleOutput(number) {
+
+}
 
 function changeBreakpointColor(lineNumber) {
     let breakpoints = window.editor.getBreakpoints()
     if (lineNumber == null) {
-        breakpointsList = [];
+        breakpointsList = []
         breakpoints.forEach(point => {
             point.options.glyphMarginClassName = "fas fa-ban inactive-breakpoint"
         })
@@ -19,9 +28,48 @@ function changeBreakpointColor(lineNumber) {
     window.editor.setBreakpoints(breakpoints)
 }
 
+function nextBreakpoint() {
+    if (currentBreakpointIndex < breakpointsList.length - 1) {
+        unhighlightBreakpointLine(parseInt(breakpointsList[currentBreakpointIndex].scope["@position"].second_1) + 1)
+        showDebuggingScope(breakpointsList[++currentBreakpointIndex].scope)
+        changeCurrentIndex()
+    }
+}
+
+function previousBreakpoint() {
+    if (currentBreakpointIndex > 0) {
+        unhighlightBreakpointLine(parseInt(breakpointsList[currentBreakpointIndex].scope["@position"].second_1) + 1)
+        showDebuggingScope(breakpointsList[--currentBreakpointIndex].scope)
+        changeCurrentIndex()
+    }
+}
+
+function toCaretBreakpoint() {
+    let lineNumber = window.editor.getPosition().lineNumber
+    let i = 0;
+    for (let breakpoint of breakpointsList.slice(currentBreakpointIndex, breakpointsList.length)) {
+        if (lineNumber == breakpoint.scope["@position"].second_1 + 1) {
+            unhighlightBreakpointLine(parseInt(breakpointsList[currentBreakpointIndex].scope["@position"].second_1) + 1)
+            currentBreakpointIndex += i
+            changeCurrentIndex()
+            showDebuggingScope(breakpointsList[currentBreakpointIndex].scope)
+            return
+        }
+        i++;
+    }
+    let notificiation = document.createElement("span")
+    notificiation.innerText = "No further breakpoint on same line with a caret"
+    notificiation.style.color = "var(--gray)"
+    document.getElementById("debug-button-panel").insertAdjacentElement('afterend', notificiation)
+}
+
+function changeCurrentIndex() {
+    document.getElementById("debug-button-panel").getElementsByTagName("span")[0].innerText = (currentBreakpointIndex + 1) + "/" + breakpointsList.length
+}
+
 function addBreakpoint(point) {
     console.log(point)
-    breakpointsList.push(traverseMap(point));
+    breakpointsList.push({ output: [], scope: traverseMap(point) })
 }
 
 function traverseMap(map) {
@@ -69,15 +117,19 @@ function transformLinkedHashMap(map) {
 function startDebugging() {
     if (breakpointsList.length == 0)
         return
-    let debugPanel = document.getElementById("debug-panel");
-    let settingsPanel = document.getElementById("settings-panel");
-    debugPanel.style = "display:block;";
-    settingsPanel.style = "display:none;";
-    showDebuggingScope(breakpointsList[currentBreakpointIndex]);
+    currentBreakpointIndex = 0;
+    changeCurrentIndex();
+    showDebuggingScope(breakpointsList[currentBreakpointIndex].scope);
 }
 
 function showDebuggingScope(scope) {
-    console.log(scope)
+    let debugPanel = document.getElementById("debug-panel");
+    let buttons = document.getElementById("debug-button-panel");
+    debugPanel.innerHTML = "";
+    debugPanel.appendChild(buttons)
+    let settingsPanel = document.getElementById("settings-panel");
+    debugPanel.style = "display:block;";
+    settingsPanel.style = "display:none;";
     highlightBreakpointLine(parseInt(scope["@position"].second_1) + 1)
     for (const [key, value] of Object.entries(scope)) {
         if (key[0] == "@")
@@ -97,17 +149,7 @@ function createCollection(name, value, type, scope, parent = document.getElement
 
     let valueSpan;
     valueSpan = getValueSpan(value, type, scope)
-    let i = 0;
-    // for (let child of valueSpan.getElementsByTagName("span")) {
-    //     let inParentSpan = document.createElement("ul");
-    //     inParentSpan.style.marginLeft = '-60px'
-    //     let ident = createIdentifier(inParentSpan, i)
-    //     parentText.parentElement.getElementsByTagName("ul")[0].appendChild(inParentSpan)
-    //     inParentSpan.appendChild(ident)
-    //     ident.insertAdjacentText('afterend', ": ")
-    //     inParentSpan.appendChild(child.cloneNode(true))
-    //     i++;
-    // }
+    let i = 0
 
     parentText.appendChild(valueSpan)
     parentText.setAttribute("cType", type)
@@ -131,13 +173,18 @@ function getValueSpan(value, type, scope, isSimple) {
     switch (type) {
         case "Dictionary":
             if (isSimple) {
-                simpleSpan.innerText = "{..}"
+                if (Object.entries(getDictionary(value, scope)).length == 0)
+                    simpleSpan.innerText = "{}"
+                else simpleSpan.innerText = "{..}"
                 return simpleSpan
             }
             return getDictionarySpan(value, scope);
         case "Array":
             if (isSimple) {
-                simpleSpan.innerText = "[..]"
+                if (getArray(value, scope).length == 0)
+                    simpleSpan.innerText = "[]"
+                else
+                    simpleSpan.innerText = "[..]"
                 return simpleSpan
             }
             return getArraySpan(value, scope);
@@ -154,11 +201,6 @@ function addChildrenToArray(arrayElement, scope, id) {
             createCollection(i, child.second_1, child.first_1, scope, arrayElement)
         else createNonCollection(i, child.second_1, child.first_1, arrayElement)
         i++
-        // let childSpan = document.createElement("ul")
-        // createIdentifier(childSpan, i)
-        // let valueSpan = getValueSpan(child.second_1, child.first_1, scope, true)
-        // childSpan.appendChild(valueSpan)
-        // arrayElement.appendChild(childSpan)
     }
     arrayElement.parentElement.getElementsByClassName("caret")[0].setAttribute("added", "true")
 }
@@ -172,7 +214,9 @@ function addChildrenToDictionary(dictElement, scope, id) {
     let i = 0;
     for (const [entry, keyVal] of Object.entries(dictChildren)) {
         let entryElement = createParent(dictElement);
-        createIdentifier(entryElement, 'entry' + i) //'entry'+i)
+        entryElement.appendChild(getValueSpan(keyVal.key.second_1, keyVal.key.first_1, scope, true))
+        entryElement.insertAdjacentText('beforeend', ": ")
+        entryElement.appendChild(getValueSpan(keyVal.value.second_1, keyVal.value.first_1, scope, true))
         let tree = treeFromCaret(entryElement)
         if (isCollection(keyVal.key))
             createCollection('key', keyVal.key.second_1, keyVal.key.first_1, scope, tree)
@@ -336,7 +380,28 @@ function highlightBreakpointLine(lineNumber) {
     window.editor.revealLine(lineNumber);
 }
 
+function unhighlightBreakpointLine(lineNumber) {
+    let breakpoints = window.editor.getBreakpoints()
+    for (let i = 0; i < breakpoints.length; i++) {
+        if (breakpoints[i].range.startLineNumber == lineNumber) {
+            breakpoints[i].options.className = "";
+            break;
+        }
+
+    }
+    window.editor.setBreakpoints(breakpoints)
+    window.editor.setPosition({ lineNumber: lineNumber, column: 1 });
+    window.editor.revealLine(lineNumber);
+}
+
 function loadDebuggingFold(foldElement, scope, elementId) {}
 
 export default {};
-export { changeBreakpointColor, addBreakpoint, startDebugging }
+export {
+    changeBreakpointColor,
+    addBreakpoint,
+    startDebugging,
+    nextBreakpoint,
+    previousBreakpoint,
+    toCaretBreakpoint
+}

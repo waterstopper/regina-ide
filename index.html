@@ -27,7 +27,7 @@
                     Debug
                 </button>
             </div>
-            <div id="settings-panel" class="stacked">
+            <div id="settings-panel" class="stacked" style="display:none">
                 <div class="grid-container">
                     <div class="grid-item">Theme
                         <div class='description'></div>
@@ -80,10 +80,19 @@
                 </div>
             </div>
             <div id="debug-panel" class="stacked" style="display:block">
-                <!-- <div class="button-list">
-                    <button title="previous breakpoint" <i class="fa-solid fa-arrow-left-long" onclick="previousBreakpoint()"></i></button>
-                    <button title="next breakpoint"><i class="fa-solid fa-arrow-right-long" onclick="nextBreakpoint()"></i></button>
-                </div> -->
+                <div id="debug-button-panel">
+                    <button title="previous breakpoint">
+                        <i class="fa-solid fa-circle"></i>
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                    <button title="next breakpoint">
+                        <i class="fa-solid fa-arrow-right"></i>
+                        <i class="fa-solid fa-circle"></i></button>
+                    <button title="to breakpoint on caret position">
+                        <i class="fa-solid fa-arrow-right"></i>
+                        <i class="fa-solid fa-i-cursor"></i></button>
+                    <span></span>
+                </div>
             </div>
         </div>
         <div class="resizer wide">
@@ -95,7 +104,7 @@
                     <div class="button-list">
                         <button title="run" id="start-button"><i class="fas fa-play"
                                 style="color:var(--green);"></i></button>
-                        <button title="debug" id="debug-button" onclick=startExecution(true)><i class="fa-solid fa-bug"></i></button>
+                        <button title="debug" id="debug-button"><i class="fa-solid fa-bug"></i></button>
                         <button title="terminate" id="halt-button" onclick=terminateExecution()><i class="fas fa-stop"
                                 style="color:var(--red);"></i></button>
                         <button title="save manually (autosave happens every 3 seconds)" id="save-button">

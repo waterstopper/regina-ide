@@ -588,3 +588,7 @@ input[type=number]::-webkit-inner-spin-button:hover {
 a {
     color: var(--middle-color)
 }
+
+::-webkit-scrollbar-corner {
+    background: rgba(0, 0, 0, 0);
+}

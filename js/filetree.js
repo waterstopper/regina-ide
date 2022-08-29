@@ -170,4 +170,4 @@ function toDefaultStyle(element) {
 
 createTree()
 
-export { createFolder, createFile, createLeaf, createParent };
+export { createLeaf, createParent };
