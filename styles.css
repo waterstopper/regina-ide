@@ -1,8 +1,8 @@
 html {
-    font-family: 'Fira Code';
+    font-family: "Fira Code";
 }
 
-html[data-theme='light'] {
+html[data-theme="light"] {
     --font-size: 16px;
     --bg-color: #ffffff;
     --middle-color: #253092;
@@ -27,7 +27,7 @@ html[data-theme='light'] {
     --number-color: #6a8759;
 }
 
-html[data-theme='dark'] {
+html[data-theme="dark"] {
     --font-size: 16px;
     --bg-color: #282a36;
     --middle-color: #3896d4;
@@ -67,12 +67,7 @@ html[data-theme='dark'] {
     /* margin-left: -5px; */
 }
 
-#settings-panel {
-    overflow-y: scroll;
-    overflow-x: hidden;
-}
-
-#debug-panel {
+#bottom-left-panel {
     overflow-y: scroll;
     overflow-x: scroll;
 }
@@ -92,7 +87,7 @@ html[data-theme='dark'] {
 input {
     background-color: transparent;
     color: var(--main-color);
-    font-family: 'Fira Code';
+    font-family: "Fira Code";
 }
 
 button {
@@ -100,7 +95,7 @@ button {
     background-color: rgba(0, 0, 0, 0);
     border-radius: 1em;
     cursor: pointer;
-    font-family: 'Fira Code';
+    font-family: "Fira Code";
     /* color: var(--main-color) */
     /* font-family: JetBrains Mono; */
     /* color: var(--main-color); */
@@ -135,30 +130,6 @@ button:hover {
     /* background-color: var(--gray); */
 }
 
-.tab:hover {
-    background-color: var(--light-gray);
-    cursor: default;
-}
-
-.tab:active {
-    background-color: var(--bg-color);
-}
-
-.tab:hover .close {
-    background-color: var(--light-gray);
-    cursor: pointer;
-}
-
-.tab-trapezoid {
-    display: none;
-    position: absolute;
-    z-index: -1;
-    width: 7em;
-    height: 2em;
-    background-color: var(--mint);
-    transform: perspective(10px) rotateX(5deg);
-}
-
 .button-list {
     position: absolute;
     float: left;
@@ -175,18 +146,22 @@ button:hover {
     overflow-y: hidden;
     -webkit-text-fill-color: var(--main-color);
     color: transparent;
-    transition: color .3s ease;
+    transition: color 0.3s ease;
 }
 
 #settings-panel {
     color: transparent;
-    transition: color .3s ease;
+    transition: color 0.3s ease;
 }
 
 .top-gutter:hover,
 #console:hover,
 #settings-panel:hover {
     color: var(--gray);
+}
+
+#debug-button-panel {
+    border-bottom: var(--light-gray) solid 1px;
 }
 
 .tabs {
@@ -231,6 +206,8 @@ button:hover {
     user-select: none;
 }
 
+
+
 .close {
     z-index: 2;
     background-color: var(--bg-color);
@@ -265,6 +242,13 @@ button:hover {
     cursor: pointer;
 }
 
+.file-tree-element {
+    user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
 .file-tree-element:hover {
     background-color: var(--light-gray);
 }
@@ -280,13 +264,12 @@ button:hover {
 }
 
 .close:hover {
-    background-color: var(--gray);
+    background-color: var(--bg-color);
 }
 
 .close:hover .tab {
-    background-color: var(--gray);
+    background-color: var(--bg-color);
 }
-
 
 /* Remove default bullets */
 
@@ -294,7 +277,6 @@ ul {
     list-style-type: none;
     margin: 0px;
 }
-
 
 /* Remove margins and padding from the parent ul */
 
@@ -326,7 +308,6 @@ li {
 .caret-down::before {
     transform: rotate(90deg);
 }
-
 
 /* Hide the nested list */
 
@@ -402,7 +383,8 @@ li {
 }
 
 .stacked {
-    height: 48%;
+    /* TODO: was 48 */
+    height: 49%;
 }
 
 .container-middle {
@@ -513,14 +495,13 @@ input[type="number"]:hover {
     padding-top: 0px;
 }
 
-input[type=number]:hover::-webkit-inner-spin-button {
+input[type="number"]:hover::-webkit-inner-spin-button {
     opacity: 0.2;
 }
 
-input[type=number]::-webkit-inner-spin-button:hover {
+input[type="number"]::-webkit-inner-spin-button:hover {
     opacity: 0.2;
 }
-
 
 /* Toggle */
 
@@ -537,7 +518,6 @@ input[type=number]::-webkit-inner-spin-button:hover {
     height: 0;
 }
 
-
 /* The slider */
 
 #settings-panel .slider {
@@ -548,8 +528,8 @@ input[type=number]::-webkit-inner-spin-button:hover {
     right: -4px;
     bottom: 0;
     background-color: var(--light-gray);
-    -webkit-transition: .4s;
-    transition: .4s;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
 }
 
 #settings-panel .slider:before {
@@ -560,20 +540,19 @@ input[type=number]::-webkit-inner-spin-button:hover {
     left: 0.2em;
     bottom: 0.15em;
     background-color: white;
-    -webkit-transition: .4s;
-    transition: .4s;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
 }
 
-#settings-panel input:checked+.slider {
+#settings-panel input:checked + .slider {
     background-color: var(--middle-color);
 }
 
-#settings-panel input:checked+.slider:before {
+#settings-panel input:checked + .slider:before {
     -webkit-transform: translateX(0.9em);
     -ms-transform: translateX(0.9em);
     transform: translateX(0.9em);
 }
-
 
 /* Rounded sliders */
 
@@ -586,7 +565,7 @@ input[type=number]::-webkit-inner-spin-button:hover {
 }
 
 a {
-    color: var(--middle-color)
+    color: var(--middle-color);
 }
 
 ::-webkit-scrollbar-corner {

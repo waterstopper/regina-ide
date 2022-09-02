@@ -1,173 +1,199 @@
-var toggler = document.getElementsByClassName("caret");
-let i;
+import { openTab } from "./tab.js";
 
-function nextBreakpoint() {
-    console.log("next")
-}
-
-for (i = 0; i < toggler.length; i++) {
-    toggler[i].addEventListener("click", function() {
-        this.parentElement.querySelector(".nested").classList.toggle("active");
-        this.classList.toggle("caret-down");
-    });
+function getPath(fileElement) {
+    let res = [];
+    let parent = fileElement.parentElement;
+    let filetree = document.getElementById("file-tree");
+    while (parent != filetree && parent != filetree.parentElement) {
+        res.push(parent.getElementsByTagName("span")[0].innerText);
+        parent = parent.parentElement.parentElement;
+    }
+    return res.reverse().join("/");
 }
 
 function createTree() {
     fetch("https://alex5041.github.io/reginafiles/layout.json")
-        .then(function(response) {
-            if (!response.ok)
-                console.log("Could not load")
-            else return response.text();
-        }).then(text => JSON.parse(text)).then(layout => {
+        .then(function (response) {
+            return response.text();
+        })
+        .then((text) => JSON.parse(text))
+        .then((layout) => {
             let folders = layout.folders;
             let files = layout.files;
-            folders.forEach(folder => {
-                createFolder(folder.name, folder.parent == null ? "" : folder.parent)
+            folders.forEach((folder) => {
+                createFolder(
+                    folder.name,
+                    folder.parent == null ? "" : folder.parent
+                );
             });
-            files.forEach(file => {
-                createFile(file.name, file.parent == null ? "" : file.parent)
+            files.forEach((file) => {
+                let htmlElement = createFile(
+                    file.name,
+                    file.parent == null ? "" : file.parent
+                );
+                htmlElement.setAttribute("lib", "true");
             });
         })
+        .catch((_) => {
+            console.log("Could not load");
+        });
+    createFolder("example", "");
+    createFolder("e", "example");
+    createFile("file.rgn", "e");
 }
 
-var focusedFile = null;
-
 function createLeaf(parent) {
-    let leaf = document.createElement("ul")
-    let text = document.createElement("span")
+    let leaf = document.createElement("ul");
+    let text = document.createElement("span");
     text.classList.add("file-tree-element");
 
-    leaf.appendChild(text);
     parent.appendChild(leaf);
+    leaf.appendChild(text);
     return text;
 }
 
-function createFile(
-    fileName = "myFile.rgn",
-    folderName = "") {
-    let tree = getTree(folderName)
+function createFile(fileName = "myFile.rgn", folderName = "", parent) {
+    let tree = parent == null ? getTree(folderName) : parent;
     let file = createLeaf(tree);
-    tree.appendChild(file);
-    file.textContent = fileName
-    file.onclick = (e) => addFocusFunction(file)
+    tree.appendChild(file.parentElement);
+    file.textContent = fileName;
+    file.onclick = () => addFocusFunction(file);
     addHoverFunction(file);
-    file.ondblclick = (e) => {
-        console.log("open " + file.innerText)
-    }
-    if (folderName != "") {
-        file.style.marginLeft = '-20px'
-    }
-    file.style.padding = '0px'
+
+    file.ondblclick = () => {
+        console.log("open " + file.innerText);
+        openTab(file.getAttribute("path"), file.getAttribute("lib"));
+    };
+    if (folderName != "") file.parentElement.style.marginLeft = "-20px";
+
+    file.parentElement.style.padding = "0px";
+    let path = getPath(file);
+    console.log(path);
+    file.setAttribute("path", path);
+    return file;
 }
 
 function createParent(parent) {
     let par = document.createElement("li");
     let caret = document.createElement("span");
     caret.classList.add("caret", "file-tree-element");
-    let ul = document.createElement("ul")
+    let ul = document.createElement("ul");
     ul.className = "nested";
 
     par.appendChild(caret);
     par.appendChild(ul);
     parent.appendChild(par);
 
-    caret.addEventListener("click", function() {
+    caret.addEventListener("click", function () {
         this.parentElement.querySelector(".nested").classList.toggle("active");
         this.classList.toggle("caret-down");
     });
-    return caret
+    return caret;
 }
 
-function createFolder(name = "myFolder",
-    folderName = "",
-    parentElement = document.getElementById("file-tree")) {
-    let tree = getTree(folderName)
-    let folder = document.createElement("li")
-    let caret = document.createElement("span")
-    caret.className = "caret"
-    folder.appendChild(caret)
-
-    let ul = document.createElement("ul")
-    ul.className = "nested"
-    folder.appendChild(ul)
-
-    addTextToTreeElement(name, caret)
-    tree.appendChild(folder)
-    caret.addEventListener("click", function() {
-        this.parentElement.querySelector(".nested").classList.toggle("active");
-        this.classList.toggle("caret-down");
-        addFocusFunction(caret)
-    });
-    // addHoverFunction(caret);
-}
-
-
-function addTextToTreeElement(text, element) {
-    if (text.includes(":")) {
-        element.textContent = ":"
-        let coloredName = document.createElement("span")
-        coloredName.textContent = text.split(":")[0]
-        coloredName.style.color = "var(--ident-color)"
-
-        let remainder = document.createElement("span")
-        remainder.textContent = text.substring(text.indexOf(":") + 1)
-        element.appendChild(coloredName)
-        element.appendChild(remainder)
-        element.insertBefore(element.childNodes[0], remainder)
-    } else {
-        element.textContent = text
-        element.classList.add("file-tree-element")
-        element.onclick = (e) => addFocusFunction(element)
-        addHoverFunction(element);
-        element.ondblclick = (e) => {
-            console.log("open " + element.innerText)
-        }
-    }
+function createFolder(name = "myFolder", folderName = "", parent) {
+    let tree = parent == null ? getTree(folderName) : parent;
+    let folder = createParent(tree);
+    folder.innerText = name;
+    folder.onclick = () => addFocusFunction(folder);
+    return folder
 }
 
 function getByInnerHtml(collection, searched) {
     for (let i = 0; i < collection.length; i++) {
-        if (collection[i].innerHTML == searched)
-            return collection[i]
+        if (collection[i].innerHTML == searched) return collection[i];
     }
 }
 
 function getTree(folderName) {
     let parentElement = document.getElementById("file-tree");
-    return folderName == "" ?
-        parentElement :
-        (getByInnerHtml(parentElement.getElementsByClassName("caret"), folderName)
-            .parentNode.getElementsByClassName("nested")[0])
+    return folderName == ""
+        ? parentElement
+        : getByInnerHtml(
+              parentElement.getElementsByClassName("caret"),
+              folderName
+          ).parentNode.getElementsByClassName("nested")[0];
 }
-
 
 function addHoverFunction(element) {
     element.onmouseenter = () => {
-        if (element != focusedFile) {
-            element.style.backgroundColor = "var(--light-gray)"
-            element.style.color = "var(--bg-color)"
+        if (element != window.currentFile) {
+            element.style.backgroundColor = "var(--light-gray)";
         }
-    }
+    };
     element.onmouseleave = () => {
-        if (element != focusedFile) {
-            toDefaultStyle(element)
+        if (element != window.currentFile) {
+            toDefaultStyle(element);
         }
-    }
+    };
 }
 
 function addFocusFunction(element) {
-    if (focusedFile != null)
-        toDefaultStyle(focusedFile)
-    focusedFile = element;
-    element.style.backgroundColor = "var(--middle-color)"
-    element.style.color = "var(--bg-color)"
+    if (window.currentFile != null) toDefaultStyle(window.currentFile);
+    window.currentFile = element;
+    element.style.backgroundColor = "var(--middle-color)";
+    element.style.color = "var(--bg-color)";
 }
 
 function toDefaultStyle(element) {
-    element.style.backgroundColor = "var(--bg-color)"
-    element.style.color = "var(--main-color)"
+    element.style.backgroundColor = "var(--bg-color)";
+    element.style.color = "var(--main-color)";
 }
 
-createTree()
+function addTreeElement(
+    parent = document.getElementById("file-tree"),
+    isFolder
+) {
+    let divInput = document.createElement("div");
+    if (parent != document.getElementById("file-tree"))
+        divInput.style.marginLeft = "-20px";
+    let input = document.createElement("input");
+    input.style.borderWidth = "0px";
+    input.style.outline = "none";
+    input.style.width = "1px";
+    input.style.padding = "0px";
+    input.style.fontSize = "medium";
 
-export { createLeaf, createParent };
+    console.log(isFolder);
+    divInput.appendChild(input);
+    if (!isFolder) {
+        let format = document.createElement("span");
+        format.innerText = ".rgn";
+        divInput.appendChild(format);
+    }
+    parent.appendChild(divInput);
+
+    input.oninput = () => {
+        input.style.width = input.value.length + "ch";
+    };
+    input.onblur = () => {
+        let name = fixFileName(input.value) + (isFolder ? "" : ".rgn");
+        let element = isFolder
+            ? createFolder(
+                  name,
+                  parent == document.getElementById("file-tree") ? "" : "a",
+                  parent
+              )
+            : createFile(
+                  name,
+                  parent == document.getElementById("file-tree") ? "" : "a",
+                  parent
+              );
+        divInput.insertAdjacentElement("afterend", element.parentElement);
+        divInput.remove();
+    };
+    input.focus();
+}
+
+function fixFileName(name) {
+    let res = name.replace(/[^\w]/gi, "").replace(/^[0-9]+/g, "");
+    if (res == "") return "unnamed";
+    return res;
+}
+
+function checkFileNames(folder) {}
+
+createTree();
+addTreeElement();
+
+export { createLeaf, createParent, addTreeElement };

@@ -2,30 +2,17 @@ import { createLeaf, createParent } from "./filetree.js";
 
 var breakpointsList = []
 var currentBreakpointIndex = 0
-var outputList = []
 
 function addConsoleOutput(output) {
-    breakpointsList[breakpointsList.length - 1].output.push(output)
+    if (breakpointsList.length != 0)
+        breakpointsList[breakpointsList.length - 1].output.push(output)
 }
 
 function removeConsoleOutput(number) {
-
-}
-
-function changeBreakpointColor(lineNumber) {
-    let breakpoints = window.editor.getBreakpoints()
-    if (lineNumber == null) {
-        breakpointsList = []
-        breakpoints.forEach(point => {
-            point.options.glyphMarginClassName = "fas fa-ban inactive-breakpoint"
-        })
-    } else
-        breakpoints.forEach(point => {
-            if (point.range.startLineNumber == lineNumber) {
-                point.options.glyphMarginClassName = "fas fa-circle"
-            }
-        })
-    window.editor.setBreakpoints(breakpoints)
+    let records = document.getElementById("console").getElementsByClassName("console-record")
+    for (let i = 0; i < number; i++) {
+        records.removeChild(records.lastElementChild)
+    }
 }
 
 function nextBreakpoint() {
@@ -68,7 +55,6 @@ function changeCurrentIndex() {
 }
 
 function addBreakpoint(point) {
-    console.log(point)
     breakpointsList.push({ output: [], scope: traverseMap(point) })
 }
 
@@ -131,31 +117,32 @@ function showDebuggingScope(scope) {
     debugPanel.style = "display:block;";
     settingsPanel.style = "display:none;";
     highlightBreakpointLine(parseInt(scope["@position"].second_1) + 1)
-    for (const [key, value] of Object.entries(scope)) {
+    let locals = Object.entries(scope);
+    for (const [key, value] of locals) {
         if (key[0] == "@")
             continue
         if (isCollection(value)) {
             createCollection(key, value.second_1, value.first_1, scope)
         } else { createNonCollection(key, value.second_1, value.first_1) }
     }
-    // empty debug panel
-    // create all elements
+    if (locals.length == 2) {
+        let noLocals = document.createElement("span");
+        noLocals.innerText = "no local variables"
+        noLocals.style.color = "var(--gray)"
+        debugPanel.appendChild(noLocals)
+    }
 }
 
 function createCollection(name, value, type, scope, parent = document.getElementById("debug-panel")) {
     let parentText = createParent(parent)
-
     let ident = createIdentifier(parentText, name)
-
-    let valueSpan;
-    valueSpan = getValueSpan(value, type, scope)
-    let i = 0
+    let valueSpan = getValueSpan(value, type, scope)
 
     parentText.appendChild(valueSpan)
     parentText.setAttribute("cType", type)
     parentText.setAttribute("cValue", value)
     ident.insertAdjacentText('afterend', ": ")
-    parentText.onclick = (e) => {
+    parentText.onclick = () => {
         if (parentText.getAttribute("added") != null)
             return
         let tree = parentText.parentElement.getElementsByTagName("ul")[0]
@@ -202,7 +189,7 @@ function addChildrenToArray(arrayElement, scope, id) {
         else createNonCollection(i, child.second_1, child.first_1, arrayElement)
         i++
     }
-    arrayElement.parentElement.getElementsByClassName("caret")[0].setAttribute("added", "true")
+    arrayElement.setAttribute("added", "true")
 }
 
 function treeFromCaret(caret) {
@@ -211,8 +198,7 @@ function treeFromCaret(caret) {
 
 function addChildrenToDictionary(dictElement, scope, id) {
     let dictChildren = getDictionary(id, scope)
-    let i = 0;
-    for (const [entry, keyVal] of Object.entries(dictChildren)) {
+    for (const [_, keyVal] of Object.entries(dictChildren)) {
         let entryElement = createParent(dictElement);
         entryElement.appendChild(getValueSpan(keyVal.key.second_1, keyVal.key.first_1, scope, true))
         entryElement.insertAdjacentText('beforeend', ": ")
@@ -224,22 +210,19 @@ function addChildrenToDictionary(dictElement, scope, id) {
         if (isCollection(keyVal.value))
             createCollection('value', keyVal.value.second_1, keyVal.value.first_1, scope, tree)
         else createNonCollection('value', keyVal.value.second_1, keyVal.value.first_1, tree)
-        i++
     }
-    dictElement.parentElement.getElementsByClassName("caret")[0].setAttribute("added", "true")
+    dictElement.setAttribute("added", "true")
 }
 
 function addChildrenToType(typeElement, scope, id) {
     let typeChildren = getType(id, scope)
-    let i = 0;
     for (const [ident, property] of Object.entries(typeChildren)) {
         let tree = treeFromCaret(typeElement)
         if (isCollection(property))
             createCollection(ident, property.second_1, property.first_1, scope, tree)
         else createNonCollection(ident, property.second_1, property.first_1, tree)
-        i++
     }
-    typeElement.parentElement.getElementsByClassName("caret")[0].setAttribute("added", "true")
+    typeElement.setAttribute("added", "true")
 }
 
 function getType(id, scope) {
@@ -320,50 +303,8 @@ function createIdentifier(parent, name) {
     return nameSpan
 }
 
-function getCollectionString(scope, collection) {
-    switch (collection.first_1) {
-        case "Type":
-            return collection.second_1
-        case "Array":
-            return getArrayById(collection.second_1, scope["@references"].arrays_1)
-        case "Dictionary":
-            return getDictionaryById(collection.second_1, scope["@references"].dictionaries_1)
-    }
-}
-
 function isCollection(e) {
     return e.first_1 == 'Type' || e.first_1 == 'Array' || e.first_1 == 'Dictionary'
-}
-
-function getArrayById(id, arrays) {
-    let array = arrays[id].properties_1.array_1
-    return "[" + array.slice(0, 4).map(e => shortenedString(e)).join(', ') +
-        (array.length > 4 ? ",..]" : "]");
-}
-
-function shortenedString(e) {
-    return typeof e == 'object' ? shortenedCollectionString(e) : e
-}
-
-function shortenedCollectionString(collection) {
-    switch (collection.first_1) {
-        case "Type":
-            return collection.second_1
-        case "Array":
-            return "[..]"
-        case "Dictionary":
-            return "{..}"
-    }
-}
-
-function getDictionaryById(id, dictionaries) {
-    let dict = dictionaries[id].properties_1
-    return "{" + Object.entries(dict).slice(0, 3).map(([key, value], i) => {
-        if (key[0] == "@") {
-            return shortenedString(dict[key].key) + ":" + shortenedString(dict[key].value)
-        }
-        return key + ":" + shortenedString(value)
-    }).join(', ') + (Object.keys(dict).length > 2 ? ",..}" : "}");
 }
 
 function highlightBreakpointLine(lineNumber) {
@@ -394,7 +335,21 @@ function unhighlightBreakpointLine(lineNumber) {
     window.editor.revealLine(lineNumber);
 }
 
-function loadDebuggingFold(foldElement, scope, elementId) {}
+function changeBreakpointColor(lineNumber) {
+    let breakpoints = window.editor.getBreakpoints()
+    if (lineNumber == null) {
+        breakpointsList = []
+        breakpoints.forEach(point => {
+            point.options.glyphMarginClassName = "fas fa-ban inactive-breakpoint"
+        })
+    } else
+        breakpoints.forEach(point => {
+            if (point.range.startLineNumber == lineNumber) {
+                point.options.glyphMarginClassName = "fas fa-circle"
+            }
+        })
+    window.editor.setBreakpoints(breakpoints)
+}
 
 export default {};
 export {
@@ -403,5 +358,6 @@ export {
     startDebugging,
     nextBreakpoint,
     previousBreakpoint,
-    toCaretBreakpoint
+    toCaretBreakpoint,
+    addConsoleOutput
 }

@@ -20,78 +20,86 @@
                 </ul>
             </div>
             <div class="horizontal-resizer">
-                <button id="hide-settings" style="font-family: 'Fira Code'; bottom: 2px; font-size:var(--font-size)">
+                <button id="show-settings" style="font-family: 'Fira Code'; bottom: 2px; font-size:var(--font-size)">
                     Settings
                 </button>
-                <button id="hide-settings" style="font-family: 'Fira Code'; bottom: 2px; font-size:var(--font-size)">
+                <button id="show-debug" style="font-family: 'Fira Code'; bottom: 2px; font-size:var(--font-size)">
                     Debug
                 </button>
             </div>
-            <div id="settings-panel" class="stacked" style="display:none">
-                <div class="grid-container">
-                    <div class="grid-item">Theme
-                        <div class='description'></div>
-                    </div>
-                    <div class="grid-item">
-                        <button id='theme-button' onclick='changeTheme(this)'>light</button>
-                    </div>
-                    <div class="grid-item">Autosave, seconds
-                        <div class='description'>0 to disable</div>
-                    </div>
-                    <div class="grid-item">
-                        <input id="save-seconds" type="number" min="0" max="1000"> </input>
-                    </div>
-                    <div class="grid-item">Console entries
-                        <div class='description'>qty before overflow</div>
-                    </div>
-                    <div class="grid-item">
-                        <input id="console-entries" type="number" min="0" max="1000"> </input>
-                    </div>
-                    <div class="grid-item">Reset all
-                        <div class='description'>all settings to defaults, all code to default</div>
-                    </div>
-                    <div class="grid-item">
-                        <button id="reset-all">do reset</button>
-                    </div>
-                    <div class="grid-item">Save lib files to local
-                        <div class='description'>if there is no internet, local files will be used</div>
-                    </div>
-                    <div class="grid-item">
-                        <label class="switch">
+            <div id="bottom-left-panel" class="stacked">
+                <div id="settings-panel" style="display:block">
+                    <div class="grid-container">
+                        <div class="grid-item">Theme
+                            <div class='description'></div>
+                        </div>
+                        <div class="grid-item">
+                            <button id='theme-button' onclick='changeTheme(this)'>light</button>
+                        </div>
+                        <div class="grid-item">Autosave, seconds
+                            <div class='description'>0 to disable</div>
+                        </div>
+                        <div class="grid-item">
+                            <input id="save-seconds" type="number" min="0" max="1000"> </input>
+                        </div>
+                        <div class="grid-item">Console entries
+                            <div class='description'>qty before overflow</div>
+                        </div>
+                        <div class="grid-item">
+                            <input id="console-entries" type="number" min="0" max="1000"> </input>
+                        </div>
+                        <div class="grid-item">Font size
+                            <div class='description'>in editor</div>
+                        </div>
+                        <div class="grid-item">
+                            <input id="font-size" type="number" min="5" max="50"> </input>
+                        </div>
+                        <div class="grid-item">Reset all
+                            <div class='description'>all settings to defaults, all code to default</div>
+                        </div>
+                        <div class="grid-item">
+                            <button id="reset-all">do reset</button>
+                        </div>
+                        <div class="grid-item">Save lib files to local
+                            <div class='description'>if there is no internet, local files will be used</div>
+                        </div>
+                        <div class="grid-item">
+                            <label class="switch">
                             <input type="checkbox">
                             <span class="slider round"></span>
                           </label>
-                    </div>
+                        </div>
 
 
-                    <!-- Not implemented -->
-                    <div class="grid-item" style='display: none;'>Texture
-                        <div class='description'></div>
-                    </div>
-                    <div class="grid-item" style='display: none;'>
-                        <!-- Rough means there is a texture on every svg.Incredibels 2 titles for reference -->
-                        <button id='texture-button' onclick='changeTexture(this)'>rough</button>
-                    </div>
-                    <div class="grid-item"><a href="https://docs.google.com/forms/d/e/1FAIpQLScqsdD7BmKWK_GJgfmLQ1V8e8mvegwPUHe-TxpnOGZP95Y-xQ/viewform" target="_blank">Leave feedback</a>
-                        <div class='description'></div>
-                    </div>
-                    <div class="grid-item">
+                        <!-- Not implemented -->
+                        <div class="grid-item" style='display: none;'>Texture
+                            <div class='description'></div>
+                        </div>
+                        <div class="grid-item" style='display: none;'>
+                            <!-- Rough means there is a texture on every svg.Incredibels 2 titles for reference -->
+                            <button id='texture-button' onclick='changeTexture(this)'>rough</button>
+                        </div>
+                        <div class="grid-item"><a href="https://docs.google.com/forms/d/e/1FAIpQLScqsdD7BmKWK_GJgfmLQ1V8e8mvegwPUHe-TxpnOGZP95Y-xQ/viewform" target="_blank">Leave feedback</a>
+                            <div class='description'></div>
+                        </div>
+                        <div class="grid-item">
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div id="debug-panel" class="stacked" style="display:block">
-                <div id="debug-button-panel">
-                    <button title="previous breakpoint">
+                <div id="debug-panel" style="display:none">
+                    <div id="debug-button-panel">
+                        <button title="previous breakpoint">
                         <i class="fa-solid fa-circle"></i>
                         <i class="fa-solid fa-arrow-left"></i>
                     </button>
-                    <button title="next breakpoint">
+                        <button title="next breakpoint">
                         <i class="fa-solid fa-arrow-right"></i>
                         <i class="fa-solid fa-circle"></i></button>
-                    <button title="to breakpoint on caret position">
+                        <button title="to breakpoint on caret position">
                         <i class="fa-solid fa-arrow-right"></i>
                         <i class="fa-solid fa-i-cursor"></i></button>
-                    <span></span>
+                        <span style="border-left: var(--light-gray) solid 1px; padding-left: 10px;">0/0</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -115,20 +123,8 @@
                         <div class="tab tab-opaque" hidden>
                             <p class="tab-child tab-opaque">sdmain.pgdd</p>
                         </div>
-                        <div class="tab" draggable="true">
+                        <div class="tab" draggable="true" style="display:none;">
                             <p class="tab-child">main.pg</p>
-                            <button class=" tab-child close">✕</button>
-                        </div>
-                        <div class="tab">
-                            <p class="tab-child">main.pg</p>
-                            <button class=" tab-child close">✕</button>
-                        </div>
-                        <div class="tab">
-                            <p class="tab-child">defaults.pg</p>
-                            <button class=" tab-child close">✕</button>
-                        </div>
-                        <div class="tab">
-                            <p class="tab-child">functions.pg</p>
                             <button class=" tab-child close">✕</button>
                         </div>
                     </div>
@@ -159,9 +155,11 @@
     </div>
     <div id="file-tree-menu" style="display:none;">
         <p>add file</p>
-        <p>delete file</p>
+        <p>add folder</p>
+        <p>delete</p>
     </div>
     <script type="module" src="js/external/editor.js"></script>
+    <script type="module" src="js/tab.js"></script>
     <script type="module" src="js/index.js"></script>
     <script type="module" src="js/execution.js"></script>
     <script type="module" src="js/resizer.js"></script>
