@@ -1,4 +1,11 @@
-import {getBreakpointsList, getBreakpointsIndex, setBreakpointsList, setBreakpointsIndex } from "./debug.js"
+import {
+    getBreakpointsList,
+    getBreakpointsIndex,
+    setBreakpointsList,
+    setBreakpointsIndex,
+} from "./debug.js";
+
+import { addBreakpointsToCode } from "./execution.js";
 
 /**
  * name: name to display in tab
@@ -70,10 +77,42 @@ class Tab {
         };
     }
 }
+// localStorage.removeItem("generators/plant.rgn")
+// localStorage.removeItem("generators/house.rgn")
+// localStorage.removeItem("generators/animal.rgn")
+// localStorage.removeItem("main.js")
+console.log(localStorage);
+
+window.getFileContentByPath = async function (path) {
+    // check if currently opened - in that case breakpoints are important
+    if (window.tabs[path] != null) {
+        console.log("adding bpoints");
+        return addBreakpointsToCode(
+            window.tabs[path].model.getValue(),
+            window.tabs[path].bList
+        );
+    }
+    let isLocal = localStorage.getItem(path);
+    if (isLocal == null) {
+        let res = (
+            await (
+                await fetch("https://alex5041.github.io/reginafiles/" + path)
+            ).text()
+        ).toString();
+        if (
+            res.includes(
+                "Hey! You look a little lost. This page doesn't exist (or may be private)"
+            )
+        )
+            return null;
+        else return res;
+    }
+    return isLocal.code == null ? isLocal.model.getValue() : isLocal.code;
+};
 
 async function openTab(path, isLib) {
     let found = window.tabs[path];
-    if (found != null && typeof found != "string") {
+    if (found != null) {
         switchTab(found);
         return;
     }
@@ -87,25 +126,23 @@ async function openTab(path, isLib) {
         ).toString();
     } else {
         let saved = JSON.parse(localStorage.getItem(path));
-        code = saved.code;
-        tab.state = saved.state;
+        if (saved != null) {
+            code = saved.code;
+            tab.state = saved.state;
+            tab.bList = saved.bList;
+        } else {
+            code = "";
+        }
     }
-    if (
-        code.includes(
-            "Hey! You look a little lost. This page doesn't exist (or may be private)"
-        )
-    )
-        code = "// Library file not found";
 
     window.tabs[path] = tab;
     tab.path = path;
     tab.isLib = isLib;
-    tab.breakpointsList = [];
-    tab.currentBreakpointIndex = 0;
+
     require(["vs/editor/editor.main"], function () {
         tab.model = monaco.editor.createModel(code, "Regina");
-        console.log(tab.state);
         if (tab.state != null) window.editor.restoreViewState(tab.state);
+        if (tab.bList == null) tab.bList = [];
         switchTab(tab);
     });
 }
@@ -120,6 +157,7 @@ function switchTab(tab) {
         codeLens: tab.isLib == "true",
     });
     window.editor.focus();
+    window.editor.setBreakpoints(tab.bList);
 }
 
 function closeTab(tab) {
@@ -151,4 +189,4 @@ function findTab(path) {
 }
 
 export default {};
-export { openTab };
+export { openTab, switchTab, closeTab };

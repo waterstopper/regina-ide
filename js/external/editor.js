@@ -4,13 +4,17 @@ import * as themes from "/js/external/themes.js";
 async function getFile(path) {
     // lib file
     if (localStorage.getItem(path) == null) {
-        let res = (await (await fetch("https://alex5041.github.io/reginafiles/" + path)).text()).toString()
+        let res = (
+            await (
+                await fetch("https://alex5041.github.io/reginafiles/" + path)
+            ).text()
+        ).toString();
         //console.log(res, typeof res)
-        return res
-            // .then((response) => response.text())
-            // .then((code) => {
-            //     console.log(code);
-            // });
+        return res;
+        // .then((response) => response.text())
+        // .then((code) => {
+        //     console.log(code);
+        // });
     }
     // user file
     else return localStorage.getItem(path);
@@ -370,20 +374,20 @@ require(["vs/editor/editor.main"], function () {
         lineDecorationsWidth: 0,
         lineNumbersMinChars: 0,
     });
-    let bList = [];
-    var breakpoints = window.editor.deltaDecorations([breakpoints], bList);
+
+    var breakpoints = window.editor.deltaDecorations([breakpoints], []);
 
     window.editor.onMouseDown(function (e) {
         if (e.target.type === 2) {
             if (e.target.element.className.includes("codicon")) {
-                bList = bList.filter(
+                window.currentTab.bList = window.currentTab.bList.filter(
                     (breakpoint) =>
                         breakpoint.range.startLineNumber !==
                         e.target.position.lineNumber
                 );
             } else {
                 let pos = e.target.position;
-                bList.push({
+                window.currentTab.bList.push({
                     range: new monaco.Range(
                         pos.lineNumber,
                         1,
@@ -398,11 +402,14 @@ require(["vs/editor/editor.main"], function () {
                 });
             }
         }
-        breakpoints = window.editor.deltaDecorations(breakpoints, bList);
+        breakpoints = window.editor.deltaDecorations(
+            breakpoints,
+            window.currentTab.bList
+        );
     });
 
     window.editor.getBreakpoints = function () {
-        return bList;
+        return window.currentTab.bList;
     };
 
     window.editor.setBreakpoints = function (list) {
@@ -437,7 +444,7 @@ require(["vs/editor/editor.main"], function () {
 
     var openedFiles = {};
     window.editor.openFile = async function (path) {
-        let code = await getFile(path)
+        let code = await getFile(path);
         openedFiles[path] = monaco.editor.createModel(code, "Regina");
         window.editor.setModel(openedFiles[path]);
     };
@@ -445,10 +452,10 @@ require(["vs/editor/editor.main"], function () {
         openedFiles[path].dispose();
         localStorage.removeItem("file:" + path);
     };
-    window.editor.switchFile = function(path) {
-        window.editor.setModel(openedFiles[path])
-    }
-   // window.editor.openFile("s")
+    window.editor.switchFile = function (path) {
+        window.editor.setModel(openedFiles[path]);
+    };
+    // window.editor.openFile("s")
     // window.editor.closeFile("s")
     // window.editor.openFile("s")
     //window.m1 = monaco.editor.createModel()

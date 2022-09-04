@@ -20,9 +20,24 @@ function createTree() {
         })
         .then((text) => JSON.parse(text))
         .then((layout) => {
-            addFolderBeforeLoad(document.getElementById("file-tree"), fileSystem, fileSystem, false)
-            addFolderBeforeLoad(document.getElementById("file-tree"), layout, fileSystem, true);
-            openTab("intro.rgn", "true")
+            if (fileSystem.resources == null){
+                fileSystem.resources = { isLib: false, content: {} };
+                localStorage.setItem("layout", JSON.stringify(fileSystem))
+            }
+            console.log(fileSystem);
+            addFolderBeforeLoad(
+                document.getElementById("file-tree"),
+                fileSystem,
+                fileSystem,
+                false
+            );
+            addFolderBeforeLoad(
+                document.getElementById("file-tree"),
+                layout,
+                fileSystem,
+                true
+            );
+            openTab("intro.rgn", "true");
         })
         .catch((_) => {
             console.log("Could not load");
@@ -61,7 +76,12 @@ function addFolderBeforeLoad(
                 if (fileSystemFolder[name] == null)
                     fileSystemFolder[name] = { isLib: "true", content: {} };
             }
-            addFolderBeforeLoad(folder, entry.content, fileSystemFolder[name].content, isLib);
+            addFolderBeforeLoad(
+                folder,
+                entry.content,
+                fileSystemFolder[name].content,
+                isLib
+            );
         } else {
             let file = createFile(
                 name,
@@ -100,7 +120,8 @@ function createFile(fileName = "myFile.rgn", folderName = "", parent) {
     file.ondblclick = () => {
         openTab(file.getAttribute("path"), file.getAttribute("lib"));
     };
-    if (parent != document.getElementById("file-tree")) file.parentElement.style.marginLeft = "-20px";
+    if (parent != document.getElementById("file-tree"))
+        file.parentElement.style.marginLeft = "-20px";
 
     file.parentElement.style.padding = "0px";
     let path = getPath(file);
@@ -131,7 +152,8 @@ function createFolder(name = "myFolder", folderName = "", parent) {
     let folder = createParent(tree);
     folder.innerText = name;
     folder.onclick = () => addFocusFunction(folder);
-    if (parent != document.getElementById("file-tree")) folder.parentElement.style.marginLeft = "-20px";
+    if (parent != document.getElementById("file-tree"))
+        folder.parentElement.style.marginLeft = "-20px";
     let path = getPath(folder);
     folder.setAttribute("path", path);
     return folder;
@@ -226,8 +248,10 @@ function addFile(path) {
     let fileName = path[path.length - 1];
     let folderNames = path.slice(0, -1);
     let currentFolder = fileSystem;
-    for (let folderName of folderNames)
+    for (let folderName of folderNames){
+        console.log(currentFolder, folderName)
         currentFolder = currentFolder[folderName].content;
+    }
     while (currentFolder[fileName] != null) fileName = nextName(fileName);
     currentFolder[fileName] = fileName.includes(".")
         ? "1"
@@ -244,7 +268,7 @@ function deleteFile(path) {
     for (let folderName of folderNames)
         currentFolder = currentFolder[folderName];
     delete currentFolder[fileName];
-    localStorage.setItem('layout', JSON.stringify(fileSystem))
+    localStorage.setItem("layout", JSON.stringify(fileSystem));
 }
 
 function fixFileName(name) {
@@ -261,8 +285,9 @@ function nextName(fileName) {
         else break;
     }
     let length = res.length;
-    if (length == 0) return name + (format == null ? "" : "1." + format);
+    if (length == 0) return name + (format == null ? "1" : "1." + format);
     let nextNumber = parseInt(res.reverse().join("")) + 1;
+    console.log(nextNumber);
     return (
         name.substring(0, name.length - length) +
         nextNumber +
@@ -271,6 +296,5 @@ function nextName(fileName) {
 }
 
 createTree();
-
 
 export { createLeaf, createParent, addTreeElement, deleteFile };

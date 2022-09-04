@@ -1,4 +1,6 @@
 import { createLeaf, createParent } from "./filetree.js";
+import { switchTab } from "./tab.js";
+import { hideLeftPanel } from "./index.js";
 
 var breakpointsList = [];
 var currentBreakpointIndex = 0;
@@ -125,11 +127,20 @@ function transformLinkedHashMap(map) {
 function startDebugging() {
     if (breakpointsList.length == 0) return;
     currentBreakpointIndex = 0;
+    if (
+        document.getElementsByClassName("container-left")[0].style.display ==
+        "none"
+    ) {
+        console.log("clicked")
+        hideLeftPanel();
+    }
     changeCurrentIndex();
     showDebuggingScope(breakpointsList[currentBreakpointIndex].scope);
 }
 
 function showDebuggingScope(scope) {
+    let breakpointTab = window.tabs[scope["@file"]];
+    if (breakpointTab != window.currentTab) switchTab(breakpointTab);
     let debugPanel = document.getElementById("debug-panel");
     let buttons = document.getElementById("debug-button-panel");
     debugPanel.innerHTML = "";
@@ -479,5 +490,5 @@ export {
     getBreakpointsList,
     getBreakpointsIndex,
     setBreakpointsList,
-    setBreakpointsIndex
+    setBreakpointsIndex,
 };

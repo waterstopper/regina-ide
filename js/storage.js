@@ -27,7 +27,10 @@ document.getElementById("reset-all").onmousedown = () => {
     interval = setInterval(function () {
         if (index == 0) {
             clearInterval(interval);
-            document.getElementById("reset-all").innerText = "do reset";
+            document.getElementById("reset-all").innerText = "succesful!";
+            console.log("reset")
+            localStorage.clear()
+            setDefaults()
         } else document.getElementById("reset-all").innerText = "hold " + index + "...";
         index--;
     }, 1000);
@@ -81,11 +84,14 @@ function setDefaults() {
     localStorage.setItem("theme", "light");
     localStorage.setItem("autosaveSeconds", 3);
     localStorage.setItem("consoleEntries", 100);
-    localStorage.setItem("fontSize", 20);
+    localStorage.setItem("fontSize", 14);
     localStorage.setItem("settingsSize", 48);
     localStorage.setItem("leftSize", 33);
     localStorage.setItem("rightSize", 33);
     localStorage.setItem("consoleSize", 48);
+
+    localStorage.setItem("autosave", "true")
+    localStorage.setItem("layout", "{}")
     localStorage.setItem(
         "main.rgn",
         `
@@ -110,6 +116,10 @@ function openSettings() {
         localStorage.getItem("consoleEntries");
     document.getElementById("font-size").value =
         localStorage.getItem("fontSize");
+    console.log(localStorage.getItem("autosave"), localStorage.getItem("autosave") == "true")
+    document.getElementById("autosave").checked =
+        localStorage.getItem("autosave") == "true";
+    console.log(document.getElementById("autosave").checked)
     updateFontSize();
 }
 

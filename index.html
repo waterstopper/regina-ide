@@ -16,10 +16,16 @@
     <div class="container">
         <div class="container-left">
             <div class="stacked" id="file-panel">
+                <span id="unpicked-delete" style="display:none;color:var(--gray); font-size: small;"><i
+                        class="fa-solid fa-circle-info" style="color:var(--gray)"></i> Click on element to select, then
+                    try again</span>
+                <span id="unsupported-format" style="display:none;color:var(--yellow); font-size: small;"><i
+                        class="fa-solid fa-triangle-exclamation" style="color:var(--yellow)"></i> Only rgn files are
+                    executable</span>
                 <span id="delete-library-files" style="display:none;color:var(--yellow); font-size: small;"><i
                         class="fa-solid fa-triangle-exclamation" style="color:var(--yellow)"></i> Cannot delete library
                     files</span>
-                    <span id="add-library-folders" style="display:none;color:var(--yellow); font-size: small;"><i
+                <span id="add-library-folders" style="display:none;color:var(--yellow); font-size: small;"><i
                         class="fa-solid fa-triangle-exclamation" style="color:var(--yellow)"></i> Cannot add to library
                     folders</span>
                 <ul id="file-tree" style="margin-left: 0px;">
@@ -66,12 +72,12 @@
                         <div class="grid-item">
                             <button id="reset-all">do reset</button>
                         </div>
-                        <div class="grid-item">Save lib files to local
+                        <div class="grid-item">Autosave file changes on tab close/page reload
                             <div class='description'>if there is no internet, local files will be used</div>
                         </div>
                         <div class="grid-item">
                             <label class="switch">
-                                <input type="checkbox">
+                                <input id="autosave" type="checkbox">
                                 <span class="slider round"></span>
                             </label>
                         </div>
@@ -122,7 +128,7 @@
                         <button title="run" id="start-button"><i class="fas fa-play"
                                 style="color:var(--green);"></i></button>
                         <button title="debug" id="debug-button"><i class="fa-solid fa-bug"></i></button>
-                        <button title="terminate" id="halt-button" onclick=terminateExecution()><i class="fas fa-stop"
+                        <button title="terminate" id="terminate-button"><i class="fas fa-stop"
                                 style="color:var(--red);"></i></button>
                         <button title="save manually (autosave happens every 3 seconds)" id="save-button">
                             <i class="fas fa-floppy-disk" style="color:var(--middle-color);"></i>

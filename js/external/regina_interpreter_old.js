@@ -1,10 +1,7 @@
 importScripts("kotlin_kotlin.js");
 
-var addImport;
-var startImport;
-var writeFromMainWorker;
-var currentImportNode;
-var currentRoots;
+var evaluateJS;
+var requestImport;
 
 (function (root, factory) {
     if (typeof define === "function" && define.amd)
@@ -39,11 +36,11 @@ var currentRoots;
         kotlin_kotlin.$crossModule$.ArrayList_init_$Create$_1;
     var Triple = kotlin_kotlin.$crossModule$.Triple;
     var toList = kotlin_kotlin.$crossModule$.toList;
-    var emptyList = kotlin_kotlin.$crossModule$.emptyList;
-    var last = kotlin_kotlin.$crossModule$.last;
-    var first = kotlin_kotlin.$crossModule$.first;
-    var removeLast = kotlin_kotlin.$crossModule$.removeLast;
     var toString = kotlin_kotlin.$crossModule$.toString_2;
+    var collectionSizeOrDefault =
+        kotlin_kotlin.$crossModule$.collectionSizeOrDefault;
+    var ArrayList_init_$Create$_0 =
+        kotlin_kotlin.$crossModule$.ArrayList_init_$Create$;
     var toString_0 = kotlin_kotlin.$crossModule$.toString_1;
     var getKClass = kotlin_kotlin.$crossModule$.getKClass;
     var listOf = kotlin_kotlin.$crossModule$.listOf;
@@ -52,8 +49,6 @@ var currentRoots;
     var numberToInt = kotlin_kotlin.$crossModule$.numberToInt;
     var toDouble = kotlin_kotlin.$crossModule$.toDouble;
     var charSequenceLength = kotlin_kotlin.$crossModule$.charSequenceLength;
-    var ArrayList_init_$Create$_0 =
-        kotlin_kotlin.$crossModule$.ArrayList_init_$Create$;
     var charSequenceGet = kotlin_kotlin.$crossModule$.charSequenceGet;
     var toString_1 = kotlin_kotlin.$crossModule$.toString;
     var to = kotlin_kotlin.$crossModule$.to;
@@ -63,10 +58,13 @@ var currentRoots;
         kotlin_kotlin.$crossModule$.FloatCompanionObject_getInstance;
     var _get_lastIndex__339712501 =
         kotlin_kotlin.$crossModule$._get_lastIndex__339712501;
+    var emptyList = kotlin_kotlin.$crossModule$.emptyList;
     var listOf_0 = kotlin_kotlin.$crossModule$.listOf_1;
     var getStringHashCode = kotlin_kotlin.$crossModule$.getStringHashCode;
     var ensureNotNull = kotlin_kotlin.$crossModule$.ensureNotNull;
-    var println = kotlin_kotlin.$crossModule$.println;
+    var last = kotlin_kotlin.$crossModule$.last;
+    var first = kotlin_kotlin.$crossModule$.first;
+    var removeLast = kotlin_kotlin.$crossModule$.removeLast;
     var Pair = kotlin_kotlin.$crossModule$.Pair;
     var Char = kotlin_kotlin.$crossModule$.Char;
     var _Char___init__impl__380027157 =
@@ -84,16 +82,14 @@ var currentRoots;
     var toCharArray = kotlin_kotlin.$crossModule$.toCharArray;
     var throwUninitializedPropertyAccessException =
         kotlin_kotlin.$crossModule$.throwUninitializedPropertyAccessException;
-    var collectionSizeOrDefault =
-        kotlin_kotlin.$crossModule$.collectionSizeOrDefault;
     var joinToString$default = kotlin_kotlin.$crossModule$.joinToString$default;
     var captureStack = kotlin_kotlin.$crossModule$.captureStack;
     var Exception = kotlin_kotlin.$crossModule$.Exception;
     var Exception_init_$Init$ =
         kotlin_kotlin.$crossModule$.Exception_init_$Init$;
+    var split$default = kotlin_kotlin.$crossModule$.split$default_1;
     var getKClassFromExpression =
         kotlin_kotlin.$crossModule$.getKClassFromExpression;
-    var split$default = kotlin_kotlin.$crossModule$.split$default_1;
     var first_0 = kotlin_kotlin.$crossModule$.first_1;
     var plus = kotlin_kotlin.$crossModule$.plus_1;
     var toMutableList = kotlin_kotlin.$crossModule$.toMutableList;
@@ -283,6 +279,7 @@ var currentRoots;
         kind: "interface",
         interfaces: [],
     };
+
     function elementToDebug(element, references) {
         var tmp;
         if (!isInterface(element, NestableDebug)) {
@@ -354,12 +351,14 @@ var currentRoots;
         }
         return tmp;
     }
+
     function NestableDebug() {}
     NestableDebug.$metadata$ = {
         simpleName: "NestableDebug",
         kind: "interface",
         interfaces: [],
     };
+
     function DebugType(properties) {
         this.properties_1 = properties;
     }
@@ -385,6 +384,7 @@ var currentRoots;
         kind: "class",
         interfaces: [Debug],
     };
+
     function DebugArray(properties) {
         this.properties_1 = properties;
     }
@@ -410,6 +410,7 @@ var currentRoots;
         kind: "class",
         interfaces: [Debug],
     };
+
     function DebugDictionary(properties) {
         this.properties_1 = properties;
     }
@@ -435,6 +436,7 @@ var currentRoots;
         kind: "class",
         interfaces: [Debug],
     };
+
     function References_init_$Init$(
         types,
         arrays,
@@ -487,6 +489,7 @@ var currentRoots;
         References.call($this, types, arrays, dictionaries, queue);
         return $this;
     }
+
     function References_init_$Create$(
         types,
         arrays,
@@ -505,6 +508,7 @@ var currentRoots;
             Object.create(References.prototype)
         );
     }
+
     function References(types, arrays, dictionaries, queue) {
         this.types_1 = types;
         this.arrays_1 = arrays;
@@ -528,6 +532,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function Logger() {
         Logger_instance = this;
         var tmp = this;
@@ -565,135 +570,21 @@ var currentRoots;
     }
 
     function main() {
-        writeFromMainWorker = (path, content) => {
-            if (content == null)
-                // check importNode again
-                PathBuilder_getInstance().getFullPath_tjb74u_k$(
-                    currentImportNode,
-                    currentRoots,
-                    false
-                );
-            FileSystem_getInstance().write_kwtaoc_k$(path, content);
-        };
-        startImport = (startFileName) => {
-            var tmp =
-                PathBuilder_getInstance().getNodes_jwpeo6_k$(startFileName);
-            var igc = new ImportGraphCreator(
-                startFileName,
-                tmp,
-                mutableListOf([""])
+        evaluateJS = (arg) =>
+            Evaluation_getInstance().eval_6yi0cr_k$(
+                arg[0],
+                toList(arg).subList_d153ha_k$(1, arg.length)
             );
-            createGraphJS(igc);
-            requestNextImportJS(igc);
-            addImport = (fileName) => {
-                // adding import
-                addNextImportJS(igc, fileName);
-                // requesting next import or starting evaluation
-                requestNextImportJS(igc);
-            };
-        };
         postMessage({ type: "ready" });
     }
-    function createGraphJS(importGraphCreator) {
-        importGraphCreator
-            ._get_visitedTables__1623761026_ququ0y_k$()
-            .add_1j60pz_k$(
-                new FileTable(
-                    importGraphCreator._get_mainFileName__2583226955_sb4jat_k$(),
-                    (importGraphCreator
-                        ._get_imports__1703642979_s6azc3_k$()
-                        ._get_size__809037418_ddoh9m_k$() +
-                        1) |
-                        0
-                )
-            );
-        Unit_getInstance();
-        {
-            var tmp0_set_0 =
-                importGraphCreator._get_imports__1703642979_s6azc3_k$();
-            var tmp1_set_0 =
-                importGraphCreator._get_mainFileName__2583226955_sb4jat_k$();
-            var tmp2_set_0 = last(
-                importGraphCreator._get_visitedTables__1623761026_ququ0y_k$()
-            );
-            tmp0_set_0.put_3mhbri_k$(tmp1_set_0, tmp2_set_0);
-            Unit_getInstance();
-        }
-        importGraphCreator.addDeclarationsToFileTable_bug9i2_k$(
-            first(
-                importGraphCreator._get_visitedTables__1623761026_ququ0y_k$()
-            ),
-            importGraphCreator._get_startingNodes__3650654368_anlv1c_k$()
-        );
-    }
-    function addNextImportJS(importGraphCreator, fileName) {
-        var nodes = PathBuilder_getInstance().getNodes_jwpeo6_k$(fileName);
-        var nextFileTable = removeLast(
-            importGraphCreator._get_importStack__3899561998_6jewoi_k$()
-        );
-        importGraphCreator
-            ._get_visitedTables__1623761026_ququ0y_k$()
-            .add_1j60pz_k$(nextFileTable);
-        Unit_getInstance();
-        importGraphCreator.addDeclarationsToFileTable_bug9i2_k$(
-            nextFileTable,
-            nodes
-        );
-    }
-    function requestNextImportJS(importGraphCreator) {
-        var tmp$ret$0;
-        $l$block: {
-            var tmp0_isNotEmpty_0 =
-                importGraphCreator._get_importStack__3899561998_6jewoi_k$();
-            tmp$ret$0 = !tmp0_isNotEmpty_0.isEmpty_y1axqb_k$();
-            break $l$block;
-        }
-        if (tmp$ret$0)
-            sendMessage(
-                new Message(
-                    "import",
-                    last(
-                        importGraphCreator._get_importStack__3899561998_6jewoi_k$()
-                    )._get_fileName__149290628_2gvtdw_k$()
-                )
-            );
-        else {
-            startEvaluationJS(importGraphCreator);
-        }
-    }
-    function startEvaluationJS(igc) {
-        initializeSuperTypes(igc._get_supertypes__1291562605_lcyo31_k$());
-        var tmp0_iterator = igc
-            ._get_visitedTables__1623761026_ququ0y_k$()
-            .iterator_jk1svi_k$();
-        while (tmp0_iterator.hasNext_bitz1p_k$()) {
-            var fileTable = tmp0_iterator.next_20eer_k$();
-            new Analyzer(fileTable);
-            Unit_getInstance();
-        }
-        var tmp = first(igc._get_visitedTables__1623761026_ququ0y_k$())
-            .getMain_18urbl_k$()
-            ._get_body__793495785_d4fd9l_k$();
-        tmp.evaluate_hfj3qo_k$(
-            SymbolTable_init_$Create$(
-                null,
-                null,
-                first(igc._get_visitedTables__1623761026_ququ0y_k$()),
-                false,
-                3,
-                null
-            )
-        );
-        Unit_getInstance();
-        postMessage({ type: "finished" });
-        close();
-    }
+
     function Optional_init_$Init$(value, isGood, $mask0, $marker, $this) {
         if (!(($mask0 & 1) === 0)) value = null;
         if (!(($mask0 & 2) === 0)) isGood = false;
         Optional.call($this, value, isGood);
         return $this;
     }
+
     function Optional_init_$Create$(value, isGood, $mask0, $marker) {
         return Optional_init_$Init$(
             value,
@@ -703,6 +594,7 @@ var currentRoots;
             Object.create(Optional.prototype)
         );
     }
+
     function Optional(value, isGood) {
         this.value_1 = value;
         this.isGood_1 = isGood;
@@ -744,6 +636,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function Tuple4(first, second, third, fourth) {
         this.first_1 = first;
         this.second_1 = second;
@@ -809,18 +702,38 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function Evaluation() {
         Evaluation_instance = this;
         this.trainingWheels_1 = true;
     }
-    Evaluation.prototype.evaluate_n4zkb6_k$ = function (fileName, roots) {
-        var fileTable = analyzeSemantics$default(
-            fileName,
-            roots,
-            null,
-            4,
-            null
-        );
+    Evaluation.prototype.eval_6yi0cr_k$ = function (code, roots) {
+        var tmp$ret$2;
+        $l$block_1: {
+            var tmp0_map_0 = Parser_init_$Create$(code).statements_3k22vw_k$();
+            var tmp$ret$1;
+            $l$block_0: {
+                var tmp0_mapTo_0_1 = ArrayList_init_$Create$_0(
+                    collectionSizeOrDefault(tmp0_map_0, 10)
+                );
+                var tmp0_iterator_1_2 = tmp0_map_0.iterator_jk1svi_k$();
+                while (tmp0_iterator_1_2.hasNext_bitz1p_k$()) {
+                    var item_2_3 = tmp0_iterator_1_2.next_20eer_k$();
+                    var tmp$ret$0;
+                    $l$block: {
+                        tmp$ret$0 = item_2_3.toNode_edekmb_k$();
+                        break $l$block;
+                    }
+                    tmp0_mapTo_0_1.add_1j60pz_k$(tmp$ret$0);
+                    Unit_getInstance();
+                }
+                tmp$ret$1 = tmp0_mapTo_0_1;
+                break $l$block_0;
+            }
+            tmp$ret$2 = tmp$ret$1;
+            break $l$block_1;
+        }
+        var fileTable = analyzeSemantics("@NoFile", roots, tmp$ret$2);
         var tmp = fileTable
             .getMain_18urbl_k$()
             ._get_body__793495785_d4fd9l_k$();
@@ -835,14 +748,17 @@ var currentRoots;
         interfaces: [],
     };
     var Evaluation_instance;
+
     function Evaluation_getInstance() {
         if (Evaluation_instance == null) new Evaluation();
         return Evaluation_instance;
     }
+
     function createIdent($this, node, name) {
         var tmp = node._get_position__3188952002_iahqv2_k$();
         return Node_init_$Create$(name, name, tmp, null, 8, null);
     }
+
     function FunctionFactory$initializeEmbedded$lambda() {
         return function (token, args) {
             sendMessage(
@@ -860,6 +776,7 @@ var currentRoots;
             return Unit_getInstance();
         };
     }
+
     function FunctionFactory$initializeEmbedded$lambda_0() {
         return function (token, args) {
             var tmp = toString_0(
@@ -880,6 +797,7 @@ var currentRoots;
             );
         };
     }
+
     function FunctionFactory$initializeEmbedded$lambda_1() {
         return function (
             _anonymous_parameter_0__2695192052,
@@ -888,6 +806,7 @@ var currentRoots;
             return readLine();
         };
     }
+
     function FunctionFactory$initializeEmbedded$lambda_2() {
         return function (token, args) {
             var fileName = FunctionFactory_getInstance().getIdent_dfe2u9_k$(
@@ -931,6 +850,7 @@ var currentRoots;
             return Unit_getInstance();
         };
     }
+
     function FunctionFactory$initializeEmbedded$lambda_3() {
         return function (token, args) {
             var fileName = FunctionFactory_getInstance().getIdent_dfe2u9_k$(
@@ -952,11 +872,12 @@ var currentRoots;
                 );
             } else {
             }
-            return FileSystem_getInstance().read(
+            return FileSystem_getInstance().read_bwmtyj_k$(
                 fileName.getPValue_berniv_k$()
             );
         };
     }
+
     function FunctionFactory$initializeEmbedded$lambda_4() {
         return function (token, args) {
             var fileName = FunctionFactory_getInstance().getIdent_dfe2u9_k$(
@@ -985,6 +906,7 @@ var currentRoots;
             );
         };
     }
+
     function FunctionFactory$initializeEmbedded$lambda_5() {
         return function (token, args) {
             var fileName = FunctionFactory_getInstance().getIdent_dfe2u9_k$(
@@ -1013,6 +935,7 @@ var currentRoots;
             );
         };
     }
+
     function FunctionFactory$initializeEmbedded$lambda_6() {
         return function (token, args) {
             var ident = FunctionFactory_getInstance().getIdent_dfe2u9_k$(
@@ -1045,6 +968,7 @@ var currentRoots;
             return Unit_getInstance();
         };
     }
+
     function FunctionFactory$initializeEmbedded$lambda_7() {
         return function (
             _anonymous_parameter_0__2695192052,
@@ -1053,6 +977,7 @@ var currentRoots;
             return FunctionFactory_getInstance().rnd_1.nextDouble_s2xvfg_k$();
         };
     }
+
     function FunctionFactory$initializeEmbedded$lambda_8() {
         return function (token, args) {
             var seed = FunctionFactory_getInstance().getIdent_dfe2u9_k$(
@@ -1085,6 +1010,7 @@ var currentRoots;
             return Unit_getInstance();
         };
     }
+
     function FunctionFactory$initializeEmbedded$lambda_9() {
         return function (token, args) {
             return toString_0(
@@ -1096,6 +1022,7 @@ var currentRoots;
             );
         };
     }
+
     function FunctionFactory$initializeEmbedded$lambda_10() {
         return function (token, args) {
             var argument = FunctionFactory_getInstance().getIdent_dfe2u9_k$(
@@ -1130,6 +1057,7 @@ var currentRoots;
             return tmp;
         };
     }
+
     function FunctionFactory$initializeEmbedded$lambda_11() {
         return function (token, args) {
             var argument = FunctionFactory_getInstance().getIdent_dfe2u9_k$(
@@ -1164,6 +1092,7 @@ var currentRoots;
             return tmp;
         };
     }
+
     function FunctionFactory$initializeEmbedded$lambda_12() {
         return function (token, args) {
             var argument = FunctionFactory_getInstance().getIdent_dfe2u9_k$(
@@ -1291,6 +1220,7 @@ var currentRoots;
             return tmp;
         };
     }
+
     function FunctionFactory$initializeEmbedded$lambda_13() {
         return function (token, args) {
             var argument = FunctionFactory_getInstance().getIdent_dfe2u9_k$(
@@ -1333,6 +1263,7 @@ var currentRoots;
             return tmp;
         };
     }
+
     function FunctionFactory$initializeEmbedded$lambda_14() {
         return function (token, args) {
             var argument = FunctionFactory_getInstance().getIdent_dfe2u9_k$(
@@ -1375,6 +1306,7 @@ var currentRoots;
             return tmp;
         };
     }
+
     function FunctionFactory$initializeEmbedded$lambda_15() {
         return function (token, args) {
             var argument = FunctionFactory_getInstance().getIdent_dfe2u9_k$(
@@ -1417,6 +1349,7 @@ var currentRoots;
             return tmp;
         };
     }
+
     function FunctionFactory$initializeEmbedded$lambda_16() {
         return function (token, args) {
             var argument = FunctionFactory_getInstance().getIdent_dfe2u9_k$(
@@ -1459,6 +1392,7 @@ var currentRoots;
             return tmp;
         };
     }
+
     function FunctionFactory$initializeEmbedded$lambda_17() {
         return function (token, args) {
             var argument = FunctionFactory_getInstance().getIdent_dfe2u9_k$(
@@ -1501,6 +1435,7 @@ var currentRoots;
             return tmp;
         };
     }
+
     function FunctionFactory$initializeEmbedded$lambda_18() {
         return function (token, args) {
             var first = numberToDouble(
@@ -1570,6 +1505,7 @@ var currentRoots;
             return tmp;
         };
     }
+
     function FunctionFactory$initializeEmbedded$lambda_19() {
         return function (token, args) {
             var instance = FunctionFactory_getInstance().getIdent_dfe2u9_k$(
@@ -1647,6 +1583,7 @@ var currentRoots;
             return tmp;
         };
     }
+
     function FunctionFactory() {
         FunctionFactory_instance = this;
         this.randomSeed_1 = 42;
@@ -2129,10 +2066,12 @@ var currentRoots;
         interfaces: [],
     };
     var FunctionFactory_instance;
+
     function FunctionFactory_getInstance() {
         if (FunctionFactory_instance == null) new FunctionFactory();
         return FunctionFactory_instance;
     }
+
     function Message(type, content) {
         this.type_1 = type;
         this.content_1 = content;
@@ -2207,6 +2146,63 @@ var currentRoots;
         configurable: true,
         get: Message.prototype._get_content__1558689208_ps04ag_k$,
     });
+
+    function addDeclarationsToFileTable($this, fileTable, nodes) {
+        var tmp0_iterator = nodes.iterator_jk1svi_k$();
+        while (tmp0_iterator.hasNext_bitz1p_k$()) {
+            var node = tmp0_iterator.next_20eer_k$();
+            var tmp1_subject = node;
+            if (tmp1_subject instanceof ImportNode)
+                fileTable.addImport_wgtzok_k$(
+                    node,
+                    getFileTableByName(
+                        $this,
+                        PathBuilder_getInstance().getFullPath_tjb74u_k$(
+                            node._get_fileName__149290628_2gvtdw_k$(),
+                            $this.roots_1
+                        )
+                    )
+                );
+            else {
+                if (tmp1_subject instanceof FunctionNode)
+                    fileTable.addFunction_5sy9lo_k$(
+                        FunctionFactory_getInstance().createFunction_29w3jx_k$(
+                            node
+                        )
+                    );
+                else {
+                    if (tmp1_subject instanceof TypeNode) {
+                        var type = fileTable.addType_ye6w96_k$(node);
+                        {
+                            var tmp0_set_0 = $this.supertypes_1;
+                            var tmp1_set_0 =
+                                node._get_superTypeNode__300917434_4z5pdm_k$();
+                            tmp0_set_0.put_3mhbri_k$(type, tmp1_set_0);
+                            Unit_getInstance();
+                        }
+                    } else {
+                        if (tmp1_subject instanceof ObjectNode)
+                            fileTable.addObject_iiux36_k$(node);
+                        else {
+                            if (tmp1_subject instanceof Meta) {
+                            } else {
+                                throw PositionalException_init_$Create$(
+                                    "Only class, object or function can be top level declaration",
+                                    node,
+                                    null,
+                                    0,
+                                    null,
+                                    28,
+                                    null
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     function getFileTableByName($this, name) {
         if ($this.imports_1.get_1mhr4y_k$(name) == null) {
             {
@@ -2225,6 +2221,7 @@ var currentRoots;
         }
         return ensureNotNull($this.imports_1.get_1mhr4y_k$(name));
     }
+
     function ImportGraphCreator(mainFileName, startingNodes, roots) {
         this.mainFileName_1 = mainFileName;
         this.startingNodes_1 = startingNodes;
@@ -2258,14 +2255,6 @@ var currentRoots;
         }
         tmp_2.importStack_1 = tmp$ret$3;
     }
-    ImportGraphCreator.prototype._get_mainFileName__2583226955_sb4jat_k$ =
-        function () {
-            return this.mainFileName_1;
-        };
-    ImportGraphCreator.prototype._get_startingNodes__3650654368_anlv1c_k$ =
-        function () {
-            return this.startingNodes_1;
-        };
     ImportGraphCreator.prototype._get_visitedTables__1623761026_ququ0y_k$ =
         function () {
             return this.visitedTables_1;
@@ -2273,14 +2262,6 @@ var currentRoots;
     ImportGraphCreator.prototype._get_supertypes__1291562605_lcyo31_k$ =
         function () {
             return this.supertypes_1;
-        };
-    ImportGraphCreator.prototype._get_imports__1703642979_s6azc3_k$ =
-        function () {
-            return this.imports_1;
-        };
-    ImportGraphCreator.prototype._get_importStack__3899561998_6jewoi_k$ =
-        function () {
-            return this.importStack_1;
         };
     ImportGraphCreator.prototype.createGraph_hzqy5d_k$ = function () {
         this.visitedTables_1.add_1j60pz_k$(
@@ -2297,7 +2278,8 @@ var currentRoots;
             tmp0_set_0.put_3mhbri_k$(tmp1_set_0, tmp2_set_0);
             Unit_getInstance();
         }
-        this.addDeclarationsToFileTable_bug9i2_k$(
+        addDeclarationsToFileTable(
+            this,
             first(this.visitedTables_1),
             this.startingNodes_1
         );
@@ -2314,7 +2296,8 @@ var currentRoots;
             var nextFileTable = removeLast(this.importStack_1);
             this.visitedTables_1.add_1j60pz_k$(nextFileTable);
             Unit_getInstance();
-            this.addDeclarationsToFileTable_bug9i2_k$(
+            addDeclarationsToFileTable(
+                this,
                 nextFileTable,
                 PathBuilder_getInstance().getNodes_jwpeo6_k$(
                     nextFileTable._get_fileName__149290628_2gvtdw_k$()
@@ -2322,79 +2305,23 @@ var currentRoots;
             );
         }
     };
-    ImportGraphCreator.prototype.addDeclarationsToFileTable_bug9i2_k$ =
-        function (fileTable, nodes) {
-            var tmp0_iterator = nodes.iterator_jk1svi_k$();
-            while (tmp0_iterator.hasNext_bitz1p_k$()) {
-                var node = tmp0_iterator.next_20eer_k$();
-                var tmp1_subject = node;
-                if (tmp1_subject instanceof ImportNode)
-                    fileTable.addImport_wgtzok_k$(
-                        node,
-                        getFileTableByName(
-                            this,
-                            PathBuilder_getInstance().getFullPath_tjb74u_k$(
-                                node._get_fileName__149290628_2gvtdw_k$(),
-                                this.roots_1,
-                                true
-                            )
-                        )
-                    );
-                else {
-                    if (tmp1_subject instanceof FunctionNode)
-                        fileTable.addFunction_5sy9lo_k$(
-                            FunctionFactory_getInstance().createFunction_29w3jx_k$(
-                                node
-                            )
-                        );
-                    else {
-                        if (tmp1_subject instanceof TypeNode) {
-                            var type = fileTable.addType_ye6w96_k$(node);
-                            {
-                                var tmp0_set_0 = this.supertypes_1;
-                                var tmp1_set_0 =
-                                    node._get_superTypeNode__300917434_4z5pdm_k$();
-                                tmp0_set_0.put_3mhbri_k$(type, tmp1_set_0);
-                                Unit_getInstance();
-                            }
-                        } else {
-                            if (tmp1_subject instanceof ObjectNode)
-                                fileTable.addObject_iiux36_k$(node);
-                            else {
-                                if (tmp1_subject instanceof Meta) {
-                                } else {
-                                    {
-                                        throw PositionalException_init_$Create$(
-                                            "Only class, object or function can be top level declaration",
-                                            node,
-                                            null,
-                                            0,
-                                            null,
-                                            28,
-                                            null
-                                        );
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        };
     ImportGraphCreator.$metadata$ = {
         simpleName: "ImportGraphCreator",
         kind: "class",
         interfaces: [],
     };
+
     function Lexer_init_$Init$(source, $this) {
         Lexer.call($this);
         $this.source_1 = source;
         addTokens($this);
         return $this;
     }
+
     function Lexer_init_$Create$(source) {
         return Lexer_init_$Init$(source, Object.create(Lexer.prototype));
     }
+
     function addTokens($this) {
         $this.nodes_1.add_1j60pz_k$(
             Token_init_$Create$(
@@ -2448,6 +2375,7 @@ var currentRoots;
         $this.nodes_1.removeAt_qvpkxi_k$(0);
         Unit_getInstance();
     }
+
     function createNextToken($this) {
         consumeWhitespaceAndComments($this);
         Unit_getInstance();
@@ -2533,6 +2461,7 @@ var currentRoots;
         }
         return tmp_0;
     }
+
     function nextMeta($this) {
         var res = StringBuilder_init_$Create$();
         res.append_t8oh9e_k$(charSequenceGet($this.source_1, $this.index_1));
@@ -2575,6 +2504,7 @@ var currentRoots;
             null
         );
     }
+
     function nextString($this) {
         var res = StringBuilder_init_$Create$();
         moveAndAppend($this, res);
@@ -2654,6 +2584,7 @@ var currentRoots;
             )
         );
     }
+
     function nextIdent($this) {
         var res = StringBuilder_init_$Create$();
         while (
@@ -2687,6 +2618,7 @@ var currentRoots;
             )
         );
     }
+
     function nextNumber($this) {
         var res = StringBuilder_init_$Create$();
         moveAndAppend($this, res);
@@ -2730,6 +2662,7 @@ var currentRoots;
             )
         );
     }
+
     function nextOperator($this) {
         var inductionVariable = ($this.index_1 + 2) | 0;
         var last = $this.index_1;
@@ -2794,6 +2727,7 @@ var currentRoots;
             null
         );
     }
+
     function consumeWhitespaceAndComments($this) {
         var iter = 0;
         var tmp0_container = listOf_0([true, true]);
@@ -2827,6 +2761,7 @@ var currentRoots;
         }
         return iter > 1;
     }
+
     function consumeComments($this) {
         if (
             (
@@ -2934,6 +2869,7 @@ var currentRoots;
         }
         return false;
     }
+
     function consumeWhitespace($this) {
         var res = (
             $this.index_1 < $this.source_1.length
@@ -2955,6 +2891,7 @@ var currentRoots;
         }
         return res;
     }
+
     function isLineSeparator($this) {
         if ($this.index_1 === _get_lastIndex__339712501_0($this.source_1))
             return equals(
@@ -2993,6 +2930,7 @@ var currentRoots;
                   new Char(_Char___init__impl__380027157(10))
               );
     }
+
     function moveAfterLineSeparator($this) {
         if ($this.index_1 === _get_lastIndex__339712501_0($this.source_1))
             return (
@@ -3041,6 +2979,7 @@ var currentRoots;
             ? ($this.index_1 + 1) | 0
             : $this.index_1;
     }
+
     function addToken($this, newNode) {
         if (
             !(
@@ -3054,6 +2993,7 @@ var currentRoots;
             Unit_getInstance();
         }
     }
+
     function move($this, step) {
         var tmp0_this = $this;
         tmp0_this.index_1 = (tmp0_this.index_1 + step) | 0;
@@ -3062,15 +3002,18 @@ var currentRoots;
             $this.position_1._get_second__4255435031_njbah_k$()
         );
     }
+
     function move$default($this, step, $mask0, $handler) {
         if (!(($mask0 & 2) === 0)) step = 1;
         return move($this, step);
     }
+
     function moveAndAppend($this, sb) {
         sb.append_t8oh9e_k$(charSequenceGet($this.source_1, $this.index_1));
         Unit_getInstance();
         move$default($this, 0, 2, null);
     }
+
     function toNextLine($this) {
         $this.index_1 = moveAfterLineSeparator($this);
         $this.position_1 = new Pair(
@@ -3078,16 +3021,19 @@ var currentRoots;
             ($this.position_1._get_second__4255435031_njbah_k$() + 1) | 0
         );
     }
+
     function isFirstIdentChar($this, c) {
         return isLetter(c)
             ? true
             : equals(new Char(c), new Char(_Char___init__impl__380027157(95)));
     }
+
     function isIdentChar($this, c) {
         return isLetterOrDigit(c)
             ? true
             : equals(new Char(c), new Char(_Char___init__impl__380027157(95)));
     }
+
     function isOperatorChar($this, c) {
         var tmp$ret$1;
         $l$block_1: {
@@ -3114,6 +3060,7 @@ var currentRoots;
         }
         return tmp$ret$1;
     }
+
     function Lexer() {
         this.source_1 = "";
         this.operators_1 = '!@$%^*-+=?.,:;"&|/(){}[]><\n\r';
@@ -3234,14 +3181,17 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function Parser_init_$Init$(text, $this) {
         Parser.call($this);
         $this.lexer_1 = Lexer_init_$Create$(text);
         return $this;
     }
+
     function Parser_init_$Create$(text) {
         return Parser_init_$Init$(text, Object.create(Parser.prototype));
     }
+
     function Parser() {}
     Parser.prototype._get_lexer__3401167429_es58e3_k$ = function () {
         var tmp = this.lexer_1;
@@ -3537,6 +3487,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function checkFiles($this, path, roots) {
         var tmp$ret$0;
         $l$block: {
@@ -3554,6 +3505,7 @@ var currentRoots;
         }
         return candidates;
     }
+
     function PathBuilder() {
         PathBuilder_instance = this;
     }
@@ -3586,11 +3538,7 @@ var currentRoots;
         }
         return tmp$ret$2;
     };
-    PathBuilder.prototype.getFullPath_tjb74u_k$ = function (
-        importName,
-        roots,
-        firstTime = false
-    ) {
+    PathBuilder.prototype.getFullPath_tjb74u_k$ = function (importName, roots) {
         var tmp0_subject = importName;
         var tmp;
         if (tmp0_subject instanceof Link) {
@@ -3615,13 +3563,7 @@ var currentRoots;
             }
         }
         var path = tmp;
-        if (firstTime) {
-            currentImportNode = importName;
-            currentRoots = roots;
-            return tmp;
-        }
         var candidates = checkFiles(this, path, roots);
-        console.log(candidates, path, roots);
         if (candidates.isEmpty_y1axqb_k$()) {
             var tmp_0;
             if (importName instanceof Link) {
@@ -3710,10 +3652,12 @@ var currentRoots;
         interfaces: [],
     };
     var PathBuilder_instance;
+
     function PathBuilder_getInstance() {
         if (PathBuilder_instance == null) new PathBuilder();
         return PathBuilder_instance;
     }
+
     function PositionalException_init_$Init$(
         errorMessage,
         node,
@@ -3740,6 +3684,7 @@ var currentRoots;
         );
         return $this;
     }
+
     function PositionalException_init_$Create$(
         errorMessage,
         node,
@@ -3762,6 +3707,7 @@ var currentRoots;
         captureStack(tmp, PositionalException_init_$Create$);
         return tmp;
     }
+
     function PositionalException(errorMessage, node, position, length, file) {
         Exception_init_$Init$(this);
         this.errorMessage_1 = errorMessage;
@@ -3825,6 +3771,7 @@ var currentRoots;
             return this._get_message__1663917034_rinilm_k$();
         },
     });
+
     function SyntaxException_init_$Init$(
         errorMessage,
         token,
@@ -3837,6 +3784,7 @@ var currentRoots;
         SyntaxException.call($this, errorMessage, token, position);
         return $this;
     }
+
     function SyntaxException_init_$Create$(
         errorMessage,
         token,
@@ -3855,6 +3803,7 @@ var currentRoots;
         captureStack(tmp, SyntaxException_init_$Create$);
         return tmp;
     }
+
     function getPosition($this) {
         return !($this.token_1._get_value__3683422336_a43j40_k$() === "")
             ? "" +
@@ -3880,6 +3829,7 @@ var currentRoots;
                   "-" +
                   $this.position_1._get_first__3232921377_hkbbvj_k$();
     }
+
     function SyntaxException(errorMessage, token, position) {
         Exception_init_$Init$(this);
         this.errorMessage_1 = errorMessage;
@@ -3911,6 +3861,7 @@ var currentRoots;
             return this._get_message__1663917034_rinilm_k$();
         },
     });
+
     function NotFoundException_init_$Init$(
         node,
         fileName,
@@ -3929,6 +3880,7 @@ var currentRoots;
         NotFoundException.call($this, node, fileName, file, variable);
         return $this;
     }
+
     function NotFoundException_init_$Create$(
         node,
         fileName,
@@ -3949,6 +3901,7 @@ var currentRoots;
         captureStack(tmp, NotFoundException_init_$Create$);
         return tmp;
     }
+
     function NotFoundException(node, fileName, file, variable) {
         PositionalException_init_$Init$(
             "",
@@ -3991,6 +3944,7 @@ var currentRoots;
             return this._get_message__1663917034_rinilm_k$();
         },
     });
+
     function TokenExpectedTypeException_init_$Init$(
         classes,
         token,
@@ -4011,6 +3965,7 @@ var currentRoots;
         );
         return $this;
     }
+
     function TokenExpectedTypeException_init_$Create$(
         classes,
         token,
@@ -4031,100 +3986,7 @@ var currentRoots;
         captureStack(tmp, TokenExpectedTypeException_init_$Create$);
         return tmp;
     }
-    function TokenExpectedTypeException$_get_message_$lambda_2941932641() {
-        return function (it) {
-            return Utils_getInstance().mapToString_hbz8o4_k$(it);
-        };
-    }
-    function TokenExpectedTypeException(
-        classes,
-        token,
-        value,
-        expectedMultiple
-    ) {
-        SyntaxException_init_$Init$("", token, null, 4, null, this);
-        this.classes_1 = classes;
-        this.value_1 = value;
-        this.expectedMultiple_1 = expectedMultiple;
-        captureStack(this, TokenExpectedTypeException);
-    }
-    TokenExpectedTypeException.prototype._get_message__1663917034_rinilm_k$ =
-        function () {
-            var tmp = this.expectedMultiple_1 ? " and " : " or ";
-            return (
-                "Expected " +
-                joinToString$default(
-                    this.classes_1,
-                    tmp,
-                    null,
-                    null,
-                    0,
-                    null,
-                    TokenExpectedTypeException$_get_message_$lambda_2941932641(),
-                    30,
-                    null
-                ) +
-                (!(this.value_1 == null)
-                    ? ", but got " +
-                      Utils_getInstance().mapToString_hbz8o4_k$(
-                          getKClassFromExpression(this.value_1)
-                      )
-                    : "") +
-                (" " +
-                    this._get_token__3639048440_auim88_k$()._get_position__3188952002_iahqv2_k$())
-            );
-        };
-    TokenExpectedTypeException.$metadata$ = {
-        simpleName: "TokenExpectedTypeException",
-        kind: "class",
-        interfaces: [],
-    };
-    Object.defineProperty(TokenExpectedTypeException.prototype, "message", {
-        configurable: true,
-        get: function () {
-            return this._get_message__1663917034_rinilm_k$();
-        },
-    });
-    function ExpectedTypeException_init_$Init$(
-        classes,
-        node,
-        value,
-        expectedMultiple,
-        $mask0,
-        $marker,
-        $this
-    ) {
-        if (!(($mask0 & 4) === 0)) value = null;
-        if (!(($mask0 & 8) === 0)) expectedMultiple = false;
-        ExpectedTypeException.call(
-            $this,
-            classes,
-            node,
-            value,
-            expectedMultiple
-        );
-        return $this;
-    }
-    function ExpectedTypeException_init_$Create$(
-        classes,
-        node,
-        value,
-        expectedMultiple,
-        $mask0,
-        $marker
-    ) {
-        var tmp = ExpectedTypeException_init_$Init$(
-            classes,
-            node,
-            value,
-            expectedMultiple,
-            $mask0,
-            $marker,
-            Object.create(ExpectedTypeException.prototype)
-        );
-        captureStack(tmp, ExpectedTypeException_init_$Create$);
-        return tmp;
-    }
+
     function mapToString($this, mapped) {
         var tmp0_subject = mapped;
         var tmp;
@@ -4154,11 +4016,143 @@ var currentRoots;
         }
         return tmp;
     }
-    function ExpectedTypeException$_get_message_$lambda_2916805064(this$0) {
+
+    function TokenExpectedTypeException$_get_message_$lambda_2941932641(
+        this$0
+    ) {
         return function (it) {
             return mapToString(this$0, it);
         };
     }
+
+    function TokenExpectedTypeException(
+        classes,
+        token,
+        value,
+        expectedMultiple
+    ) {
+        SyntaxException_init_$Init$("", token, null, 4, null, this);
+        this.classes_1 = classes;
+        this.value_1 = value;
+        this.expectedMultiple_1 = expectedMultiple;
+        captureStack(this, TokenExpectedTypeException);
+    }
+    TokenExpectedTypeException.prototype._get_message__1663917034_rinilm_k$ =
+        function () {
+            var tmp = this.expectedMultiple_1 ? " and " : " or ";
+            return (
+                "Expected " +
+                joinToString$default(
+                    this.classes_1,
+                    tmp,
+                    null,
+                    null,
+                    0,
+                    null,
+                    TokenExpectedTypeException$_get_message_$lambda_2941932641(
+                        this
+                    ),
+                    30,
+                    null
+                ) +
+                (!(this.value_1 == null)
+                    ? ", but got " +
+                      mapToString(this, getKClassFromExpression(this.value_1))
+                    : "") +
+                (" " +
+                    this._get_token__3639048440_auim88_k$()._get_position__3188952002_iahqv2_k$())
+            );
+        };
+    TokenExpectedTypeException.$metadata$ = {
+        simpleName: "TokenExpectedTypeException",
+        kind: "class",
+        interfaces: [],
+    };
+    Object.defineProperty(TokenExpectedTypeException.prototype, "message", {
+        configurable: true,
+        get: function () {
+            return this._get_message__1663917034_rinilm_k$();
+        },
+    });
+
+    function ExpectedTypeException_init_$Init$(
+        classes,
+        node,
+        value,
+        expectedMultiple,
+        $mask0,
+        $marker,
+        $this
+    ) {
+        if (!(($mask0 & 4) === 0)) value = null;
+        if (!(($mask0 & 8) === 0)) expectedMultiple = false;
+        ExpectedTypeException.call(
+            $this,
+            classes,
+            node,
+            value,
+            expectedMultiple
+        );
+        return $this;
+    }
+
+    function ExpectedTypeException_init_$Create$(
+        classes,
+        node,
+        value,
+        expectedMultiple,
+        $mask0,
+        $marker
+    ) {
+        var tmp = ExpectedTypeException_init_$Init$(
+            classes,
+            node,
+            value,
+            expectedMultiple,
+            $mask0,
+            $marker,
+            Object.create(ExpectedTypeException.prototype)
+        );
+        captureStack(tmp, ExpectedTypeException_init_$Create$);
+        return tmp;
+    }
+
+    function mapToString_0($this, mapped) {
+        var tmp0_subject = mapped;
+        var tmp;
+        if (tmp0_subject.equals(getKClass(RFunction))) {
+            tmp = "Function";
+        } else if (tmp0_subject.equals(getKClass(PInt))) {
+            tmp = "Int";
+        } else if (tmp0_subject.equals(getKClass(PDouble))) {
+            tmp = "Double";
+        } else if (tmp0_subject.equals(getKClass(PNumber))) {
+            tmp = "Number";
+        } else if (tmp0_subject.equals(getKClass(PString))) {
+            tmp = "String";
+        } else if (tmp0_subject.equals(getKClass(PArray))) {
+            tmp = "Array";
+        } else if (tmp0_subject.equals(getKClass(PDictionary))) {
+            tmp = "Dictionary";
+        } else if (tmp0_subject.equals(getKClass(Identifier))) {
+            tmp = "Identifier";
+        } else if (tmp0_subject.equals(getKClass(Invocation))) {
+            tmp = "Invocation";
+        } else if (tmp0_subject.equals(getKClass(Index))) {
+            tmp = "Index";
+        } else {
+            var tmp_0 = toString_0(mapped);
+            tmp = last(split$default(tmp_0, ["."], false, 0, 6, null));
+        }
+        return tmp;
+    }
+
+    function ExpectedTypeException$_get_message_$lambda_2916805064(this$0) {
+        return function (it) {
+            return mapToString_0(this$0, it);
+        };
+    }
+
     function ExpectedTypeException(classes, node, value, expectedMultiple) {
         PositionalException_init_$Init$(
             "",
@@ -4193,7 +4187,7 @@ var currentRoots;
                 ) +
                 (!(this.value_1 == null)
                     ? ", but got " +
-                      mapToString(this, getKClassFromExpression(this.value_1))
+                      mapToString_0(this, getKClassFromExpression(this.value_1))
                     : "") +
                 (" " +
                     this._get_node__804577417_db0vwp_k$()._get_position__3188952002_iahqv2_k$())
@@ -4210,6 +4204,7 @@ var currentRoots;
             return this._get_message__1663917034_rinilm_k$();
         },
     });
+
     function register($this, symbol, bp, nud, led, std) {
         if (!($this.table_1.get_1mhr4y_k$(symbol) == null)) {
             var value = ensureNotNull($this.table_1.get_1mhr4y_k$(symbol));
@@ -4249,6 +4244,7 @@ var currentRoots;
             Unit_getInstance();
         }
     }
+
     function Registry$prefix$lambda() {
         return function (t, p) {
             t._get_children__1387553196_my42wc_k$().add_1j60pz_k$(
@@ -4258,6 +4254,7 @@ var currentRoots;
             return t;
         };
     }
+
     function Registry$unaryMinus$lambda() {
         return function (t, p) {
             t._get_children__1387553196_my42wc_k$().add_1j60pz_k$(
@@ -4282,6 +4279,7 @@ var currentRoots;
             return tmp;
         };
     }
+
     function Registry$infix$lambda() {
         return function (t, p, left) {
             t._get_children__1387553196_my42wc_k$().add_1j60pz_k$(left);
@@ -4295,11 +4293,13 @@ var currentRoots;
             return t;
         };
     }
+
     function Registry$symbol$lambda() {
         return function (t, _anonymous_parameter_1__2695192083) {
             return t;
         };
     }
+
     function Registry$infixRight$lambda() {
         return function (t, p, left) {
             t._get_children__1387553196_my42wc_k$().add_1j60pz_k$(left);
@@ -4313,6 +4313,7 @@ var currentRoots;
             return t;
         };
     }
+
     function Registry() {
         var tmp = this;
         var tmp$ret$0;
@@ -4467,6 +4468,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function sequence($this, node, parser) {
         var comma = false;
         while (true) {
@@ -4488,6 +4490,7 @@ var currentRoots;
             comma = true;
         }
     }
+
     function isLinkable($this, node) {
         if (!isInterface(node, Linkable)) {
             var tmp = listOf_0([
@@ -4531,6 +4534,7 @@ var currentRoots;
         } else {
         }
     }
+
     function checkImportedFolder($this, link) {
         var tmp0_iterator = link
             ._get_children__1387553196_my42wc_k$()
@@ -4548,6 +4552,7 @@ var currentRoots;
             }
         }
     }
+
     function checkIdentifierInImport($this, node) {
         var tmp;
         if (node instanceof TokenIdentifier) {
@@ -4562,6 +4567,7 @@ var currentRoots;
         }
         return tmp;
     }
+
     function RegistryFactory$getRegistry$lambda() {
         return function (node, _anonymous_parameter_1__2695192083) {
             return new TokenNumber(
@@ -4570,6 +4576,7 @@ var currentRoots;
             );
         };
     }
+
     function RegistryFactory$getRegistry$lambda_0() {
         return function (node, _anonymous_parameter_1__2695192083) {
             return new TokenNumber(
@@ -4578,6 +4585,7 @@ var currentRoots;
             );
         };
     }
+
     function RegistryFactory$getRegistry$lambda_1() {
         return function (node, parser, left) {
             node._get_children__1387553196_my42wc_k$().add_1j60pz_k$(left);
@@ -4609,6 +4617,7 @@ var currentRoots;
             return node;
         };
     }
+
     function RegistryFactory$getRegistry$lambda_2() {
         return function (node, parser, left) {
             var tmp;
@@ -4655,6 +4664,7 @@ var currentRoots;
             return node;
         };
     }
+
     function RegistryFactory$getRegistry$lambda_3() {
         return function (node, parser, left) {
             var res = TokenIndex_init_$Create$(node);
@@ -4681,6 +4691,7 @@ var currentRoots;
             return res;
         };
     }
+
     function RegistryFactory$getRegistry$lambda_4() {
         return function (node, parser) {
             var comma = false;
@@ -4728,6 +4739,7 @@ var currentRoots;
             return tmp_0;
         };
     }
+
     function RegistryFactory$getRegistry$lambda_5() {
         return function (node, parser) {
             var res = new TokenArray(node);
@@ -4751,6 +4763,7 @@ var currentRoots;
             return res;
         };
     }
+
     function RegistryFactory$getRegistry$lambda_6() {
         return function (node, parser) {
             var res = new TokenDictionary(node);
@@ -4808,6 +4821,7 @@ var currentRoots;
             return res;
         };
     }
+
     function RegistryFactory$getRegistry$lambda_7() {
         return function (node, parser) {
             var res = new TokenTernary(node);
@@ -4833,6 +4847,7 @@ var currentRoots;
             return res;
         };
     }
+
     function RegistryFactory$getRegistry$lambda_8() {
         return function (node, parser) {
             var res = new TokenBlock(node);
@@ -4873,6 +4888,7 @@ var currentRoots;
             return res;
         };
     }
+
     function RegistryFactory$getRegistry$lambda_9() {
         return function (node, parser) {
             var res = new TokenImport(node);
@@ -4979,6 +4995,7 @@ var currentRoots;
             return res;
         };
     }
+
     function RegistryFactory$getRegistry$lambda_10() {
         return function (node, parser) {
             var res = new TokenType(node);
@@ -5018,6 +5035,7 @@ var currentRoots;
             return res;
         };
     }
+
     function RegistryFactory$getRegistry$lambda_11() {
         return function (node, parser) {
             var res = new TokenObject(node);
@@ -5032,6 +5050,7 @@ var currentRoots;
             return res;
         };
     }
+
     function RegistryFactory$getRegistry$lambda_12() {
         return function (node, parser) {
             var res = new TokenFunction(node);
@@ -5046,6 +5065,7 @@ var currentRoots;
             return res;
         };
     }
+
     function RegistryFactory$getRegistry$lambda_13() {
         return function (node, parser) {
             var res = new TokenBlock(node);
@@ -5059,6 +5079,7 @@ var currentRoots;
             return res;
         };
     }
+
     function RegistryFactory$getRegistry$lambda_14() {
         return function (node, parser) {
             var res = new TokenBlock(node);
@@ -5074,6 +5095,7 @@ var currentRoots;
             return res;
         };
     }
+
     function RegistryFactory$getRegistry$lambda_15() {
         return function (node, parser) {
             if (
@@ -5088,6 +5110,7 @@ var currentRoots;
             return new TokenWordStatement(node);
         };
     }
+
     function RegistryFactory$getRegistry$lambda_16() {
         return function (node, parser) {
             if (
@@ -5102,6 +5125,7 @@ var currentRoots;
             return new TokenWordStatement(node);
         };
     }
+
     function RegistryFactory$getRegistry$lambda_17() {
         return function (node, parser) {
             var res = new TokenWordStatement(node);
@@ -5127,11 +5151,13 @@ var currentRoots;
             return res;
         };
     }
+
     function RegistryFactory$getRegistry$lambda_18() {
         return function (node, _anonymous_parameter_1__2695192083) {
             return node;
         };
     }
+
     function RegistryFactory() {
         RegistryFactory_instance = this;
     }
@@ -5256,10 +5282,12 @@ var currentRoots;
         interfaces: [],
     };
     var RegistryFactory_instance;
+
     function RegistryFactory_getInstance() {
         if (RegistryFactory_instance == null) new RegistryFactory();
         return RegistryFactory_instance;
     }
+
     function initializeSuperTypes(superTypes) {
         var tmp$ret$0;
         $l$block: {
@@ -5463,6 +5491,7 @@ var currentRoots;
             );
         }
     }
+
     function analyzeSemantics(startingFileName, roots, nodes) {
         var importGraphCreator = new ImportGraphCreator(
             startingFileName,
@@ -5485,18 +5514,7 @@ var currentRoots;
             importGraphCreator._get_visitedTables__1623761026_ququ0y_k$()
         );
     }
-    function analyzeSemantics$default(
-        startingFileName,
-        roots,
-        nodes,
-        $mask0,
-        $handler
-    ) {
-        if (!(($mask0 & 4) === 0))
-            nodes =
-                PathBuilder_getInstance().getNodes_jwpeo6_k$(startingFileName);
-        return analyzeSemantics(startingFileName, roots, nodes);
-    }
+
     function analyzeType($this, type, fileTable) {
         var table = SymbolTable_init_$Create$(
             null,
@@ -5551,6 +5569,7 @@ var currentRoots;
             );
         }
     }
+
     function changeInvocationType($this, node, symbolTable, inProperty) {
         var iterator = node
             ._get_children__1387553196_my42wc_k$()
@@ -5666,6 +5685,7 @@ var currentRoots;
             }
         }
     }
+
     function changeInvocationType$default(
         $this,
         node,
@@ -5677,6 +5697,7 @@ var currentRoots;
         if (!(($mask0 & 8) === 0)) inProperty = false;
         return changeInvocationType($this, node, symbolTable, inProperty);
     }
+
     function changeInvocationsInLink($this, node, symbolTable, inProperty) {
         if (isInvocation($this, node._get_left__802434852_d9qyp0_k$())) {
             TokenFactory_getInstance().createSpecificInvocation_ycswry_k$(
@@ -5732,6 +5753,7 @@ var currentRoots;
             }
         }
     }
+
     function isInvocation($this, node) {
         var tmp;
         var tmp_0;
@@ -5751,6 +5773,7 @@ var currentRoots;
         }
         return tmp;
     }
+
     function addFunctionParametersToTable($this, function_0, table) {
         var tmp0_iterator = function_0
             ._get_nonDefaultParams__3666398385_ae8evj_k$()
@@ -5780,6 +5803,7 @@ var currentRoots;
         }
         return table;
     }
+
     function Analyzer(fileTable) {
         var tmp0_iterator = plus(
             fileTable.getTypes_wiwjwj_k$()._get_values__2516944425_tel787_k$(),
@@ -5808,12 +5832,14 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function Assignable() {}
     Assignable.$metadata$ = {
         simpleName: "Assignable",
         kind: "interface",
         interfaces: [],
     };
+
     function Declaration(symbol, value, position, children) {
         Node.call(this, symbol, value, position, toMutableList(children));
     }
@@ -5822,6 +5848,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function ImportNode(symbol, value, position, children) {
         Declaration.call(
             this,
@@ -5842,6 +5869,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function FunctionNode(symbol, value, position, children) {
         Declaration.call(
             this,
@@ -5856,6 +5884,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function TypeNode(symbol, value, position, children) {
         Declaration.call(
             this,
@@ -5879,6 +5908,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function ObjectNode(symbol, value, position, children) {
         Declaration.call(
             this,
@@ -5893,16 +5923,19 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function Identifier_init_$Init$(value, $this) {
         Identifier.call($this, value, value, new Pair(0, 0));
         return $this;
     }
+
     function Identifier_init_$Create$(value) {
         return Identifier_init_$Init$(
             value,
             Object.create(Identifier.prototype)
         );
     }
+
     function Identifier(symbol, value, position) {
         Node_init_$Init$(symbol, value, position, null, 8, null, this);
     }
@@ -6017,6 +6050,7 @@ var currentRoots;
         kind: "class",
         interfaces: [Assignable, Linkable],
     };
+
     function checkNextVariable($this, index, table, initialTable, variable) {
         var tmp0_subject = $this
             ._get_children__1387553196_my42wc_k$()
@@ -6151,6 +6185,7 @@ var currentRoots;
             }
         }
     }
+
     function checkFirstVariable($this, index, table, initialTable, canBeFile) {
         var tmp0_subject = $this
             ._get_children__1387553196_my42wc_k$()
@@ -6250,6 +6285,7 @@ var currentRoots;
             }
         }
     }
+
     function checkFirstVariable$default(
         $this,
         index,
@@ -6262,6 +6298,7 @@ var currentRoots;
         if (!(($mask0 & 16) === 0)) canBeFile = true;
         return checkFirstVariable($this, index, table, initialTable, canBeFile);
     }
+
     function addFile($this, table) {
         var tmp0_elvis_lhs = table.getImportOrNull_hhw2v8_k$(
             $this
@@ -6277,6 +6314,7 @@ var currentRoots;
         var fileTable = tmp;
         return table.changeFile_n27o1t_k$(fileTable);
     }
+
     function resolveFunctionCall(
         $this,
         index,
@@ -6345,6 +6383,7 @@ var currentRoots;
             currentVariable
         );
     }
+
     function safeEvaluate($this, parent, symbolTable) {
         var currentParent = null;
         var table = symbolTable.copy_1tks5_k$();
@@ -6434,6 +6473,7 @@ var currentRoots;
         index = (index - 1) | 0;
         return new Tuple4(tmp_5, tmp_6, null, index);
     }
+
     function Link(symbol, value, position, children) {
         Node_init_$Init$(symbol, value, position, null, 8, null, this);
         var tmp$ret$1;
@@ -6636,17 +6676,12 @@ var currentRoots;
         }
         if (tmp) {
             var tmp_0 =
-                "Expected class instance, got " +
-                Utils_getInstance().mapToString_hbz8o4_k$(
-                    getKClassFromExpression(currentParent)
-                );
-            var tmp_1 =
                 this._get_children__1387553196_my42wc_k$().get_fkrdnv_k$(
                     (index - 1) | 0
                 );
             throw PositionalException_init_$Create$(
+                "Expected class instance",
                 tmp_0,
-                tmp_1,
                 null,
                 0,
                 null,
@@ -6671,7 +6706,7 @@ var currentRoots;
                 : false
         ) {
             var tmp1_elvis_lhs = parent.getLinkedAssignment_dmryla_k$(this, 0);
-            var tmp_2;
+            var tmp_1;
             if (tmp1_elvis_lhs == null) {
                 throw PositionalException_init_$Create$(
                     "Assignment not found",
@@ -6683,9 +6718,9 @@ var currentRoots;
                     null
                 );
             } else {
-                tmp_2 = tmp1_elvis_lhs;
+                tmp_1 = tmp1_elvis_lhs;
             }
-            return new Pair(parent, tmp_2);
+            return new Pair(parent, tmp_1);
         }
         return new Pair(
             (currentParent == null ? true : currentParent instanceof Type)
@@ -6719,12 +6754,14 @@ var currentRoots;
         kind: "class",
         interfaces: [Assignable],
     };
+
     function Linkable() {}
     Linkable.$metadata$ = {
         simpleName: "Linkable",
         kind: "interface",
         interfaces: [],
     };
+
     function Meta(symbol, value, position) {
         Node_init_$Init$(symbol, value, position, null, 8, null, this);
     }
@@ -6752,6 +6789,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function Node_init_$Init$(
         symbol,
         value,
@@ -6777,6 +6815,7 @@ var currentRoots;
         Node.call($this, symbol, value, position, children);
         return $this;
     }
+
     function Node_init_$Create$(
         symbol,
         value,
@@ -6795,6 +6834,7 @@ var currentRoots;
             Object.create(Node.prototype)
         );
     }
+
     function Node$traverseUnresolvedOptional$lambda($symbolTable, $parent) {
         return function (it) {
             var tmp0_subject = it;
@@ -6923,6 +6963,7 @@ var currentRoots;
             return tmp;
         };
     }
+
     function Node(symbol, value, position, children) {
         this.symbol_1 = symbol;
         this.value_1 = value;
@@ -7082,6 +7123,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function TokenFactory() {
         TokenFactory_instance = this;
         this.nonArithmeticOperators_1 = listOf_0(["+", "==", "!="]);
@@ -7477,10 +7519,12 @@ var currentRoots;
         interfaces: [],
     };
     var TokenFactory_instance;
+
     function TokenFactory_getInstance() {
         if (TokenFactory_instance == null) new TokenFactory();
         return TokenFactory_instance;
     }
+
     function getParamName($this, index, function_0) {
         var tmp;
         if (
@@ -7532,6 +7576,7 @@ var currentRoots;
         }
         return tmp;
     }
+
     function Call(node) {
         Invocation.call(
             this,
@@ -7813,6 +7858,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function evaluateType($this, type, symbolTable) {
         resolveArguments($this, type, symbolTable);
         return symbolTable._get_resolvingType__1126639278_imrsfi_k$()
@@ -7824,6 +7870,7 @@ var currentRoots;
                       .changeScope_rjxbi4_k$()
               );
     }
+
     function resolveArguments($this, type, symbolTable) {
         var tmp0_iterator = $this
             ._get_children__1387553196_my42wc_k$()
@@ -7880,6 +7927,7 @@ var currentRoots;
         }
         type.setProperty_tmx3oq_k$("this", type);
     }
+
     function Constructor(node) {
         Invocation.call(
             this,
@@ -7932,6 +7980,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function Invocation(symbol, value, position, children) {
         Node.call(this, symbol, value, position, toMutableList(children));
     }
@@ -7956,6 +8005,7 @@ var currentRoots;
         kind: "class",
         interfaces: [Linkable],
     };
+
     function evaluateDuplicatedOperators($this, first, second, node) {
         var a = numberToDouble(first);
         var b = numberToDouble(second);
@@ -7991,11 +8041,13 @@ var currentRoots;
         }
         return tmp;
     }
+
     function evaluateUnaryMinus($this, number) {
         return isDouble(number)
             ? -numberToDouble(number)
             : -numberToInt(number) | 0;
     }
+
     function evaluateNot($this, symbolTable) {
         var res = $this
             ._get_left__802434852_d9qyp0_k$()
@@ -8014,6 +8066,7 @@ var currentRoots;
             null
         );
     }
+
     function ArithmeticOperator(symbol, value, position, children) {
         Operator.call(this, symbol, value, position, toMutableList(children));
     }
@@ -8199,6 +8252,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function getIndexableAndIndex($this, symbolTable) {
         var indexable = symbolTable.getIdentifier_f5yrxq_k$(
             $this._get_left__802434852_d9qyp0_k$()
@@ -8233,6 +8287,7 @@ var currentRoots;
             null
         );
     }
+
     function Index$getFirstUnassigned$lambda($parent, $symbolTable) {
         return function (it) {
             var tmp;
@@ -8258,6 +8313,7 @@ var currentRoots;
             return tmp;
         };
     }
+
     function Index(symbol, value, position, children) {
         Node_init_$Init$(symbol, value, position, null, 8, null, this);
         this._get_children__1387553196_my42wc_k$().clear_j9y8zo_k$();
@@ -8422,6 +8478,7 @@ var currentRoots;
         kind: "class",
         interfaces: [Assignable, Linkable],
     };
+
     function NodeTernary(node) {
         Node.call(
             this,
@@ -8467,6 +8524,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function plus_1(_this__1828080292, $this, other, node) {
         if (isInterface(_this__1828080292, MutableList)) {
             var tmp;
@@ -8528,6 +8586,7 @@ var currentRoots;
             }
         }
     }
+
     function eq(_this__1828080292, $this, other) {
         var tmp;
         if (isNumber(_this__1828080292)) {
@@ -8692,9 +8751,11 @@ var currentRoots;
         }
         return equals(_this__1828080292, other);
     }
+
     function neq(_this__1828080292, $this, other) {
         return !eq(_this__1828080292, $this, other);
     }
+
     function Operator(symbol, value, position, children) {
         Node.call(this, symbol, value, position, toMutableList(children));
     }
@@ -8762,6 +8823,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function evaluateTypeCheck($this, symbolTable) {
         var checked = Utils_getInstance().toVariable_abd9s8_k$(
             $this
@@ -8860,6 +8922,7 @@ var currentRoots;
         }
         return tmp;
     }
+
     function TypeOperator(symbol, value, position, children) {
         Operator.call(this, symbol, value, position, children);
     }
@@ -8895,6 +8958,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function Assignment(symbol, value, position, children) {
         Operator.call(this, symbol, value, position, children);
         this._get_children__1387553196_my42wc_k$().clear_j9y8zo_k$();
@@ -9007,12 +9071,14 @@ var currentRoots;
     var CycleStatement_BREAK_instance;
     var CycleStatement_CONTINUE_instance;
     var CycleStatement_entriesInitialized;
+
     function CycleStatement_initEntries() {
         if (CycleStatement_entriesInitialized) return Unit_getInstance();
         CycleStatement_entriesInitialized = true;
         CycleStatement_BREAK_instance = new CycleStatement("BREAK", 0);
         CycleStatement_CONTINUE_instance = new CycleStatement("CONTINUE", 1);
     }
+
     function evaluateCycle($this, symbolTable) {
         var tmp0_this = Companion_getInstance();
         var tmp1 = tmp0_this.cycles_1;
@@ -9050,6 +9116,7 @@ var currentRoots;
         Unit_getInstance();
         return Unit_getInstance();
     }
+
     function evaluateConditional($this, symbolTable) {
         var condition = $this._get_left__802434852_d9qyp0_k$();
         var trueBlock = $this._get_right__3576132917_bvz45n_k$();
@@ -9071,6 +9138,7 @@ var currentRoots;
                 .evaluate_hfj3qo_k$(symbolTable);
         return Unit_getInstance();
     }
+
     function evaluateBlock($this, symbolTable) {
         var tmp0_iterator = $this
             ._get_children__1387553196_my42wc_k$()
@@ -9147,6 +9215,7 @@ var currentRoots;
         }
         return Unit_getInstance();
     }
+
     function CycleStatement(name, ordinal) {
         Enum.call(this, name, ordinal);
     }
@@ -9155,6 +9224,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function Companion() {
         Companion_instance = this;
         this.cycles_1 = 0;
@@ -9165,18 +9235,22 @@ var currentRoots;
         interfaces: [],
     };
     var Companion_instance;
+
     function Companion_getInstance() {
         if (Companion_instance == null) new Companion();
         return Companion_instance;
     }
+
     function CycleStatement_BREAK_getInstance() {
         CycleStatement_initEntries();
         return CycleStatement_BREAK_instance;
     }
+
     function CycleStatement_CONTINUE_getInstance() {
         CycleStatement_initEntries();
         return CycleStatement_CONTINUE_instance;
     }
+
     function Block(node) {
         Companion_getInstance();
         Node.call(
@@ -9218,6 +9292,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function WordStatement(node) {
         Node.call(
             this,
@@ -9260,6 +9335,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function NodeArray(node) {
         Node.call(
             this,
@@ -9305,6 +9381,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function NodeDictionary(node) {
         Node.call(
             this,
@@ -9369,6 +9446,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function NodeNumber(value, position, number) {
         Node_init_$Init$("(NUMBER)", value, position, null, 8, null, this);
         this.number_1 = number;
@@ -9381,6 +9459,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function NodeString(symbol, value, position) {
         Node_init_$Init$(symbol, value, position, null, 8, null, this);
     }
@@ -9392,6 +9471,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function EmbeddedFunction_init_$Init$(
         name,
         args,
@@ -9424,6 +9504,7 @@ var currentRoots;
         EmbeddedFunction.call($this, name, args, namedArgs, execute);
         return $this;
     }
+
     function EmbeddedFunction_init_$Create$(
         name,
         args,
@@ -9442,6 +9523,7 @@ var currentRoots;
             Object.create(EmbeddedFunction.prototype)
         );
     }
+
     function EmbeddedFunction(name, args, namedArgs, execute) {
         var tmp$ret$4;
         $l$block_1: {
@@ -9516,6 +9598,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function Object_0(name, assignments, fileTable) {
         Type_init_$Init$(
             name,
@@ -9688,6 +9771,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function Property(parent) {
         Variable.call(this, parent);
     }
@@ -9700,6 +9784,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function Companion_0() {
         Companion_instance_0 = this;
     }
@@ -9922,10 +10007,12 @@ var currentRoots;
         interfaces: [],
     };
     var Companion_instance_0;
+
     function Companion_getInstance_0() {
         if (Companion_instance_0 == null) new Companion_0();
         return Companion_instance_0;
     }
+
     function RFunction(name, nonDefaultParams, defaultParams, body) {
         Companion_getInstance_0();
         this.name_1 = name;
@@ -10078,6 +10165,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function bfs($this, root) {
         var tmp$ret$0;
         $l$block: {
@@ -10174,6 +10262,7 @@ var currentRoots;
         }
         return null;
     }
+
     function Type_init_$Init$(
         name,
         parent,
@@ -10197,6 +10286,7 @@ var currentRoots;
         );
         return $this;
     }
+
     function Type_init_$Create$(
         name,
         parent,
@@ -10219,6 +10309,7 @@ var currentRoots;
             Object.create(Type.prototype)
         );
     }
+
     function getInheritedFunctions($this) {
         if (!($this.supertype_1 == null))
             return plus_0(
@@ -10232,6 +10323,7 @@ var currentRoots;
         }
         return tmp$ret$0;
     }
+
     function getInheritedAssignments($this) {
         if (!($this.supertype_1 == null))
             return plus_0(
@@ -10245,6 +10337,7 @@ var currentRoots;
         }
         return tmp$ret$0;
     }
+
     function Companion_1() {
         Companion_instance_1 = this;
     }
@@ -10320,10 +10413,12 @@ var currentRoots;
         interfaces: [],
     };
     var Companion_instance_1;
+
     function Companion_getInstance_1() {
         if (Companion_instance_1 == null) new Companion_1();
         return Companion_instance_1;
     }
+
     function Type(name, parent, assignments, fileTable, index, supertype) {
         Companion_getInstance_1();
         Property.call(this, parent);
@@ -10805,6 +10900,7 @@ var currentRoots;
         kind: "class",
         interfaces: [NestableDebug],
     };
+
     function Variable(parent) {
         this.parent_1 = parent;
     }
@@ -10821,12 +10917,14 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function Indexable() {}
     Indexable.$metadata$ = {
         simpleName: "Indexable",
         kind: "interface",
         interfaces: [],
     };
+
     function compareVariables($this, a, b) {
         var tmp;
         if (a instanceof Type) {
@@ -10842,6 +10940,7 @@ var currentRoots;
         }
         return tmp;
     }
+
     function compareType($this, type, variable) {
         var tmp;
         if (type instanceof Object_0) {
@@ -10878,6 +10977,7 @@ var currentRoots;
         }
         return tmp_0;
     }
+
     function comparePrimitive($this, primitive, variable) {
         if (variable instanceof Type) return -1;
         else {
@@ -10958,6 +11058,7 @@ var currentRoots;
         }
         return tmp_1;
     }
+
     function sam$kotlin_Comparator$0(function_0) {
         this.function_1 = function_0;
     }
@@ -10972,6 +11073,7 @@ var currentRoots;
         kind: "class",
         interfaces: [Comparator],
     };
+
     function PArray$Companion$initializeArrayProperties$lambda() {
         return function (pr) {
             var tmp = Utils_getInstance();
@@ -10981,6 +11083,7 @@ var currentRoots;
             return tmp.toProperty$default_h4f746_k$(tmp_0, null, null, 3, null);
         };
     }
+
     function PArray$Companion$initializeEmbeddedArrayFunctions$lambda() {
         return function (token, args) {
             var list = Utils_getInstance().castToArray_aswmrj_k$(
@@ -11028,6 +11131,7 @@ var currentRoots;
             return Unit_getInstance();
         };
     }
+
     function PArray$Companion$initializeEmbeddedArrayFunctions$lambda_0() {
         return function (token, args) {
             var list = Utils_getInstance().castToArray_aswmrj_k$(
@@ -11075,6 +11179,7 @@ var currentRoots;
             return tmp;
         };
     }
+
     function PArray$Companion$initializeEmbeddedArrayFunctions$lambda_1() {
         return function (token, args) {
             var list = Utils_getInstance().castToArray_aswmrj_k$(
@@ -11121,6 +11226,7 @@ var currentRoots;
             return tmp;
         };
     }
+
     function PArray$Companion$initializeEmbeddedArrayFunctions$lambda_2() {
         return function (token, args) {
             var list = Utils_getInstance().castToArray_aswmrj_k$(
@@ -11220,6 +11326,7 @@ var currentRoots;
             return tmp;
         };
     }
+
     function PArray$Companion$initializeEmbeddedArrayFunctions$lambda_3() {
         return function (token, args) {
             var array = FunctionFactory_getInstance().getArray_kbjem0_k$(
@@ -11249,6 +11356,7 @@ var currentRoots;
             );
         };
     }
+
     function PArray$Companion$initializeEmbeddedArrayFunctions$lambda_4() {
         return function (_anonymous_parameter_0__2695192052, args) {
             var list = Utils_getInstance().castToArray_aswmrj_k$(
@@ -11259,11 +11367,13 @@ var currentRoots;
             return Unit_getInstance();
         };
     }
+
     function PArray$Companion$initializeEmbeddedArrayFunctions$lambda$lambda() {
         return function (a, b) {
             return compareVariables(Companion_getInstance_2(), a, b);
         };
     }
+
     function PArray$Companion$initializeEmbeddedArrayFunctions$lambda_5() {
         return function (token, args) {
             var array = FunctionFactory_getInstance().getArray_kbjem0_k$(
@@ -11288,11 +11398,13 @@ var currentRoots;
             return Unit_getInstance();
         };
     }
+
     function PArray$Companion$initializeEmbeddedArrayFunctions$lambda$lambda_0() {
         return function (a, b) {
             return compareVariables(Companion_getInstance_2(), a, b);
         };
     }
+
     function PArray$Companion$initializeEmbeddedArrayFunctions$lambda_6() {
         return function (token, args) {
             var array = FunctionFactory_getInstance().getArray_kbjem0_k$(
@@ -11320,6 +11432,7 @@ var currentRoots;
                 : res;
         };
     }
+
     function Companion_2() {
         Companion_instance_2 = this;
     }
@@ -11466,10 +11579,12 @@ var currentRoots;
         interfaces: [],
     };
     var Companion_instance_2;
+
     function Companion_getInstance_2() {
         if (Companion_instance_2 == null) new Companion_2();
         return Companion_instance_2;
     }
+
     function PArray(value, parent, id) {
         Companion_getInstance_2();
         Primitive.call(this, value, parent);
@@ -11629,6 +11744,7 @@ var currentRoots;
         kind: "class",
         interfaces: [Indexable, NestableDebug],
     };
+
     function PDictionary$Companion$initializeDictionaryProperties$lambda() {
         return function (pr) {
             var tmp = Utils_getInstance();
@@ -11638,6 +11754,7 @@ var currentRoots;
             return tmp.toProperty$default_h4f746_k$(tmp_0, null, null, 3, null);
         };
     }
+
     function PDictionary$Companion$initializeDictionaryProperties$lambda_0() {
         return function (pr) {
             var tmp = Utils_getInstance();
@@ -11649,6 +11766,7 @@ var currentRoots;
             return tmp.toProperty$default_h4f746_k$(tmp_0, null, null, 3, null);
         };
     }
+
     function PDictionary$Companion$initializeDictionaryProperties$lambda_1() {
         return function (pr) {
             var tmp = Utils_getInstance();
@@ -11660,6 +11778,7 @@ var currentRoots;
             return tmp.toProperty$default_h4f746_k$(tmp_0, null, null, 3, null);
         };
     }
+
     function PDictionary$Companion$initializeDictionaryFunctions$lambda() {
         return function (token, args) {
             var dict = FunctionFactory_getInstance().getDictionary_8h2ghd_k$(
@@ -11680,6 +11799,7 @@ var currentRoots;
             return tmp0_elvis_lhs == null ? new PInt(0, null) : tmp0_elvis_lhs;
         };
     }
+
     function Companion_3() {
         Companion_instance_3 = this;
     }
@@ -11738,10 +11858,12 @@ var currentRoots;
         interfaces: [],
     };
     var Companion_instance_3;
+
     function Companion_getInstance_3() {
         if (Companion_instance_3 == null) new Companion_3();
         return Companion_instance_3;
     }
+
     function PDictionary(value, parent, id) {
         Companion_getInstance_3();
         Primitive.call(this, value, parent);
@@ -11950,6 +12072,7 @@ var currentRoots;
         kind: "class",
         interfaces: [Indexable, NestableDebug],
     };
+
     function PDouble$Companion$initializeDoubleProperties$lambda() {
         return function (it) {
             var tmp = Utils_getInstance();
@@ -11958,6 +12081,7 @@ var currentRoots;
             return tmp.toProperty$default_h4f746_k$(tmp_0, null, null, 3, null);
         };
     }
+
     function PDouble$Companion$initializeDoubleProperties$lambda_0() {
         return function (it) {
             var tmp = Utils_getInstance();
@@ -11966,6 +12090,7 @@ var currentRoots;
             return tmp.toProperty$default_h4f746_k$(tmp_0, null, null, 3, null);
         };
     }
+
     function Companion_4() {
         Companion_instance_4 = this;
     }
@@ -11994,10 +12119,12 @@ var currentRoots;
         interfaces: [],
     };
     var Companion_instance_4;
+
     function Companion_getInstance_4() {
         if (Companion_instance_4 == null) new Companion_4();
         return Companion_instance_4;
     }
+
     function PDouble(value, parent) {
         Companion_getInstance_4();
         PNumber.call(this, value, parent);
@@ -12017,6 +12144,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function PInt$Companion$initializeIntProperties$lambda() {
         return function (p) {
             var tmp = Utils_getInstance();
@@ -12025,6 +12153,7 @@ var currentRoots;
             return tmp.toProperty$default_h4f746_k$(tmp_0, null, null, 3, null);
         };
     }
+
     function PInt$Companion$initializeIntProperties$lambda_0() {
         return function (p) {
             var tmp = Utils_getInstance();
@@ -12033,6 +12162,7 @@ var currentRoots;
             return tmp.toProperty$default_h4f746_k$(tmp_0, null, null, 3, null);
         };
     }
+
     function Companion_5() {
         Companion_instance_5 = this;
     }
@@ -12057,10 +12187,12 @@ var currentRoots;
         interfaces: [],
     };
     var Companion_instance_5;
+
     function Companion_getInstance_5() {
         if (Companion_instance_5 == null) new Companion_5();
         return Companion_instance_5;
     }
+
     function PInt(value, parent) {
         Companion_getInstance_5();
         PNumber.call(this, value, parent);
@@ -12080,6 +12212,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function PNumber$Companion$initializeEmbeddedNumberFunctions$lambda() {
         return function (_anonymous_parameter_0__2695192052, args) {
             var number = Utils_getInstance().castToNumber_n7uin9_k$(
@@ -12093,6 +12226,7 @@ var currentRoots;
                   );
         };
     }
+
     function PNumber$Companion$initializeEmbeddedNumberFunctions$lambda_0() {
         return function (token, args) {
             var tmp0_container = Utils_getInstance().unifyPNumbers_mynzfo_k$(
@@ -12134,6 +12268,7 @@ var currentRoots;
             return tmp;
         };
     }
+
     function PNumber$Companion$initializeEmbeddedNumberFunctions$lambda_1() {
         return function (token, args) {
             var tmp0_container = Utils_getInstance().unifyPNumbers_mynzfo_k$(
@@ -12175,6 +12310,7 @@ var currentRoots;
             return tmp;
         };
     }
+
     function PNumber$Companion$initializeEmbeddedNumberFunctions$lambda_2() {
         return function (token, args) {
             var number = Utils_getInstance().castToNumber_n7uin9_k$(
@@ -12197,6 +12333,7 @@ var currentRoots;
             return tmp$ret$0;
         };
     }
+
     function PNumber$Companion$initializeEmbeddedNumberFunctions$lambda_3() {
         return function (token, args) {
             var number = FunctionFactory_getInstance().getNumber_htzifw_k$(
@@ -12233,6 +12370,7 @@ var currentRoots;
             return tmp;
         };
     }
+
     function PNumber$Companion$initializeEmbeddedNumberFunctions$lambda_4() {
         return function (token, args) {
             var number = FunctionFactory_getInstance().getNumber_htzifw_k$(
@@ -12254,6 +12392,7 @@ var currentRoots;
             );
         };
     }
+
     function Companion_6() {
         Companion_instance_6 = this;
     }
@@ -12344,10 +12483,12 @@ var currentRoots;
         interfaces: [],
     };
     var Companion_instance_6;
+
     function Companion_getInstance_6() {
         if (Companion_instance_6 == null) new Companion_6();
         return Companion_instance_6;
     }
+
     function PNumber(value, parent) {
         Companion_getInstance_6();
         Primitive.call(this, value, parent);
@@ -12379,6 +12520,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function PString$Companion$initializeStringProperties$lambda() {
         return function (p) {
             var tmp = Utils_getInstance();
@@ -12388,6 +12530,7 @@ var currentRoots;
             return tmp.toProperty$default_h4f746_k$(tmp_0, null, null, 3, null);
         };
     }
+
     function PString$Companion$initializeEmbeddedStringFunctions$lambda() {
         return function (token, args) {
             var string = Utils_getInstance().castToString_p2wdar_k$(
@@ -12425,6 +12568,7 @@ var currentRoots;
             return tmp$ret$1;
         };
     }
+
     function PString$Companion$initializeEmbeddedStringFunctions$lambda_0() {
         return function (token, args) {
             var string = Utils_getInstance().castToString_p2wdar_k$(
@@ -12449,6 +12593,7 @@ var currentRoots;
             return replace$default(tmp, tmp_0, tmp_1, false, 4, null);
         };
     }
+
     function PString$Companion$initializeEmbeddedStringFunctions$lambda_1() {
         return function (_anonymous_parameter_0__2695192052, args) {
             var string = Utils_getInstance().castToString_p2wdar_k$(
@@ -12470,6 +12615,7 @@ var currentRoots;
             return tmp$ret$0;
         };
     }
+
     function PString$Companion$initializeEmbeddedStringFunctions$lambda_2() {
         return function (_anonymous_parameter_0__2695192052, args) {
             var string = Utils_getInstance().castToString_p2wdar_k$(
@@ -12490,6 +12636,7 @@ var currentRoots;
             return tmp$ret$1;
         };
     }
+
     function PString$Companion$initializeEmbeddedStringFunctions$lambda_3() {
         return function (_anonymous_parameter_0__2695192052, args) {
             var string = Utils_getInstance().castToString_p2wdar_k$(
@@ -12510,6 +12657,7 @@ var currentRoots;
             return tmp$ret$1;
         };
     }
+
     function PString$Companion$initializeEmbeddedStringFunctions$lambda_4() {
         return function (_anonymous_parameter_0__2695192052, args) {
             var string = Utils_getInstance().castToString_p2wdar_k$(
@@ -12547,6 +12695,7 @@ var currentRoots;
             return tmp$ret$2;
         };
     }
+
     function Companion_7() {
         Companion_instance_7 = this;
     }
@@ -12642,10 +12791,12 @@ var currentRoots;
         interfaces: [],
     };
     var Companion_instance_7;
+
     function Companion_getInstance_7() {
         if (Companion_instance_7 == null) new Companion_7();
         return Companion_instance_7;
     }
+
     function PString(value, parent) {
         Companion_getInstance_7();
         Primitive.call(this, value, parent);
@@ -12721,6 +12872,7 @@ var currentRoots;
         kind: "class",
         interfaces: [Indexable],
     };
+
     function formatClassName($this) {
         var tmp$ret$1;
         $l$block_0: {
@@ -12739,6 +12891,7 @@ var currentRoots;
         }
         return tmp$ret$1;
     }
+
     function Companion_8() {
         Companion_instance_8 = this;
         this.dictionaryId_1 = 0;
@@ -12947,10 +13100,12 @@ var currentRoots;
         interfaces: [],
     };
     var Companion_instance_8;
+
     function Companion_getInstance_8() {
         if (Companion_instance_8 == null) new Companion_8();
         return Companion_instance_8;
     }
+
     function Primitive(value, parent) {
         Companion_getInstance_8();
         Property.call(this, parent);
@@ -13233,6 +13388,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function createAssignmentsAndFunctions($this, node) {
         var tmp$ret$0;
         $l$block: {
@@ -13308,17 +13464,20 @@ var currentRoots;
         }
         return new Pair(res, functions);
     }
+
     function getFromFilesOrNull($this, getValue) {
         var valuesList = getListFromFiles($this, getValue);
         return valuesList._get_size__809037418_ddoh9m_k$() === 1
             ? first(valuesList)
             : null;
     }
+
     function getListFromFiles($this, getValue) {
         var fromCurrent = getValue($this);
         if (!(fromCurrent == null)) return listOf(fromCurrent);
         return checkImports($this, getValue);
     }
+
     function checkImports($this, check) {
         var tmp$ret$0;
         $l$block: {
@@ -13339,6 +13498,7 @@ var currentRoots;
         }
         return suitable;
     }
+
     function FileTable$getTypeOrNull$lambda($name) {
         return function (it) {
             var tmp$ret$2;
@@ -13374,6 +13534,7 @@ var currentRoots;
                 : tmp0_safe_receiver.copy_1tks5_k$();
         };
     }
+
     function FileTable$getObjectOrNull$lambda($name) {
         return function (it) {
             var tmp$ret$2;
@@ -13406,6 +13567,7 @@ var currentRoots;
             return tmp$ret$2;
         };
     }
+
     function FileTable$getFunctionOrNull$lambda($node) {
         return function (fileTable) {
             var tmp = Companion_getInstance_0();
@@ -13415,6 +13577,7 @@ var currentRoots;
             );
         };
     }
+
     function FileTable(fileName, index) {
         this.fileName_1 = fileName;
         this.index_1 = index;
@@ -14030,6 +14193,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function Companion_9() {
         Companion_instance_9 = this;
     }
@@ -14039,10 +14203,12 @@ var currentRoots;
         interfaces: [],
     };
     var Companion_instance_9;
+
     function Companion_getInstance_9() {
         if (Companion_instance_9 == null) new Companion_9();
         return Companion_instance_9;
     }
+
     function ScopeTable() {
         Companion_getInstance_9();
         var tmp = this;
@@ -14076,6 +14242,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function initializeGlobal($this) {
         var res = new FileTable("@global", 0);
         var tmp$ret$0;
@@ -14094,6 +14261,7 @@ var currentRoots;
         }
         return res;
     }
+
     function SymbolTable_init_$Init$(
         scopeTable,
         variableTable,
@@ -14114,6 +14282,7 @@ var currentRoots;
         );
         return $this;
     }
+
     function SymbolTable_init_$Create$(
         scopeTable,
         variableTable,
@@ -14132,6 +14301,7 @@ var currentRoots;
             Object.create(SymbolTable.prototype)
         );
     }
+
     function Companion_10() {
         Companion_instance_10 = this;
         var tmp = this;
@@ -14152,10 +14322,12 @@ var currentRoots;
         interfaces: [],
     };
     var Companion_instance_10;
+
     function Companion_getInstance_10() {
         if (Companion_instance_10 == null) new Companion_10();
         return Companion_instance_10;
     }
+
     function SymbolTable(scopeTable, variableTable, fileTable, resolvingType) {
         Companion_getInstance_10();
         this.scopeTable_1 = scopeTable;
@@ -14585,6 +14757,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function ArithmeticOperator_0(
         symbol,
         value,
@@ -14641,6 +14814,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function Assignment_init_$Init$(
         symbol,
         value,
@@ -14683,6 +14857,7 @@ var currentRoots;
         );
         return $this;
     }
+
     function Assignment_init_$Create$(
         symbol,
         value,
@@ -14709,6 +14884,7 @@ var currentRoots;
             Object.create(Assignment_0.prototype)
         );
     }
+
     function Assignment_0(
         symbol,
         value,
@@ -14734,6 +14910,9 @@ var currentRoots;
         Unit_getInstance();
     }
     Assignment_0.prototype.toNode_edekmb_k$ = function () {
+        var tmp = this._get_symbol__541899891_8ymsmr_k$();
+        var tmp_0 = this._get_value__3683422336_a43j40_k$();
+        var tmp_1 = this._get_position__3188952002_iahqv2_k$();
         var tmp$ret$2;
         $l$block_1: {
             var tmp0_map_0 = this._get_children__1387553196_my42wc_k$();
@@ -14791,6 +14970,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function checkParamsOrArgsOrder($this, params) {
         var wasAssignment = false;
         var tmp0_iterator = params.iterator_jk1svi_k$();
@@ -14823,6 +15003,7 @@ var currentRoots;
             }
         }
     }
+
     function Invocation_0(
         symbol,
         value,
@@ -14889,6 +15070,7 @@ var currentRoots;
         kind: "class",
         interfaces: [Linkable],
     };
+
     function Link_init_$Init$(
         symbol,
         value,
@@ -14925,6 +15107,7 @@ var currentRoots;
         );
         return $this;
     }
+
     function Link_init_$Create$(
         symbol,
         value,
@@ -14951,6 +15134,7 @@ var currentRoots;
             Object.create(Link_0.prototype)
         );
     }
+
     function Link_0(
         symbol,
         value,
@@ -15024,6 +15208,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function MetaToken_init_$Init$(
         symbol,
         value,
@@ -15039,6 +15224,7 @@ var currentRoots;
         MetaToken.call($this, symbol, value, position, nud);
         return $this;
     }
+
     function MetaToken_init_$Create$(
         symbol,
         value,
@@ -15057,11 +15243,13 @@ var currentRoots;
             Object.create(MetaToken.prototype)
         );
     }
+
     function MetaToken$_init_$lambda_1781794921() {
         return function (t, _anonymous_parameter_1__2695192083) {
             return t;
         };
     }
+
     function MetaToken(symbol, value, position, nud) {
         Token_init_$Init$(
             symbol,
@@ -15089,6 +15277,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function Operator_0(symbol, value, position, bindingPower, nud, led, std) {
         Token_init_$Init$(
             symbol,
@@ -15140,6 +15329,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function Token_init_$Init$(
         symbol,
         value,
@@ -15183,6 +15373,7 @@ var currentRoots;
         );
         return $this;
     }
+
     function Token_init_$Create$(
         symbol,
         value,
@@ -15209,6 +15400,7 @@ var currentRoots;
             Object.create(Token.prototype)
         );
     }
+
     function Token(
         symbol,
         value,
@@ -15325,6 +15517,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function TokenBlock_init_$Init$(position, $this) {
         TokenBlock.call(
             $this,
@@ -15343,12 +15536,14 @@ var currentRoots;
         );
         return $this;
     }
+
     function TokenBlock_init_$Create$(position) {
         return TokenBlock_init_$Init$(
             position,
             Object.create(TokenBlock.prototype)
         );
     }
+
     function TokenBlock(token) {
         var tmp = token._get_symbol__541899891_8ymsmr_k$();
         var tmp_0 = token._get_value__3683422336_a43j40_k$();
@@ -15407,6 +15602,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function TokenIdentifier(
         symbol,
         value,
@@ -15442,6 +15638,7 @@ var currentRoots;
         kind: "class",
         interfaces: [Linkable],
     };
+
     function TokenIndex_init_$Init$(node, $this) {
         TokenIndex.call(
             $this,
@@ -15456,12 +15653,14 @@ var currentRoots;
         );
         return $this;
     }
+
     function TokenIndex_init_$Create$(node) {
         return TokenIndex_init_$Init$(
             node,
             Object.create(TokenIndex.prototype)
         );
     }
+
     function TokenIndex(
         symbol,
         value,
@@ -15525,6 +15724,7 @@ var currentRoots;
         kind: "class",
         interfaces: [Linkable],
     };
+
     function TokenTernary(node) {
         var tmp = node._get_symbol__541899891_8ymsmr_k$();
         var tmp_0 = node._get_value__3683422336_a43j40_k$();
@@ -15585,6 +15785,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function TokenWordStatement(node) {
         var tmp = node._get_symbol__541899891_8ymsmr_k$();
         var tmp_0 = node._get_value__3683422336_a43j40_k$();
@@ -15645,6 +15846,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function TypeOperator_0(
         symbol,
         value,
@@ -15701,6 +15903,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function TokenImport(token) {
         var tmp = token._get_symbol__541899891_8ymsmr_k$();
         var tmp_0 = token._get_value__3683422336_a43j40_k$();
@@ -15759,6 +15962,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function TokenType(token) {
         var tmp = token._get_symbol__541899891_8ymsmr_k$();
         var tmp_0 = token._get_value__3683422336_a43j40_k$();
@@ -15817,6 +16021,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function TokenObject(token) {
         var tmp = token._get_symbol__541899891_8ymsmr_k$();
         var tmp_0 = token._get_value__3683422336_a43j40_k$();
@@ -15875,6 +16080,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function checkParameters($this, parameters) {
         var tmp0_iterator = parameters.iterator_jk1svi_k$();
         while (tmp0_iterator.hasNext_bitz1p_k$()) {
@@ -15899,6 +16105,7 @@ var currentRoots;
             }
         }
     }
+
     function TokenFunction(token) {
         Token.call(
             this,
@@ -15961,6 +16168,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function TokenArray(node) {
         Token.call(
             this,
@@ -16017,6 +16225,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function TokenDictionary(node) {
         Token.call(
             this,
@@ -16068,15 +16277,18 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function isInteger($this) {
         var tmp = $this._get_value__3683422336_a43j40_k$();
         return !contains$default(tmp, ".", false, 2, null);
     }
+
     function TokenNumber$_init_$lambda_3476634519() {
         return function (t, _anonymous_parameter_1__2695192083) {
             return t;
         };
     }
+
     function TokenNumber(value, position) {
         var tmp = TokenNumber$_init_$lambda_3476634519();
         Token_init_$Init$(
@@ -16130,6 +16342,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function TokenString(symbol, value, position, bindingPower, nud, led, std) {
         Token_init_$Init$(
             symbol,
@@ -16157,6 +16370,7 @@ var currentRoots;
         kind: "class",
         interfaces: [],
     };
+
     function Utils() {
         Utils_instance = this;
         Companion_getInstance_2().initializeEmbeddedArrayFunctions_bl57m3_k$();
@@ -16386,41 +16600,13 @@ var currentRoots;
         }
         return num;
     };
-    Utils.prototype.mapToString_hbz8o4_k$ = function (mapped) {
-        var tmp0_subject = mapped;
-        var tmp;
-        if (tmp0_subject.equals(getKClass(RFunction))) {
-            tmp = "Function";
-        } else if (tmp0_subject.equals(getKClass(PInt))) {
-            tmp = "Int";
-        } else if (tmp0_subject.equals(getKClass(PDouble))) {
-            tmp = "Double";
-        } else if (tmp0_subject.equals(getKClass(PNumber))) {
-            tmp = "Number";
-        } else if (tmp0_subject.equals(getKClass(PString))) {
-            tmp = "String";
-        } else if (tmp0_subject.equals(getKClass(PArray))) {
-            tmp = "Array";
-        } else if (tmp0_subject.equals(getKClass(PDictionary))) {
-            tmp = "Dictionary";
-        } else if (tmp0_subject.equals(getKClass(Identifier))) {
-            tmp = "Identifier";
-        } else if (tmp0_subject.equals(getKClass(Invocation))) {
-            tmp = "Invocation";
-        } else if (tmp0_subject.equals(getKClass(Index))) {
-            tmp = "Index";
-        } else {
-            var tmp_0 = toString_0(mapped);
-            tmp = last(split$default(tmp_0, ["."], false, 0, 6, null));
-        }
-        return tmp;
-    };
     Utils.$metadata$ = {
         simpleName: "Utils",
         kind: "object",
         interfaces: [],
     };
     var Utils_instance;
+
     function Utils_getInstance() {
         if (Utils_instance == null) new Utils();
         return Utils_instance;
@@ -16491,10 +16677,12 @@ var currentRoots;
         set: JSSetter.prototype._set_sendMessage__4077931654_vfpvyb_k$,
     });
     var JSSetter_instance;
+
     function JSSetter_getInstance() {
         if (JSSetter_instance == null) new JSSetter();
         return JSSetter_instance;
     }
+
     function FileSystem() {
         FileSystem_instance = this;
         var tmp = this;
@@ -16533,7 +16721,6 @@ var currentRoots;
         }
     };
     FileSystem.prototype.exists_9c3km3_k$ = function (path) {
-        console.log(path);
         return !(this.fileSystem_1.get_1mhr4y_k$(path) == null);
     };
     FileSystem.prototype.delete_47x42e_k$ = function (path) {
@@ -16547,31 +16734,37 @@ var currentRoots;
         interfaces: [],
     };
     var FileSystem_instance;
+
     function FileSystem_getInstance() {
         if (FileSystem_instance == null) new FileSystem();
         return FileSystem_instance;
     }
+
     function readLine() {
         return "";
     }
+
     function round(num, digits) {
         var tmp = round$outlinedJsCode$(num, digits);
         return (!(tmp == null) ? typeof tmp === "number" : false)
             ? tmp
             : THROW_CCE();
     }
+
     function isInt(num) {
         var tmp = isInt$outlinedJsCode$(num);
         return (!(tmp == null) ? typeof tmp === "boolean" : false)
             ? tmp
             : THROW_CCE();
     }
+
     function isDouble(num) {
         var tmp = isDouble$outlinedJsCode$(num);
         return (!(tmp == null) ? typeof tmp === "boolean" : false)
             ? tmp
             : THROW_CCE();
     }
+
     function sendMessage(m) {
         postMessage({ type: m.type, content: m.content });
         Unit_getInstance();
@@ -16583,9 +16776,11 @@ var currentRoots;
         var n = (nnum * p).toPrecision(15);
         return num < 0 ? -Math.round(n) / p : Math.round(n) / p;
     }
+
     function isInt$outlinedJsCode$(num) {
         return Number.isInteger(num);
     }
+
     function isDouble$outlinedJsCode$(num) {
         return (
             typeof num === "number" &&
@@ -16608,26 +16803,12 @@ var currentRoots;
 });
 
 onmessage = (e) => {
-    console.log("Message in worker", e.data);
+    console.log("Message in worker");
+    if (e.data == "import") {
+        requestImport(e.content);
+    }
     try {
-        switch (e.data.data) {
-            case "write":
-                console.log(e.data);
-                writeFromMainWorker(
-                    e.data.content.path,
-                    e.data.content.content
-                );
-
-                addImport(e.data.content.path);
-                break;
-            case "start":
-                writeFromMainWorker(
-                    e.data.content.path,
-                    e.data.content.content
-                );
-                startImport(e.data.content.path);
-                break;
-        }
+        evaluateJS(e.data);
     } catch (exception) {
         if (exception.token_1 != null) exception.node_1 = exception.token_1;
         postMessage({
@@ -16635,6 +16816,8 @@ onmessage = (e) => {
             content: createCloneableException(exception),
         });
     }
+    postMessage({ type: "finished" });
+    close();
 };
 
 function createCloneableException(exception) {
@@ -16644,6 +16827,7 @@ function createCloneableException(exception) {
     for (let entry of Object.entries(exception)) {
         console.log(entry);
     }
+    console.log();
     if (exception.node_1 != null && exception.node_1.symbol_1 != "") {
         length = exception.node_1.value_1.length;
         position = exception.node_1.position_1;

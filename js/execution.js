@@ -4,12 +4,12 @@ import {
     startDebugging,
     addConsoleOutput,
 } from "./debug.js";
+import { showWarning } from "./index.js";
 
 var worker;
 
-function addBreakpointsToCode() {
-    let code = window.editor.getValue().split("\n");
-    let breakpoints = window.editor.getBreakpoints();
+function addBreakpointsToCode(code, breakpoints) {
+    code = code.split("\n");
     breakpoints.sort(
         (a, b) =>
             parseInt(a.range.startLineNumber) -
@@ -22,7 +22,17 @@ function addBreakpointsToCode() {
     return code.join("\n");
 }
 
-function startExecution(withDebug) {
+async function startExecution(withDebug) {
+    if (window.currentTab == null) {
+        showWarning("unpicked-delete", 2000);
+        return;
+    } else if (
+        !window.currentTab.path.includes(".") ||
+        window.currentTab.path.split(".").reverse()[0] != "rgn"
+    ) {
+        showWarning("unsupported-format", 2000);
+        return;
+    }
     if (withDebug) changeBreakpointColor();
     // allow only one instance running
     if (worker != null) return;
@@ -33,35 +43,65 @@ function startExecution(withDebug) {
     let button = document
         .getElementById(withDebug ? "debug-button" : "start-button")
         .getElementsByTagName("i")[0];
-    button.style["-webkit-text-fill-color"] =
-        bodyStyles.getPropertyValue("--gray");
+    button.style["-webkit-text-fill-color"] = "var(--gray)";
     worker = new Worker("js/external/regina_interpreter.js");
     worker.onmessage = (e) => {
-        switch (e.data.type) {
-            case "ready":
-                worker.postMessage([addBreakpointsToCode(), ""]);
-                break;
-            case "finished":
-                worker = null;
-                button.style["-webkit-text-fill-color"] =
-                    bodyStyles.getPropertyValue("--green");
-                if (withDebug) return startDebugging();
-                break;
-            case "log":
-                console.log(e.data.content);
-                if (withDebug) addConsoleOutput(e.data.content);
-                break;
-            case "exception":
-                showException(e.data.content);
-                break;
-            case "debug":
-                addBreakpoint(e.data.content);
-                break;
-            case "breakpoint":
-                changeBreakpointColor(parseInt(e.data.content.second_1) + 1);
-                break;
-        }
+        handleWorkerMessage(e, withDebug, button, bodyStyles);
     };
+}
+
+async function handleWorkerMessage(e, withDebug, button) {
+    switch (e.data.type) {
+        case "ready":
+            worker.postMessage({
+                data: "start",
+                content: {
+                    path: window.currentTab.path,
+                    content: addBreakpointsToCode(
+                        window.currentTab.model.getValue(),
+                        window.currentTab.bList
+                    ),
+                },
+            }); //worker.postMessage([addBreakpointsToCode(), ""]);
+            break;
+        case "import":
+            console.log(e.data);
+            let code = await window.getFileContentByPath(e.data.content);
+            worker.postMessage({
+                data: "write",
+                content: {
+                    path: e.data.content,
+                    content: code,
+                },
+            });
+            break;
+        case "write":
+            console.log(e.data);
+            break;
+        case "finished":
+            resetExecution(button);
+            if (withDebug) return startDebugging();
+            break;
+        case "log":
+            console.log(e.data.content);
+            if (withDebug) addConsoleOutput(e.data.content);
+            break;
+        case "exception":
+            showException(e.data.content);
+            resetExecution(button);
+            break;
+        case "debug":
+            addBreakpoint(e.data.content);
+            break;
+        case "breakpoint":
+            changeBreakpointColor(parseInt(e.data.content.second_1) + 1);
+            break;
+    }
+}
+
+function resetExecution(button) {
+    worker = null;
+    button.style["-webkit-text-fill-color"] = "var(--green)";
 }
 
 function showLog(content) {
@@ -75,14 +115,15 @@ function showLog(content) {
 
 function terminateExecution() {
     if (worker != null) {
-        console.log("Stopped");
         worker.terminate();
-        let bodyStyles = window.getComputedStyle(document.body);
-        let button = document
+        document
             .getElementById("start-button")
-            .getElementsByTagName("i")[0];
-        button.style["-webkit-text-fill-color"] =
-            bodyStyles.getPropertyValue("--green");
+            .getElementsByTagName("i")[0].style["-webkit-text-fill-color"] =
+            "var(--green)";
+        document
+            .getElementById("debug-button")
+            .getElementsByTagName("i")[0].style["-webkit-text-fill-color"] =
+            "var(--green)";
         worker = null;
     }
 }
@@ -102,5 +143,4 @@ function showException(exception) {
     });
 }
 
-export default startExecution;
-export { showLog };
+export { startExecution, showLog, addBreakpointsToCode, terminateExecution };
