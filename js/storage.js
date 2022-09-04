@@ -40,10 +40,7 @@ function stopReset() {
 
 document.getElementById("reset-all").onmouseup = () => stopReset();
 document.getElementById("reset-all").onmouseleave = () => stopReset();
-
-document.getElementById("save-button").onclick = () => {
-    autosave();
-};
+document.getElementById("save-button").onclick = () => autosave();
 
 document.getElementById("theme-button").onclick = () => {
     if (document.documentElement.getAttribute("data-theme") == "dark")
@@ -90,7 +87,7 @@ function setDefaults() {
     localStorage.setItem("rightSize", 33);
     localStorage.setItem("consoleSize", 48);
     localStorage.setItem(
-        "main.js",
+        "main.rgn",
         `
 fun main() {
     log("Hello, World!")

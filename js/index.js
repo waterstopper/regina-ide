@@ -4,28 +4,66 @@ import {
     previousBreakpoint,
     toCaretBreakpoint,
 } from "./debug.js";
-import { addTreeElement } from "./filetree.js";
+import { addTreeElement, deleteFile } from "./filetree.js";
 
 window.tabs = {};
 
 let fileMenu = document
     .getElementById("file-tree-menu")
     .getElementsByTagName("p");
-fileMenu[0].onclick = () => {
-    if (window.currentFile == null) addTreeElement(document.getElementById("file-tree"), false);
-    else addTreeElement(window.currentFile.parentElement.parentElement, false);
-};
 
-fileMenu[1].onclick = () => {
-    if (window.currentFile == null) addTreeElement(document.getElementById("file-tree"), true);
-    else addTreeElement(window.currentFile.parentElement.parentElement, true);
-};
+fileMenu[0].onclick = () => addElement(false);
+fileMenu[1].onclick = () => addElement(true);
+
+function addElement(isFolder) {
+    if (window.currentFile == null){
+        addTreeElement(document.getElementById("file-tree"), isFolder, "");
+        return
+    }
+    if (
+        window.currentFile.getAttribute("lib") != null &&
+        (window.currentFile.parentElement.parentElement !=
+            document.getElementById("file-tree") ||
+            window.currentFile.parentElement.tagName == "LI")
+    ) {
+        const span = document.getElementById("add-library-folders");
+        span.style.display = "block";
+        setTimeout(() => {
+            span.style.display = "none";
+        }, 1500);
+    }
+    else {
+        if (window.currentFile.parentElement.tagName == "LI") {
+            let nested =
+                window.currentFile.parentElement.getElementsByClassName(
+                    "nested"
+                )[0];
+            nested.classList.add("active");
+            addTreeElement(nested, isFolder, window.currentFile.innerText);
+        } else
+            addTreeElement(
+                window.currentFile.parentElement.parentElement,
+                isFolder,
+                window.currentFile.innerText
+            );
+    }
+}
 
 fileMenu[2].onclick = () => {
-    if (currentFile == null) return;
+    if (window.currentFile == null) return;
+    if (window.currentFile.getAttribute("lib") != null) {
+        const span = document.getElementById("delete-library-files");
+        span.style.display = "block";
+        setTimeout(() => {
+            span.style.display = "none";
+        }, 1500);
+        return;
+    }
     let tab = window.tabs[window.currentFile.getAttribute("path")];
     if (tab != null && window.currentFile.getAttribute("lib") == null);
     delete window.tabs[window.currentFile.getAttribute("path")];
+    let path = window.currentFile.getAttribute("path");
+    deleteFile(path.split("/"));
     window.currentFile.parentElement.remove();
 };
 
@@ -35,42 +73,28 @@ document.getElementById("show-settings").onclick = (e) => {
     e.stopPropagation();
 };
 
-document.getElementById("show-settings").onmousedown = (e) => {
-    e.stopPropagation();
-};
-
 document.getElementById("show-debug").onclick = (e) => {
     document.getElementById("settings-panel").style.display = "none";
     document.getElementById("debug-panel").style.display = "block";
     e.stopPropagation();
 };
 
-document.getElementById("show-debug").onmousedown = (e) => {
-    e.stopPropagation();
-};
-
-document.getElementById("start-button").onclick = (e) => {
-    startExecution(false);
-};
+document.getElementById("show-settings").onmousedown = () =>  e.stopPropagation();
+document.getElementById("show-debug").onmousedown = (e) => e.stopPropagation();
+document.getElementById("left-panel-button").onclick = (e) => e.stopPropagation();
+document.getElementById("clear-console").onmousedown = (e) => e.stopPropagation();
+document.getElementById("hide-console").onmousedown = (e) => e.stopPropagation();
 
 let debugArrows = document
-    .getElementById("debug-button-panel")
-    .getElementsByTagName("button");
-debugArrows[0].onclick = (e) => {
-    previousBreakpoint();
-};
+.getElementById("debug-button-panel")
+.getElementsByTagName("button");
 
-debugArrows[1].onclick = (e) => {
-    nextBreakpoint();
-};
+debugArrows[0].onclick = () => previousBreakpoint();
+debugArrows[1].onclick = () => nextBreakpoint();
+debugArrows[2].onclick = () => toCaretBreakpoint();
 
-debugArrows[2].onclick = (e) => {
-    toCaretBreakpoint();
-};
-
-document.getElementById("debug-button").onclick = (e) => {
-    startExecution(true);
-};
+document.getElementById("start-button").onclick = () => startExecution(false);
+document.getElementById("debug-button").onclick = () => startExecution(true);
 
 oncontextmenu = (event) => {
     let fileMenu = document.getElementById("file-tree-menu");
@@ -91,22 +115,16 @@ onclick = () => {
 var mouseInTree = false;
 
 let fileTree = document.getElementById("file-tree");
-fileTree.onmouseenter = () => {
-    mouseInTree = true;
-};
-fileTree.onmouseleave = () => {
-    mouseInTree = false;
-};
+fileTree.onmouseenter = () => mouseInTree = true;
+
+fileTree.onmouseleave = () => mouseInTree = false;
 
 function setPanelWidth() {
     document.getElementsByClassName("container-left")[0].style.width = "30%";
     document.getElementsByClassName("container-middle")[0].style.width = "46%";
 }
-setPanelWidth();
 
-document.getElementById("left-panel-button").onclick = (e) => {
-    e.stopPropagation();
-};
+setPanelWidth();
 
 document.getElementById("left-panel-button").onmousedown = (e) => {
     let lPanel = document.getElementsByClassName("container-left")[0];
@@ -143,14 +161,6 @@ document.getElementById("clear-console").onclick = (e) => {
         .cloneNode(true);
     console.innerHTML = "";
     console.appendChild(template);
-};
-
-document.getElementById("clear-console").onmousedown = (e) => {
-    e.stopPropagation();
-};
-
-document.getElementById("hide-console").onmousedown = (e) => {
-    e.stopPropagation();
 };
 
 document.getElementById("hide-console").onclick = () => {

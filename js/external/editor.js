@@ -423,7 +423,7 @@ require(["vs/editor/editor.main"], function () {
                         id: "First Line",
                         command: {
                             //id: commandId,
-                            title: "Changes in lib file are removed after page reload",
+                            title: "Changes in library file are removed after page reload",
                         },
                     },
                 ],

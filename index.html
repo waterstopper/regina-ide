@@ -3,7 +3,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Regina</title>
+    <title>Regina IDE</title>
     <script type="text/javascript" src="js/event.js"></script>
     <script src="https://kit.fontawesome.com/fcd79d1b18.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="styles.css">
@@ -16,6 +16,12 @@
     <div class="container">
         <div class="container-left">
             <div class="stacked" id="file-panel">
+                <span id="delete-library-files" style="display:none;color:var(--yellow); font-size: small;"><i
+                        class="fa-solid fa-triangle-exclamation" style="color:var(--yellow)"></i> Cannot delete library
+                    files</span>
+                    <span id="add-library-folders" style="display:none;color:var(--yellow); font-size: small;"><i
+                        class="fa-solid fa-triangle-exclamation" style="color:var(--yellow)"></i> Cannot add to library
+                    folders</span>
                 <ul id="file-tree" style="margin-left: 0px;">
                 </ul>
             </div>
@@ -65,9 +71,9 @@
                         </div>
                         <div class="grid-item">
                             <label class="switch">
-                            <input type="checkbox">
-                            <span class="slider round"></span>
-                          </label>
+                                <input type="checkbox">
+                                <span class="slider round"></span>
+                            </label>
                         </div>
 
 
@@ -79,7 +85,9 @@
                             <!-- Rough means there is a texture on every svg.Incredibels 2 titles for reference -->
                             <button id='texture-button' onclick='changeTexture(this)'>rough</button>
                         </div>
-                        <div class="grid-item"><a href="https://docs.google.com/forms/d/e/1FAIpQLScqsdD7BmKWK_GJgfmLQ1V8e8mvegwPUHe-TxpnOGZP95Y-xQ/viewform" target="_blank">Leave feedback</a>
+                        <div class="grid-item"><a
+                                href="https://docs.google.com/forms/d/e/1FAIpQLScqsdD7BmKWK_GJgfmLQ1V8e8mvegwPUHe-TxpnOGZP95Y-xQ/viewform"
+                                target="_blank">Leave feedback</a>
                             <div class='description'></div>
                         </div>
                         <div class="grid-item">
@@ -89,22 +97,23 @@
                 <div id="debug-panel" style="display:none">
                     <div id="debug-button-panel">
                         <button title="previous breakpoint">
-                        <i class="fa-solid fa-circle"></i>
-                        <i class="fa-solid fa-arrow-left"></i>
-                    </button>
+                            <i class="fa-solid fa-circle"></i>
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </button>
                         <button title="next breakpoint">
-                        <i class="fa-solid fa-arrow-right"></i>
-                        <i class="fa-solid fa-circle"></i></button>
+                            <i class="fa-solid fa-arrow-right"></i>
+                            <i class="fa-solid fa-circle"></i></button>
                         <button title="to breakpoint on caret position">
-                        <i class="fa-solid fa-arrow-right"></i>
-                        <i class="fa-solid fa-i-cursor"></i></button>
+                            <i class="fa-solid fa-arrow-right"></i>
+                            <i class="fa-solid fa-i-cursor"></i></button>
                         <span style="border-left: var(--light-gray) solid 1px; padding-left: 10px;">0/0</span>
                     </div>
                 </div>
             </div>
         </div>
         <div class="resizer wide">
-            <input id="left-panel-button" type="button" value="Filetree Settings Debug" style="font-family: 'Fira Code'; font-size:var(--font-size)" />
+            <input id="left-panel-button" type="button" value="Filetree Settings Debug"
+                style="font-family: 'Fira Code'; font-size:var(--font-size)" />
         </div>
         <div class="container-middle">
             <div class="top-gutter">

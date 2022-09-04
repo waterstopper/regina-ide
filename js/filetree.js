@@ -12,34 +12,71 @@ function getPath(fileElement) {
 }
 
 function createTree() {
+    deleteLibFiles();
+    let fileSystem = JSON.parse(localStorage.getItem("layout"));
     fetch("https://alex5041.github.io/reginafiles/layout.json")
         .then(function (response) {
             return response.text();
         })
         .then((text) => JSON.parse(text))
         .then((layout) => {
-            let folders = layout.folders;
-            let files = layout.files;
-            folders.forEach((folder) => {
-                createFolder(
-                    folder.name,
-                    folder.parent == null ? "" : folder.parent
-                );
-            });
-            files.forEach((file) => {
-                let htmlElement = createFile(
-                    file.name,
-                    file.parent == null ? "" : file.parent
-                );
-                htmlElement.setAttribute("lib", "true");
-            });
+            addFolderBeforeLoad(document.getElementById("file-tree"), fileSystem, fileSystem, false)
+            addFolderBeforeLoad(document.getElementById("file-tree"), layout, fileSystem, true);
+            openTab("intro.rgn", "true")
         })
         .catch((_) => {
             console.log("Could not load");
         });
-    createFolder("example", "");
-    createFolder("e", "example");
-    createFile("file.rgn", "e");
+}
+
+function deleteLibFiles() {
+    let root = JSON.parse(localStorage.getItem("layout"));
+    for (let [name, entry] of Object.entries(root)) {
+        if (entry == "lib") delete root[name];
+        else if (typeof entry == "object")
+            if (entry.isLib == "true") delete root[name];
+    }
+    localStorage.setItem("layout", JSON.stringify(root));
+}
+
+function addFolderBeforeLoad(
+    currentFolderElement,
+    currentFolderLayout,
+    fileSystemFolder,
+    isLib
+) {
+    let fileTree = document.getElementById("file-tree");
+    for (let [name, entry] of Object.entries(currentFolderLayout)) {
+        if (typeof entry == "object") {
+            let folder = createFolder(
+                name,
+                currentFolderElement == fileTree
+                    ? ""
+                    : currentFolderElement.innerText,
+                currentFolderElement.parentElement.getElementsByTagName("ul")[0]
+            );
+            if (isLib) {
+                folder.style.color = "var(--ident-color)";
+                folder.setAttribute("lib", "true");
+                if (fileSystemFolder[name] == null)
+                    fileSystemFolder[name] = { isLib: "true", content: {} };
+            }
+            addFolderBeforeLoad(folder, entry.content, fileSystemFolder[name].content, isLib);
+        } else {
+            let file = createFile(
+                name,
+                currentFolderElement == fileTree
+                    ? ""
+                    : currentFolderElement.innerText,
+                currentFolderElement.parentElement.getElementsByTagName("ul")[0]
+            );
+            if (isLib) {
+                file.style.color = "var(--ident-color)";
+                file.setAttribute("lib", "true");
+                fileSystemFolder[name] = "lib";
+            }
+        }
+    }
 }
 
 function createLeaf(parent) {
@@ -61,14 +98,12 @@ function createFile(fileName = "myFile.rgn", folderName = "", parent) {
     addHoverFunction(file);
 
     file.ondblclick = () => {
-        console.log("open " + file.innerText);
         openTab(file.getAttribute("path"), file.getAttribute("lib"));
     };
-    if (folderName != "") file.parentElement.style.marginLeft = "-20px";
+    if (parent != document.getElementById("file-tree")) file.parentElement.style.marginLeft = "-20px";
 
     file.parentElement.style.padding = "0px";
     let path = getPath(file);
-    console.log(path);
     file.setAttribute("path", path);
     return file;
 }
@@ -96,7 +131,10 @@ function createFolder(name = "myFolder", folderName = "", parent) {
     let folder = createParent(tree);
     folder.innerText = name;
     folder.onclick = () => addFocusFunction(folder);
-    return folder
+    if (parent != document.getElementById("file-tree")) folder.parentElement.style.marginLeft = "-20px";
+    let path = getPath(folder);
+    folder.setAttribute("path", path);
+    return folder;
 }
 
 function getByInnerHtml(collection, searched) {
@@ -137,12 +175,16 @@ function addFocusFunction(element) {
 
 function toDefaultStyle(element) {
     element.style.backgroundColor = "var(--bg-color)";
-    element.style.color = "var(--main-color)";
+    element.style.color =
+        element.getAttribute("lib") != null
+            ? "var(--ident-color)"
+            : "var(--main-color)";
 }
 
 function addTreeElement(
     parent = document.getElementById("file-tree"),
-    isFolder
+    isFolder,
+    folderName = ""
 ) {
     let divInput = document.createElement("div");
     if (parent != document.getElementById("file-tree"))
@@ -153,9 +195,8 @@ function addTreeElement(
     input.style.width = "1px";
     input.style.padding = "0px";
     input.style.fontSize = "medium";
-
-    console.log(isFolder);
     divInput.appendChild(input);
+
     if (!isFolder) {
         let format = document.createElement("span");
         format.innerText = ".rgn";
@@ -169,20 +210,41 @@ function addTreeElement(
     input.onblur = () => {
         let name = fixFileName(input.value) + (isFolder ? "" : ".rgn");
         let element = isFolder
-            ? createFolder(
-                  name,
-                  parent == document.getElementById("file-tree") ? "" : "a",
-                  parent
-              )
-            : createFile(
-                  name,
-                  parent == document.getElementById("file-tree") ? "" : "a",
-                  parent
-              );
+            ? createFolder(name, folderName, parent)
+            : createFile(name, folderName, parent);
         divInput.insertAdjacentElement("afterend", element.parentElement);
         divInput.remove();
+
+        element.innerText = addFile(element.getAttribute("path").split("/"));
     };
+
     input.focus();
+}
+
+function addFile(path) {
+    let fileSystem = JSON.parse(localStorage.getItem("layout"));
+    let fileName = path[path.length - 1];
+    let folderNames = path.slice(0, -1);
+    let currentFolder = fileSystem;
+    for (let folderName of folderNames)
+        currentFolder = currentFolder[folderName].content;
+    while (currentFolder[fileName] != null) fileName = nextName(fileName);
+    currentFolder[fileName] = fileName.includes(".")
+        ? "1"
+        : { isLib: "false", content: {} };
+    localStorage.setItem("layout", JSON.stringify(fileSystem));
+    return fileName;
+}
+
+function deleteFile(path) {
+    let fileSystem = JSON.parse(localStorage.getItem("layout"));
+    let fileName = path[path.length - 1];
+    let folderNames = path.slice(0, -1);
+    let currentFolder = fileSystem;
+    for (let folderName of folderNames)
+        currentFolder = currentFolder[folderName];
+    delete currentFolder[fileName];
+    localStorage.setItem('layout', JSON.stringify(fileSystem))
 }
 
 function fixFileName(name) {
@@ -191,9 +253,24 @@ function fixFileName(name) {
     return res;
 }
 
-function checkFileNames(folder) {}
+function nextName(fileName) {
+    let [name, format] = fileName.split(".");
+    let res = [];
+    for (let char of name.split("").reverse().join("")) {
+        if (char >= "0" && char <= "9") res.push(char);
+        else break;
+    }
+    let length = res.length;
+    if (length == 0) return name + (format == null ? "" : "1." + format);
+    let nextNumber = parseInt(res.reverse().join("")) + 1;
+    return (
+        name.substring(0, name.length - length) +
+        nextNumber +
+        (format == null ? "" : "." + format)
+    );
+}
 
 createTree();
-addTreeElement();
 
-export { createLeaf, createParent, addTreeElement };
+
+export { createLeaf, createParent, addTreeElement, deleteFile };

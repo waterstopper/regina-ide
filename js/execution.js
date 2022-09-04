@@ -9,7 +9,6 @@ var worker;
 
 function addBreakpointsToCode() {
     let code = window.editor.getValue().split("\n");
-    let i = 0;
     let breakpoints = window.editor.getBreakpoints();
     breakpoints.sort(
         (a, b) =>

@@ -1,3 +1,5 @@
+import {getBreakpointsList, getBreakpointsIndex, setBreakpointsList, setBreakpointsIndex } from "./debug.js"
+
 /**
  * name: name to display in tab
  * htmlElement: tab DOM element
@@ -29,9 +31,7 @@ class Tab {
             closeTab(this);
             e.stopPropagation();
         };
-        this.htmlElement.onclick = () => {
-            switchTab(this);
-        };
+        this.htmlElement.onclick = () => switchTab(this);
         this.htmlElement.setAttribute("path", path);
         this.htmlElement.style.display = "flex";
         this.setHover();
@@ -77,6 +77,7 @@ async function openTab(path, isLib) {
         switchTab(found);
         return;
     }
+    let tab = new Tab(path, isLib);
     let code;
     if (isLib) {
         code = (
@@ -84,19 +85,29 @@ async function openTab(path, isLib) {
                 await fetch("https://alex5041.github.io/reginafiles/" + path)
             ).text()
         ).toString();
-    } else code = localStorage.getItem(path.code);
+    } else {
+        let saved = JSON.parse(localStorage.getItem(path));
+        code = saved.code;
+        tab.state = saved.state;
+    }
     if (
         code.includes(
             "Hey! You look a little lost. This page doesn't exist (or may be private)"
         )
     )
         code = "// Library file not found";
-    let tab = new Tab(path, isLib);
+
     window.tabs[path] = tab;
     tab.path = path;
-    tab.model = monaco.editor.createModel(code, "Regina");
-    tab.state = window.editor.saveViewState();
-    switchTab(tab);
+    tab.isLib = isLib;
+    tab.breakpointsList = [];
+    tab.currentBreakpointIndex = 0;
+    require(["vs/editor/editor.main"], function () {
+        tab.model = monaco.editor.createModel(code, "Regina");
+        console.log(tab.state);
+        if (tab.state != null) window.editor.restoreViewState(tab.state);
+        switchTab(tab);
+    });
 }
 
 function switchTab(tab) {
@@ -105,12 +116,16 @@ function switchTab(tab) {
     tab.setActive();
     window.editor.setModel(tab.model);
     window.editor.restoreViewState(tab.state);
+    window.editor.updateOptions({
+        codeLens: tab.isLib == "true",
+    });
     window.editor.focus();
 }
 
 function closeTab(tab) {
     delete window.tabs[tab.path];
-    if (this == window.currentTab) {
+    tab.state = window.editor.saveViewState();
+    if (tab == window.currentTab) {
         let openedTabs = Object.entries(window.tabs);
         if (openedTabs.length != 0) switchTab(openedTabs[0][1]);
         else {
@@ -121,9 +136,11 @@ function closeTab(tab) {
     if (tab.isLib) return;
 
     tab.code = tab.model.getValue();
+
     delete tab.model;
     delete tab.htmlElement;
     localStorage.setItem(tab.path, JSON.stringify(tab));
+    console.log(localStorage.getItem(tab.path));
 }
 
 function findTab(path) {
