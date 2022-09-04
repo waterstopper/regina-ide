@@ -1,6 +1,7 @@
 importScripts("kotlin_kotlin.js");
 
 var evaluateJS;
+var requestImport;
 
 (function (root, factory) {
     if (typeof define === "function" && define.amd)
@@ -6769,6 +6770,13 @@ var evaluateJS;
         {
             var tmp0_set_0 = this._get_position__3188952002_iahqv2_k$();
             content.put_3mhbri_k$("@position", tmp0_set_0);
+            Unit_getInstance();
+        }
+        {
+            var tmp1_set_0 = symbolTable
+                .getFileTable_m3scuc_k$()
+                ._get_fileName__149290628_2gvtdw_k$();
+            content.put_3mhbri_k$("@file", tmp1_set_0);
             Unit_getInstance();
         }
         sendMessage(new Message("debug", content));
@@ -16796,11 +16804,10 @@ var evaluateJS;
 
 onmessage = (e) => {
     console.log("Message in worker");
-    if (e.data == "resume") {
-        resume = true;
-        return;
+    if (e.data == "import") {
+        requestImport(e.content)
     }
-   try {
+    try {
         evaluateJS(e.data);
     } catch (exception) {
         if (exception.token_1 != null) exception.node_1 = exception.token_1;
