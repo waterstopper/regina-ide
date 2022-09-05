@@ -51,9 +51,6 @@ document.getElementById("theme-button").onclick = () => {
     else changeTheme("dark");
 };
 
-document.getElementById("save-seconds").onchange = (e) =>
-    changeNumberInput(e.target, "autosaveSeconds", [0, 200]);
-
 document.getElementById("console-entries").onchange = (e) =>
     changeNumberInput(e.target, "consoleEntries", [0, 200]);
 
@@ -110,16 +107,12 @@ fun a() {
 }
 
 function openSettings() {
-    document.getElementById("save-seconds").value =
-        localStorage.getItem("autosaveSeconds");
     document.getElementById("console-entries").value =
         localStorage.getItem("consoleEntries");
     document.getElementById("font-size").value =
         localStorage.getItem("fontSize");
-    console.log(localStorage.getItem("autosave"), localStorage.getItem("autosave") == "true")
     document.getElementById("autosave").checked =
         localStorage.getItem("autosave") == "true";
-    console.log(document.getElementById("autosave").checked)
     updateFontSize();
 }
 

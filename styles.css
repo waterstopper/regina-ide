@@ -135,12 +135,13 @@ button:hover {
     float: left;
     display: flex;
     flex-flow: row;
-    z-index: 5;
+    z-index: 2;
     height: 1.3em;
     background-color: var(--bg-color);
 }
 
 .top-gutter,
+#bottom-left-panel
 #console {
     overflow-x: scroll;
     overflow-y: hidden;
@@ -149,15 +150,19 @@ button:hover {
     transition: color 0.3s ease;
 }
 
-#settings-panel {
+#bottom-left-panel {
     color: transparent;
     transition: color 0.3s ease;
 }
 
 .top-gutter:hover,
 #console:hover,
-#settings-panel:hover {
+#bottom-left-panel:hover {
     color: var(--gray);
+}
+
+#debug-panel {
+    color: var(--main-color)
 }
 
 #debug-button-panel {
@@ -206,8 +211,6 @@ button:hover {
     user-select: none;
 }
 
-
-
 .close {
     z-index: 2;
     background-color: var(--bg-color);
@@ -234,7 +237,7 @@ button:hover {
     font-size: small;
     border: 1px solid var(--middle-color);
     background-color: var(--bg-color);
-    z-index: 7;
+    z-index: 5;
 }
 
 #file-tree-menu:hover,
@@ -244,9 +247,9 @@ button:hover {
 
 .file-tree-element {
     user-select: none;
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
 }
 
 .file-tree-element:hover {
@@ -264,7 +267,7 @@ button:hover {
 }
 
 .close:hover {
-    background-color: var(--bg-color);
+    background-color: var(--light-gray);
 }
 
 .close:hover .tab {
@@ -570,4 +573,30 @@ a {
 
 ::-webkit-scrollbar-corner {
     background: rgba(0, 0, 0, 0);
+}
+
+#description {
+    position: absolute;
+    width: 20%;
+    background-color: var(--bg-color);
+    padding: 10px;
+    border-radius: 10px;
+    top: 33%;
+    left: 40%;
+    z-index: 4;
+}
+
+html[data-theme="light"] #description {
+    box-shadow: 0px 0px 10px 5px var(--light-gray);
+}
+
+html[data-theme="dark"] #description {
+    box-shadow: 0px 0px 10px 5px black;
+}
+
+.overlay {
+    position: absolute;
+    background-color: rgba(72, 122, 180, 0.3);
+    z-index: 3;
+    border-radius: 5px;
 }

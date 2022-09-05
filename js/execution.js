@@ -39,14 +39,13 @@ async function startExecution(withDebug) {
     require(["vs/editor/editor.main"], function () {
         monaco.editor.setModelMarkers(window.editor.getModel(), "owner", []);
     });
-    let bodyStyles = window.getComputedStyle(document.body);
     let button = document
         .getElementById(withDebug ? "debug-button" : "start-button")
         .getElementsByTagName("i")[0];
     button.style["-webkit-text-fill-color"] = "var(--gray)";
     worker = new Worker("js/external/regina_interpreter.js");
     worker.onmessage = (e) => {
-        handleWorkerMessage(e, withDebug, button, bodyStyles);
+        handleWorkerMessage(e, withDebug, button);
     };
 }
 
@@ -85,6 +84,7 @@ async function handleWorkerMessage(e, withDebug, button) {
         case "log":
             console.log(e.data.content);
             if (withDebug) addConsoleOutput(e.data.content);
+            else showLog(e.data.content);
             break;
         case "exception":
             showException(e.data.content);

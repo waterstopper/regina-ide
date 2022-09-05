@@ -20,11 +20,10 @@ function createTree() {
         })
         .then((text) => JSON.parse(text))
         .then((layout) => {
-            if (fileSystem.resources == null){
+            if (fileSystem.resources == null) {
                 fileSystem.resources = { isLib: false, content: {} };
-                localStorage.setItem("layout", JSON.stringify(fileSystem))
+                localStorage.setItem("layout", JSON.stringify(fileSystem));
             }
-            console.log(fileSystem);
             addFolderBeforeLoad(
                 document.getElementById("file-tree"),
                 fileSystem,
@@ -229,7 +228,7 @@ function addTreeElement(
     input.oninput = () => {
         input.style.width = input.value.length + "ch";
     };
-    input.onblur = () => {
+    function removeElement() {
         let name = fixFileName(input.value) + (isFolder ? "" : ".rgn");
         let element = isFolder
             ? createFolder(name, folderName, parent)
@@ -237,9 +236,41 @@ function addTreeElement(
         divInput.insertAdjacentElement("afterend", element.parentElement);
         divInput.remove();
 
-        element.innerText = addFile(element.getAttribute("path").split("/"));
-    };
+        let path = element.getAttribute("path");
+        element.innerText = addFile(path.split("/"));
+        element.setAttribute(
+            "path",
+            path.substring(0, path.lastIndexOf("/") + 1) + element.innerText
+        );
+        localStorage.setItem(
+            element.getAttribute("path"),
+            `{"state":{
+            "cursorState":[{"inSelectionMode":false,"selectionStart":
+            {"lineNumber":1,"column":15},"position":{"lineNumber":1,"column":15}}],
+            "viewState":{"scrollLeft":0,"firstPosition":{"lineNumber":1,"column":1},
+            "firstPositionDeltaTop":0},"contributionsState":
+            {"editor.contrib.wordHighlighter":false,"editor.contrib.folding":
+            {"lineCount":1,"provider":"indent","foldedImports":false}}},
+            "path":"${path}",
+            "isLib":null,
+            "bList":[],
+        "code":""}`
+        );
+    }
 
+    let pressed = false;
+    function handleEnterPress(e) {
+        if (e.key.toLowerCase() != "enter") return;
+        if (pressed) return;
+        pressed = true;
+        removeElement();
+    }
+    input.onblur = () => {
+        if (pressed) return;
+        console.log("blurred");
+        removeElement();
+    };
+    addEventListener("keydown", handleEnterPress);
     input.focus();
 }
 
@@ -248,8 +279,8 @@ function addFile(path) {
     let fileName = path[path.length - 1];
     let folderNames = path.slice(0, -1);
     let currentFolder = fileSystem;
-    for (let folderName of folderNames){
-        console.log(currentFolder, folderName)
+    for (let folderName of folderNames) {
+        console.log(currentFolder, folderName);
         currentFolder = currentFolder[folderName].content;
     }
     while (currentFolder[fileName] != null) fileName = nextName(fileName);
@@ -287,7 +318,6 @@ function nextName(fileName) {
     let length = res.length;
     if (length == 0) return name + (format == null ? "1" : "1." + format);
     let nextNumber = parseInt(res.reverse().join("")) + 1;
-    console.log(nextNumber);
     return (
         name.substring(0, name.length - length) +
         nextNumber +

@@ -75,6 +75,20 @@ class Tab {
                 "close"
             )[0].style.backgroundColor = "var(--bg-color)";
         };
+        this.htmlElement.getElementsByClassName("close")[0].onmouseover = (
+            e
+        ) => {
+            this.htmlElement.getElementsByClassName(
+                "close"
+            )[0].style.backgroundColor = "var(--light-gray)";
+            e.stopPropagation();
+        };
+        this.htmlElement.getElementsByClassName("close")[0].onmouseleave =
+            () => {
+                this.htmlElement.getElementsByClassName(
+                    "close"
+                )[0].style.backgroundColor = "var(--bg-color)";
+            };
     }
 }
 // localStorage.removeItem("generators/plant.rgn")

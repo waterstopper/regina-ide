@@ -10,6 +10,7 @@
     <script type="text/javascript" src="monaco-editor/min/vs/loader.js"></script>
     <script type="module" src="js/external/themes.js"></script>
     <link rel="icon" type="image/svg+xml" href="/regina.svg">
+    <script type="text/javascript" src="description.js"></script>
 </head>
 
 <body style="background-color: var(--bg-color);">
@@ -42,23 +43,21 @@
             <div id="bottom-left-panel" class="stacked">
                 <div id="settings-panel" style="display:block">
                     <div class="grid-container">
+                        <div class="grid-item">Help
+                            <div class='description'>show panel descriptions. For language help, check <a
+                                    href="https://alex5041.github.io/regina/regina/" target="_blank">docs</a></div>
+                        </div>
+                        <div class="grid-item">
+                            <label class="switch">
+                                <input id="help-toggle" type="checkbox">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
                         <div class="grid-item">Theme
                             <div class='description'></div>
                         </div>
                         <div class="grid-item">
                             <button id='theme-button' onclick='changeTheme(this)'>light</button>
-                        </div>
-                        <div class="grid-item">Autosave, seconds
-                            <div class='description'>0 to disable</div>
-                        </div>
-                        <div class="grid-item">
-                            <input id="save-seconds" type="number" min="0" max="1000"> </input>
-                        </div>
-                        <div class="grid-item">Console entries
-                            <div class='description'>qty before overflow</div>
-                        </div>
-                        <div class="grid-item">
-                            <input id="console-entries" type="number" min="0" max="1000"> </input>
                         </div>
                         <div class="grid-item">Font size
                             <div class='description'>in editor</div>
@@ -66,11 +65,11 @@
                         <div class="grid-item">
                             <input id="font-size" type="number" min="5" max="50"> </input>
                         </div>
-                        <div class="grid-item">Reset all
-                            <div class='description'>all settings to defaults, all code to default</div>
+                        <div class="grid-item">Console entries
+                            <div class='description'>qty before overflow</div>
                         </div>
                         <div class="grid-item">
-                            <button id="reset-all">do reset</button>
+                            <input id="console-entries" type="number" min="0" max="1000"> </input>
                         </div>
                         <div class="grid-item">Autosave file changes on tab close/page reload
                             <div class='description'>if there is no internet, local files will be used</div>
@@ -81,15 +80,11 @@
                                 <span class="slider round"></span>
                             </label>
                         </div>
-
-
-                        <!-- Not implemented -->
-                        <div class="grid-item" style='display: none;'>Texture
-                            <div class='description'></div>
+                        <div class="grid-item">Reset all
+                            <div class='description'>settings to default, delete files</div>
                         </div>
-                        <div class="grid-item" style='display: none;'>
-                            <!-- Rough means there is a texture on every svg.Incredibels 2 titles for reference -->
-                            <button id='texture-button' onclick='changeTexture(this)'>rough</button>
+                        <div class="grid-item">
+                            <button id="reset-all">do reset</button>
                         </div>
                         <div class="grid-item"><a
                                 href="https://docs.google.com/forms/d/e/1FAIpQLScqsdD7BmKWK_GJgfmLQ1V8e8mvegwPUHe-TxpnOGZP95Y-xQ/viewform"
@@ -120,6 +115,8 @@
         <div class="resizer wide">
             <input id="left-panel-button" type="button" value="Filetree Settings Debug"
                 style="font-family: 'Fira Code'; font-size:var(--font-size)" />
+            <i class="fa-solid fa-arrow-left" style="color:var(--light-gray);"></i>
+            <i class="fa-solid fa-arrow-right" style="color:var(--light-gray); display:none;"></i>
         </div>
         <div class="container-middle">
             <div class="top-gutter">
@@ -172,6 +169,13 @@
         <p>add file</p>
         <p>add folder</p>
         <p>delete</p>
+    </div>
+    <div id="description" style="display: none;">
+        <p style="text-align: center; margin: 0px; font-size: large; color:var(--middle-color); font-weight: bold;"></p>
+        <hr class="console-record-divider" noshade>
+        <p style="text-align: justify; padding-left: 15px; padding-right: 15px;">
+
+        </p>
     </div>
     <script type="module" src="js/external/editor.js"></script>
     <script type="module" src="js/tab.js"></script>

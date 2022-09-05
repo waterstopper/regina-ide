@@ -138,10 +138,10 @@ onclick = () => {
 
 var mouseInTree = false;
 
-let fileTree = document.getElementById("file-tree");
-fileTree.onmouseenter = () => (mouseInTree = true);
+let filePanel = document.getElementById("file-panel");
+filePanel.onmouseenter = () => (mouseInTree = true);
 
-fileTree.onmouseleave = () => (mouseInTree = false);
+filePanel.onmouseleave = () => (mouseInTree = false);
 
 function setPanelWidth() {
     document.getElementsByClassName("container-left")[0].style.width = "30%";
@@ -228,5 +228,81 @@ function hookConsole() {
     };
 }
 //hookConsole();
+
+var descr = document.getElementById("description");
+var prevDescribedColor;
+
+function assignToDescribedElements(fn) {
+    for (let panel of descriptions) {
+        let identifiers;
+        let getter;
+        if (panel.class != null) {
+            getter = ".";
+            identifiers = panel.class;
+        } else if (Array.isArray(panel.id)) {
+            getter = "#";
+            identifiers = panel.id;
+        }
+        let elements = [];
+        for (let ident of identifiers) {
+            elements.push(
+                Array.from(document.querySelectorAll(getter + ident))
+            );
+        }
+        fn(elements.flat(), panel.title, panel.description);
+    }
+}
+
+assignToDescribedElements(setHoverDescription);
+
+var canDescribe = false;
+
+document.getElementById("help-toggle").oninput = (e) => {
+    if (e.target.checked) {
+        showDescribable();
+        canDescribe = true;
+        descr.style.display = "block";
+    } else {
+        canDescribe = false;
+        descr.style.display = "none";
+        document.getElementById("bottom-left-panel").style.backgroundColor =
+            "var(--bg-color)";
+    }
+};
+
+function showDescribable() {
+    assignToDescribedElements((elements) => {
+        let overlay = document.createElement("div");
+        document.body.appendChild(overlay);
+        overlay.classList.add("overlay");
+        let rect = elements[0].getBoundingClientRect();
+        overlay.style.width = rect.width + "px";
+        overlay.style.height = rect.height + "px";
+        overlay.style.left = rect.left + "px";
+        overlay.style.top = rect.top + "px";
+        setTimeout(() => {
+            overlay.remove();
+        }, 1000);
+    });
+}
+
+function setHoverDescription(elements, title, description) {
+    prevDescribedColor = elements[0].style.backgroundColor;
+    for (let element of elements) {
+        element.onmouseover = () => {
+            if (!canDescribe) return;
+            descr.getElementsByTagName("p")[0].innerHTML = title;
+            descr.getElementsByTagName("p")[1].innerHTML =
+                "<span style='margin-left:2em;'></span>" + description;
+            for (let e of elements)
+                e.style.backgroundColor = "rgba(72, 122, 180, .3)"; //"rgba(72 122 180 / .2)"
+        };
+        element.onmouseout = () => {
+            if (!canDescribe) return;
+            for (let e of elements)
+                e.style.backgroundColor = prevDescribedColor;
+        };
+    }
+}
 
 export { hideLeftPanel, showWarning };

@@ -1,6 +1,7 @@
 import { createLeaf, createParent } from "./filetree.js";
 import { switchTab } from "./tab.js";
 import { hideLeftPanel } from "./index.js";
+import { showLog } from "./execution.js";
 
 var breakpointsList = [];
 var currentBreakpointIndex = 0;
@@ -8,6 +9,7 @@ var currentBreakpointIndex = 0;
 function addConsoleOutput(output) {
     if (breakpointsList.length != 0)
         breakpointsList[breakpointsList.length - 1].output.push(output);
+    else showLog(output);
 }
 
 function removeConsoleOutput(number) {
@@ -15,7 +17,7 @@ function removeConsoleOutput(number) {
         .getElementById("console")
         .getElementsByClassName("console-record");
     for (let i = 0; i < number; i++) {
-        records.removeChild(records.lastElementChild);
+        records[records.length - 1].remove();
     }
 }
 
@@ -27,7 +29,10 @@ function nextBreakpoint() {
                     .second_1
             ) + 1
         );
-        showDebuggingScope(breakpointsList[++currentBreakpointIndex].scope);
+        for (let messasge of breakpointsList[currentBreakpointIndex].output)
+            showLog(messasge);
+        currentBreakpointIndex++;
+        showDebuggingScope(breakpointsList[currentBreakpointIndex].scope);
         changeCurrentIndex();
     }
 }
@@ -40,12 +45,17 @@ function previousBreakpoint() {
                     .second_1
             ) + 1
         );
-        showDebuggingScope(breakpointsList[--currentBreakpointIndex].scope);
+        currentBreakpointIndex--;
+        removeConsoleOutput(
+            breakpointsList[currentBreakpointIndex].output.length
+        );
+        showDebuggingScope(breakpointsList[currentBreakpointIndex].scope);
         changeCurrentIndex();
     }
 }
 
 function toCaretBreakpoint() {
+    console.log(breakpointsList)
     let lineNumber = window.editor.getPosition().lineNumber;
     let i = 0;
     for (let breakpoint of breakpointsList.slice(
@@ -64,6 +74,8 @@ function toCaretBreakpoint() {
             showDebuggingScope(breakpointsList[currentBreakpointIndex].scope);
             return;
         }
+        for (let message of breakpointsList[currentBreakpointIndex + i].output)
+            showLog(message);
         i++;
     }
     let notificiation = document.createElement("span");
@@ -130,10 +142,8 @@ function startDebugging() {
     if (
         document.getElementsByClassName("container-left")[0].style.display ==
         "none"
-    ) {
-        console.log("clicked")
+    )
         hideLeftPanel();
-    }
     changeCurrentIndex();
     showDebuggingScope(breakpointsList[currentBreakpointIndex].scope);
 }
