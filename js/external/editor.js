@@ -1,4 +1,4 @@
-import * as themes from "/js/external/themes.js";
+import * as themes from "./themes.js";
 //import {getFile} from "../storage.js"
 
 async function getFile(path) {

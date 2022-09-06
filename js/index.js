@@ -12,10 +12,7 @@ window.tabs = {};
 //localStorage.removeItem("closed")
 window.onbeforeunload = closingCode;
 function closingCode() {
-    for (let [path, tab] of Object.entries(window.tabs)) {
-        closeTab(tab);
-    }
-
+    for (let [path, tab] of Object.entries(window.tabs)) closeTab(tab);
     return null;
 }
 document.getElementById("autosave").oninput = (e) => {
@@ -253,6 +250,12 @@ function assignToDescribedElements(fn) {
     }
 }
 
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min) + min);
+}
+
 assignToDescribedElements(setHoverDescription);
 
 var canDescribe = false;
@@ -262,6 +265,9 @@ document.getElementById("help-toggle").oninput = (e) => {
         showDescribable();
         canDescribe = true;
         descr.style.display = "block";
+        descr.getElementsByTagName("p")[0].innerHTML = "Tip";
+        descr.getElementsByTagName("p")[1].innerHTML =
+            tips[getRandomInt(0, tips.length)];
     } else {
         canDescribe = false;
         descr.style.display = "none";

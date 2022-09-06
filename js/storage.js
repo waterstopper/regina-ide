@@ -28,8 +28,8 @@ document.getElementById("reset-all").onmousedown = () => {
         if (index == 0) {
             clearInterval(interval);
             document.getElementById("reset-all").innerText = "succesful!";
-            console.log("reset")
             localStorage.clear()
+            location.reload()
             setDefaults()
         } else document.getElementById("reset-all").innerText = "hold " + index + "...";
         index--;

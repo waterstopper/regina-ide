@@ -82,7 +82,7 @@ async function handleWorkerMessage(e, withDebug, button) {
             if (withDebug) return startDebugging();
             break;
         case "log":
-            console.log(e.data.content);
+            // console.log(e.data.content);
             if (withDebug) addConsoleOutput(e.data.content);
             else showLog(e.data.content);
             break;
@@ -98,6 +98,8 @@ async function handleWorkerMessage(e, withDebug, button) {
             break;
     }
 }
+
+function writeToFile() {}
 
 function resetExecution(button) {
     worker = null;

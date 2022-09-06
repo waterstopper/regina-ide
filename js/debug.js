@@ -29,11 +29,25 @@ function nextBreakpoint() {
                     .second_1
             ) + 1
         );
-        for (let messasge of breakpointsList[currentBreakpointIndex].output)
-            showLog(messasge);
+        showBreakpointLogs(currentBreakpointIndex);
         currentBreakpointIndex++;
         showDebuggingScope(breakpointsList[currentBreakpointIndex].scope);
         changeCurrentIndex();
+    }
+}
+
+function showBreakpointLogs(ind) {
+    let qty = document.getElementsByClassName("console-record").length - 1;
+    let printed = Math.min(
+        breakpointsList[ind].output.length,
+        localStorage.getItem("consoleEntries") - qty
+    );
+    for (let i = 0; i < printed; i++) showLog(breakpointsList[ind].output[i]);
+    // printed == -1 if overflow happened already
+    if (printed == -1) breakpointsList[ind].qty = 0;
+    else if (printed != -1 && printed < breakpointsList[ind].output.length) {
+        showLog("console overflow, print less text");
+        breakpointsList[ind].qty = printed + 1;
     }
 }
 
@@ -47,17 +61,19 @@ function previousBreakpoint() {
         );
         currentBreakpointIndex--;
         removeConsoleOutput(
-            breakpointsList[currentBreakpointIndex].output.length
+            breakpointsList[currentBreakpointIndex].qty == null
+                ? breakpointsList[currentBreakpointIndex].output.length
+                : breakpointsList[currentBreakpointIndex].qty
         );
         showDebuggingScope(breakpointsList[currentBreakpointIndex].scope);
         changeCurrentIndex();
     }
 }
-
 function toCaretBreakpoint() {
-    console.log(breakpointsList)
     let lineNumber = window.editor.getPosition().lineNumber;
     let i = 0;
+    let currentOutputQty =
+        document.getElementsByClassName("console-record").length - 1;
     for (let breakpoint of breakpointsList.slice(
         currentBreakpointIndex,
         breakpointsList.length
@@ -74,10 +90,13 @@ function toCaretBreakpoint() {
             showDebuggingScope(breakpointsList[currentBreakpointIndex].scope);
             return;
         }
-        for (let message of breakpointsList[currentBreakpointIndex + i].output)
-            showLog(message);
+        showBreakpointLogs(currentBreakpointIndex + i);
         i++;
     }
+    let records = document.getElementsByClassName("console-record");
+    while (records.length > currentOutputQty)
+        records[records.length - 1].remove();
+
     let notificiation = document.createElement("span");
     notificiation.innerText = "No further breakpoint on same line with a caret";
     notificiation.style.color = "var(--gray)";
@@ -204,6 +223,7 @@ function createCollection(
             );
         else if (parentText.getAttribute("cType") == "Type")
             addChildrenToType(tree, scope, parentText.getAttribute("cValue"));
+        parentText.setAttribute("added", "true")
     };
 }
 
@@ -247,7 +267,6 @@ function addChildrenToArray(arrayElement, scope, id) {
             createNonCollection(i, child.second_1, child.first_1, arrayElement);
         i++;
     }
-    arrayElement.setAttribute("added", "true");
 }
 
 function treeFromCaret(caret) {
@@ -302,7 +321,6 @@ function addChildrenToDictionary(dictElement, scope, id) {
                 tree
             );
     }
-    dictElement.setAttribute("added", "true");
 }
 
 function addChildrenToType(typeElement, scope, id) {
@@ -325,7 +343,6 @@ function addChildrenToType(typeElement, scope, id) {
                 tree
             );
     }
-    typeElement.setAttribute("added", "true");
 }
 
 function getType(id, scope) {

@@ -188,11 +188,26 @@ function closeTab(tab) {
     if (tab.isLib) return;
 
     tab.code = tab.model.getValue();
+    removeOutOfLineBreakpoints(tab);
 
     delete tab.model;
     delete tab.htmlElement;
+    removeLineSelection(tab);
     localStorage.setItem(tab.path, JSON.stringify(tab));
     console.log(localStorage.getItem(tab.path));
+}
+
+function removeLineSelection(tab) {
+    for (let point of tab.bList) {
+        point.options.className = "";
+    }
+}
+
+function removeOutOfLineBreakpoints(tab) {
+    let numberOfLines = tab.code.split("\n").length;
+    tab.bList = tab.bList.filter((element) => {
+        element.range.startLineNumber <= numberOfLines;
+    });
 }
 
 function findTab(path) {

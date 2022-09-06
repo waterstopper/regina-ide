@@ -24,6 +24,15 @@ function createTree() {
                 fileSystem.resources = { isLib: false, content: {} };
                 localStorage.setItem("layout", JSON.stringify(fileSystem));
             }
+            if (fileSystem["main.rgn"] == null) {
+                fileSystem["main.rgn"] = "1";
+                setEmptyFile(
+                    "main.rgn",
+                    `fun main() {\\n\\tlog(\\"Hello, World!\\") \\n}`
+                );
+                localStorage.setItem("layout", JSON.stringify(fileSystem));
+            }
+
             addFolderBeforeLoad(
                 document.getElementById("file-tree"),
                 fileSystem,
@@ -36,7 +45,7 @@ function createTree() {
                 fileSystem,
                 true
             );
-            openTab("intro.rgn", "true");
+            openTab("main.rgn", false);
         })
         .catch((_) => {
             console.log("Could not load");
@@ -242,20 +251,8 @@ function addTreeElement(
             "path",
             path.substring(0, path.lastIndexOf("/") + 1) + element.innerText
         );
-        localStorage.setItem(
-            element.getAttribute("path"),
-            `{"state":{
-            "cursorState":[{"inSelectionMode":false,"selectionStart":
-            {"lineNumber":1,"column":15},"position":{"lineNumber":1,"column":15}}],
-            "viewState":{"scrollLeft":0,"firstPosition":{"lineNumber":1,"column":1},
-            "firstPositionDeltaTop":0},"contributionsState":
-            {"editor.contrib.wordHighlighter":false,"editor.contrib.folding":
-            {"lineCount":1,"provider":"indent","foldedImports":false}}},
-            "path":"${path}",
-            "isLib":null,
-            "bList":[],
-        "code":""}`
-        );
+        path = element.getAttribute("path");
+        setEmptyFile(path);
     }
 
     let pressed = false;
@@ -267,11 +264,27 @@ function addTreeElement(
     }
     input.onblur = () => {
         if (pressed) return;
-        console.log("blurred");
         removeElement();
     };
     addEventListener("keydown", handleEnterPress);
     input.focus();
+}
+
+function setEmptyFile(path, code = "") {
+    localStorage.setItem(
+        path,
+        `{"state":{
+            "cursorState":[{"inSelectionMode":false,"selectionStart":
+            {"lineNumber":1,"column":15},"position":{"lineNumber":1,"column":15}}],
+            "viewState":{"scrollLeft":0,"firstPosition":{"lineNumber":1,"column":1},
+            "firstPositionDeltaTop":0},"contributionsState":
+            {"editor.contrib.wordHighlighter":false,"editor.contrib.folding":
+            {"lineCount":1,"provider":"indent","foldedImports":false}}},
+            "path":"${path}",
+            "isLib":null,
+            "bList":[],
+        "code":"${code}"}`
+    );
 }
 
 function addFile(path) {
@@ -325,6 +338,19 @@ function nextName(fileName) {
     );
 }
 
+function getFolderUlByName(parent, name) {
+    for (let element of parent.getElementsByTagName("li")) {
+        if (element.getElementsByClassName("span")[0].innerText == name)
+            return element.getElementsByTagName("ul")[0];
+    }
+}
+
 createTree();
 
-export { createLeaf, createParent, addTreeElement, deleteFile };
+export {
+    createLeaf,
+    createParent,
+    addTreeElement,
+    deleteFile,
+    getFolderUlByName,
+};

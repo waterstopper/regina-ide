@@ -8,8 +8,7 @@ var descriptions = [
     {
         id: ["console"],
         title: "- Console output -",
-        description:
-            `Console output produced by the program is displayed in this panel.
+        description: `Console output produced by the program is displayed in this panel.
             Click <i class="fas fa-trash" aria-hidden="true" style="font-size:bigger;"></i> to clear console.`,
     },
     {
@@ -38,7 +37,7 @@ var descriptions = [
         class: ["button-list"],
         title: "- control buttons -",
         description: `<span style='color:var(--green);'>Run</span>:
-         execute code without breakpoints. 
+         execute code without breakpoints. Starts from currently opened file. 
         Only one running program is allowed.<br>
         <span style='color:var(--green); margin-left: 2em'>Debug</span>:
          debug code.<br>
@@ -60,6 +59,20 @@ var descriptions = [
         <span style="color:var(--gray)">One panel is dedicated for settings
          and debug switch between them with resizer buttons</span><br>
         <span style="margin-left:2em"></span>Place breakpoints on line
-         by clicking on the left of the line number in editor.`,
+         by clicking on the left of the line number in editor.
+         All breakpoints should be placed before debugging.`,
     },
+];
+
+var tips = [
+    "Buttons are hoverable",
+    "Keep imports open",
+    "Use dynamic properties",
+    "Put globals into objects",
+    "Inheritance is overrated",
+    "Use files from std",
+    `Created something cool? <a
+    href="https://docs.google.com/forms/d/e/1FAIpQLScqsdD7BmKWK_GJgfmLQ1V8e8mvegwPUHe-TxpnOGZP95Y-xQ/viewform"
+    target="_blank">Leave feedback</a> (in settings)`,
+    "Don't write to lib from code",
 ];
