@@ -46,10 +46,6 @@ require(["vs/editor/editor.main"], function () {
                 close: ")",
             },
             {
-                open: "'",
-                close: "'",
-            },
-            {
                 open: '"',
                 close: '"',
             },
@@ -70,11 +66,6 @@ require(["vs/editor/editor.main"], function () {
             {
                 open: "(",
                 close: ")",
-            },
-            {
-                open: "'",
-                close: "'",
-                notIn: ["string", "comment"],
             },
             {
                 open: '"',
@@ -186,12 +177,7 @@ require(["vs/editor/editor.main"], function () {
                         bracket: "@open",
                         next: "@string",
                     },
-                ],
-
-                // characters
-                [/'[^\\']'/, "string"],
-                [/(')(@escapes)(')/, ["string", "string.escape", "string"]],
-                [/'/, "string.invalid"],
+                ]
             ],
 
             comment: [

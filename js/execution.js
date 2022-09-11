@@ -4,7 +4,7 @@ import {
     startDebugging,
     addConsoleOutput,
 } from "./debug.js";
-import { showWarning } from "./index.js";
+import { showWarning, clearConsole } from "./index.js";
 import { createFileFromPath, setFileContent } from "./filetree.js";
 
 var worker;
@@ -24,6 +24,7 @@ function addBreakpointsToCode(code, breakpoints) {
 }
 
 async function startExecution(withDebug) {
+    clearConsole();
     if (window.currentTab == null) {
         showWarning("unpicked-delete", 2000);
         return;
@@ -65,7 +66,6 @@ async function handleWorkerMessage(e, withDebug, button) {
             });
             break;
         case "import":
-            console.log(e.data);
             let code = await window.getFileContentByPath(e.data.content);
             worker.postMessage({
                 data: "write",
@@ -76,7 +76,6 @@ async function handleWorkerMessage(e, withDebug, button) {
             });
             break;
         case "write":
-            console.log(e.data.content);
             createFileFromPath(e.data.content.second_1, true);
             setFileContent(e.data.content.second_1, e.data.content.first_1);
             break;
@@ -92,6 +91,7 @@ async function handleWorkerMessage(e, withDebug, button) {
         case "exception":
             showException(e.data.content);
             resetExecution(button);
+            if (withDebug) return startDebugging();
             break;
         case "debug":
             addBreakpoint(e.data.content);

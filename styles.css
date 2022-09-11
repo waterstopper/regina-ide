@@ -136,8 +136,15 @@ button:hover {
     display: flex;
     flex-flow: row;
     z-index: 2;
-    height: 1.3em;
+    height: 1.4em;
     background-color: var(--bg-color);
+    width: 6em;
+}
+
+.button-list-back {
+    width: 6em;
+    height:  1.4em;
+    display: inline;
 }
 
 .top-gutter,

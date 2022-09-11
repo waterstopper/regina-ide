@@ -27,7 +27,7 @@ class Tab {
     createHTMLElement(path) {
         let tabs = document.getElementsByClassName("tabs scrollable")[0];
         this.htmlElement = tabs
-            .getElementsByClassName("tab")[1]
+            .getElementsByClassName("tab")[0]
             .cloneNode(true);
         let pathElements = path.split("/");
         this.htmlElement.getElementsByTagName("p")[0].innerText =

@@ -16548,7 +16548,6 @@ var currentRoots;
         }
     };
     FileSystem.prototype.exists_9c3km3_k$ = function (path) {
-        console.log(path);
         return !(this.fileSystem_1.get_1mhr4y_k$(path) == null);
     };
     FileSystem.prototype.delete_47x42e_k$ = function (path) {
@@ -16623,11 +16622,9 @@ var currentRoots;
 });
 
 onmessage = (e) => {
-    console.log("Message in worker");
     try {
         switch (e.data.data) {
             case "write":
-                console.log(e.data);
                 writeFromMainWorker(
                     e.data.content.path,
                     e.data.content.content

@@ -364,7 +364,6 @@ function getFolderUlByName(parent, name) {
 
 function createFileFromPath(path, overwrite = false) {
     let folders = path.split("/");
-    let fileName = folders[folders.length - 1];
     folders = folders.slice(0, folders.length - 1);
     let parent = document.getElementById("file-tree");
     let folderName = "";
@@ -375,7 +374,6 @@ function createFileFromPath(path, overwrite = false) {
             return;
         }
     }
-    console.log(overwrite)
     let newName = addFileToLayout(path.split("/"), overwrite);
     if (!overwrite) {
         createFile(newName, folderName, parent);

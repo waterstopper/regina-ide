@@ -182,14 +182,16 @@ function hideLeftPanel(e) {
     if (e != null) e.stopPropagation();
 }
 
-document.getElementById("clear-console").onclick = (e) => {
+document.getElementById("clear-console").onclick = () => clearConsole();
+
+function clearConsole() {
     let console = document.getElementById("console");
     let template = console
         .getElementsByClassName("console-record")[0]
         .cloneNode(true);
     console.innerHTML = "";
     console.appendChild(template);
-};
+}
 
 document.getElementById("hide-console").onclick = () => {
     let upArrow = document
@@ -315,4 +317,4 @@ function setHoverDescription(elements, title, description) {
     }
 }
 
-export { hideLeftPanel, showWarning };
+export { hideLeftPanel, showWarning, clearConsole };
