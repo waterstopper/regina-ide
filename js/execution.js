@@ -6,6 +6,7 @@ import {
 } from "./debug.js";
 import { showWarning, clearConsole } from "./index.js";
 import { createFileFromPath, setFileContent } from "./filetree.js";
+import { switchTab } from "./tab.js";
 
 var worker;
 
@@ -50,7 +51,7 @@ async function startExecution(withDebug) {
         handleWorkerMessage(e, withDebug, button);
     };
 }
-
+localStorage.removeItem("std/geometry2D.rgn");
 async function handleWorkerMessage(e, withDebug, button) {
     switch (e.data.type) {
         case "ready":
@@ -76,8 +77,9 @@ async function handleWorkerMessage(e, withDebug, button) {
             });
             break;
         case "write":
-            createFileFromPath(e.data.content.second_1, true);
-            setFileContent(e.data.content.second_1, e.data.content.first_1);
+            // console.log(e.data);
+            createFileFromPath(e.data.content.first_1, true);
+            setFileContent(e.data.content.first_1, e.data.content.second_1);
             break;
         case "finished":
             resetExecution(button);
@@ -89,6 +91,9 @@ async function handleWorkerMessage(e, withDebug, button) {
             else showLog(e.data.content);
             break;
         case "exception":
+            console.log(e.data.content);
+            let breakpointTab = window.tabs[e.data.content.path];
+            if (breakpointTab != window.currentTab) switchTab(breakpointTab);
             showException(e.data.content);
             resetExecution(button);
             if (withDebug) return startDebugging();

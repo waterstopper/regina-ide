@@ -92,6 +92,12 @@ require(["vs/editor/editor.main"], function () {
             "class",
             "fun",
             "while",
+            "foreach",
+            "as",
+            "import",
+            "null",
+            "true",
+            "false"
         ],
         operators: [
             "=",
@@ -106,6 +112,7 @@ require(["vs/editor/editor.main"], function () {
             "!=",
             "&&",
             "||",
+            "??",
             "+",
             "-",
             "*",
@@ -290,6 +297,14 @@ require(["vs/editor/editor.main"], function () {
                     label: "while",
                     kind: monaco.languages.CompletionItemKind.Keyword,
                     insertText: "while",
+                    insertTextRules:
+                        monaco.languages.CompletionItemInsertTextRule
+                            .InsertAsSnippet,
+                },
+                {
+                    label: "foreach",
+                    kind: monaco.languages.CompletionItemKind.Keyword,
+                    insertText: "foreach",
                     insertTextRules:
                         monaco.languages.CompletionItemInsertTextRule
                             .InsertAsSnippet,

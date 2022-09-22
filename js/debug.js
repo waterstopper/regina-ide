@@ -213,7 +213,7 @@ function createCollection(
     parentText.onclick = () => {
         if (parentText.getAttribute("added") != null) return;
         let tree = parentText.parentElement.getElementsByTagName("ul")[0];
-        if (parentText.getAttribute("cType") == "Array")
+        if (parentText.getAttribute("cType") == "List")
             addChildrenToArray(tree, scope, parentText.getAttribute("cValue"));
         else if (parentText.getAttribute("cType") == "Dictionary")
             addChildrenToDictionary(
@@ -238,7 +238,7 @@ function getValueSpan(value, type, scope, isSimple) {
                 return simpleSpan;
             }
             return getDictionarySpan(value, scope);
-        case "Array":
+        case "List":
             if (isSimple) {
                 if (getArray(value, scope).length == 0)
                     simpleSpan.innerText = "[]";
@@ -350,7 +350,8 @@ function getType(id, scope) {
 }
 
 function getArray(id, scope) {
-    return scope["@references"].arrays_1[id].properties_1.array_1;
+    console.log(scope)
+    return scope["@references"].lists_1[id].properties_1.array_1;
 }
 
 function getDictionary(id, scope) {
@@ -442,7 +443,7 @@ function createIdentifier(parent, name) {
 
 function isCollection(e) {
     return (
-        e.first_1 == "Type" || e.first_1 == "Array" || e.first_1 == "Dictionary"
+        e.first_1 == "Type" || e.first_1 == "List" || e.first_1 == "Dictionary"
     );
 }
 

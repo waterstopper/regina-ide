@@ -91,6 +91,10 @@ class Tab {
             };
     }
 }
+
+function moveToLineInTab(path, line){
+    
+}
 // localStorage.removeItem("generators/plant.rgn")
 // localStorage.removeItem("generators/house.rgn")
 // localStorage.removeItem("generators/animal.rgn")
@@ -100,7 +104,6 @@ console.log(localStorage);
 window.getFileContentByPath = async function (path) {
     // check if currently opened - in that case breakpoints are important
     if (window.tabs[path] != null) {
-        console.log("adding bpoints");
         return addBreakpointsToCode(
             window.tabs[path].model.getValue(),
             window.tabs[path].bList
@@ -121,6 +124,7 @@ window.getFileContentByPath = async function (path) {
             return null;
         else return res;
     }
+    isLocal = JSON.parse(isLocal);
     return isLocal.code == null ? isLocal.model.getValue() : isLocal.code;
 };
 
