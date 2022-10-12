@@ -13,9 +13,9 @@ function getPath(fileElement) {
 }
 
 function createTree() {
-    console.log(JSON.parse(localStorage.getItem("layout")));
     deleteLibFiles();
     let fileSystem = JSON.parse(localStorage.getItem("layout"));
+    console.log(fileSystem);
     fetch("https://alex5041.github.io/reginafiles/layout.json")
         .then(function (response) {
             return response.text();
@@ -305,7 +305,7 @@ function addFileToLayout(path, overwrite = false) {
             ? "1"
             : { isLib: "false", content: {} };
     else {
-        console.log("new")
+        console.log("new");
         while (currentFolder[fileName] != null) fileName = nextName(fileName);
         currentFolder[fileName] = fileName.includes(".")
             ? "1"
@@ -387,5 +387,5 @@ export {
     deleteFile,
     createFileFromPath,
     setFileContent,
-    createTree
+    createTree,
 };

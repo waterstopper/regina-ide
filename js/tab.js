@@ -92,9 +92,7 @@ class Tab {
     }
 }
 
-function moveToLineInTab(path, line){
-    
-}
+function moveToLineInTab(path, line) {}
 // localStorage.removeItem("generators/plant.rgn")
 // localStorage.removeItem("generators/house.rgn")
 // localStorage.removeItem("generators/animal.rgn")
@@ -127,6 +125,20 @@ window.getFileContentByPath = async function (path) {
     isLocal = JSON.parse(isLocal);
     return isLocal.code == null ? isLocal.model.getValue() : isLocal.code;
 };
+
+function getLayout(folderName, root = "", layout = {}, fileSystem) {
+    let res = {};
+    if (fileSystem == null)
+        fileSystem = JSON.parse(localStorage.getItem("layout"));
+    let current = fileSystem[folderName];
+    let currentPath = "";
+    for (const [name, value] in Object.entries(current.content)) {
+        res[name] =
+            typeof value == "object"
+                ? getLayout(name, currentPath)
+                : window.getFileContentByPath(currentPath + "/" + name);
+    }
+}
 
 async function openTab(path, isLib) {
     let found = window.tabs[path];

@@ -7,7 +7,6 @@ import {
 import { showWarning, clearConsole } from "./index.js";
 import { createFileFromPath, setFileContent } from "./filetree.js";
 import { switchTab } from "./tab.js";
-
 var worker;
 
 function addBreakpointsToCode(code, breakpoints) {
@@ -67,6 +66,7 @@ async function handleWorkerMessage(e, withDebug, button) {
             });
             break;
         case "import":
+            console.log("import")
             let code = await window.getFileContentByPath(e.data.content);
             worker.postMessage({
                 data: "write",
