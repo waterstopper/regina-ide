@@ -6,7 +6,7 @@ import {
 } from "./debug.js";
 import { showWarning, clearConsole } from "./index.js";
 import { createFileFromPath, setFileContent } from "./filetree.js";
-import { switchTab } from "./tab.js";
+import { openTab, switchTab } from "./tab.js";
 var worker;
 
 function addBreakpointsToCode(code, breakpoints) {
@@ -39,6 +39,7 @@ async function startExecution(withDebug) {
     // allow only one instance running
     if (worker != null) return;
     require(["vs/editor/editor.main"], function () {
+        window.editor.removeException();
         monaco.editor.setModelMarkers(window.editor.getModel(), "owner", []);
     });
     let button = document
@@ -66,7 +67,6 @@ async function handleWorkerMessage(e, withDebug, button) {
             });
             break;
         case "import":
-            console.log("import")
             let code = await window.getFileContentByPath(e.data.content);
             worker.postMessage({
                 data: "write",
@@ -93,8 +93,9 @@ async function handleWorkerMessage(e, withDebug, button) {
         case "exception":
             console.log(e.data.content);
             let breakpointTab = window.tabs[e.data.content.path];
-            if (breakpointTab != window.currentTab) switchTab(breakpointTab);
-            showException(e.data.content);
+            if (breakpointTab != null && breakpointTab != window.currentTab) switchTab(breakpointTab);
+            if(breakpointTab == null) openTab(e.data.content.path, localStorage.getItem(e.data.content.path) == null)
+            showException(e.data.content, window.tabs[e.data.content.path]);
             resetExecution(button);
             if (withDebug) return startDebugging();
             break;
@@ -136,7 +137,7 @@ function terminateExecution() {
     }
 }
 
-function showException(exception) {
+function showException(exception, tab) {
     require(["vs/editor/editor.main"], function () {
         monaco.editor.setModelMarkers(window.editor.getModel(), "owner", [
             {
@@ -148,7 +149,10 @@ function showException(exception) {
                 endColumn: exception.position.x + exception.length,
             },
         ]);
+        console.log(tab)
+        window.editor.removeException = () =>  monaco.editor.setModelMarkers(tab.model, "owner", []);
     });
+    window.editor.revealLine(exception.position.y);
 }
 
 export { startExecution, showLog, addBreakpointsToCode, terminateExecution };

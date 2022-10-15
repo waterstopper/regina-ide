@@ -37,12 +37,14 @@ var currentFileTable;
     var equals = kotlin_kotlin.$crossModule$.equals;
     var LinkedHashMap_init_$Create$ =
         kotlin_kotlin.$crossModule$.LinkedHashMap_init_$Create$_1;
+    var ensureNotNull = kotlin_kotlin.$crossModule$.ensureNotNull;
+    var last = kotlin_kotlin.$crossModule$.last_1;
     var ArrayList_init_$Create$ =
         kotlin_kotlin.$crossModule$.ArrayList_init_$Create$_1;
     var Triple = kotlin_kotlin.$crossModule$.Triple;
     var toList = kotlin_kotlin.$crossModule$.toList_1;
     var emptyList = kotlin_kotlin.$crossModule$.emptyList;
-    var last = kotlin_kotlin.$crossModule$.last;
+    var last_0 = kotlin_kotlin.$crossModule$.last;
     var first = kotlin_kotlin.$crossModule$.first;
     var removeLast = kotlin_kotlin.$crossModule$.removeLast;
     var toString = kotlin_kotlin.$crossModule$.toString_2;
@@ -123,11 +125,11 @@ var currentFileTable;
     var compareTo = kotlin_kotlin.$crossModule$.compareTo;
     var plus_0 = kotlin_kotlin.$crossModule$.plus;
     var emptySet = kotlin_kotlin.$crossModule$.emptySet;
+    var toMutableSet = kotlin_kotlin.$crossModule$.toMutableSet;
     var toMap = kotlin_kotlin.$crossModule$.toMap;
     var first_1 = kotlin_kotlin.$crossModule$.first_2;
     var split$default = kotlin_kotlin.$crossModule$.split$default_1;
     var StringBuilder = kotlin_kotlin.$crossModule$.StringBuilder;
-    var toMutableSet = kotlin_kotlin.$crossModule$.toMutableSet;
     var DoubleCompanionObject_getInstance =
         kotlin_kotlin.$crossModule$.DoubleCompanionObject_getInstance;
     var IntCompanionObject_getInstance =
@@ -299,47 +301,63 @@ var currentFileTable;
     function elementToDebug(element, references) {
         var tmp;
         if (!isInterface(element, NestableDebug)) {
-            tmp = element.toDebugClass_971qih_k$(references);
+            tmp = element.toDebugClass$default_jlj1oy_k$(
+                references,
+                false,
+                2,
+                null
+            );
         } else {
             {
                 var tmp0_subject = element;
                 var tmp_0;
                 if (tmp0_subject instanceof Type) {
-                    tmp_0 = references.types_1.get_1mhr4y_k$(
-                        element.getDebugId_sdwqy0_k$().toString()
-                    );
+                    var tmp$ret$0;
+                    $l$block: {
+                        var tmp0_get_0 = references.types_1;
+                        var tmp1_get_0 = element
+                            .getDebugId_sdwqy0_k$()
+                            ._get_second__4255435031_njbah_k$();
+                        tmp$ret$0 = (
+                            isInterface(tmp0_get_0, Map)
+                                ? tmp0_get_0
+                                : THROW_CCE()
+                        ).get_1mhr4y_k$(tmp1_get_0);
+                        break $l$block;
+                    }
+                    tmp_0 = tmp$ret$0;
                 } else {
                     if (tmp0_subject instanceof PList) {
-                        var tmp$ret$0;
-                        $l$block: {
-                            var tmp0_get_0 = references.lists_1;
-                            var tmp1_get_0 = element
+                        var tmp$ret$1;
+                        $l$block_0: {
+                            var tmp2_get_0 = references.lists_1;
+                            var tmp3_get_0 = element
                                 .getDebugId_sdwqy0_k$()
                                 ._get_second__4255435031_njbah_k$();
-                            tmp$ret$0 = (
-                                isInterface(tmp0_get_0, Map)
-                                    ? tmp0_get_0
+                            tmp$ret$1 = (
+                                isInterface(tmp2_get_0, Map)
+                                    ? tmp2_get_0
                                     : THROW_CCE()
-                            ).get_1mhr4y_k$(tmp1_get_0);
-                            break $l$block;
+                            ).get_1mhr4y_k$(tmp3_get_0);
+                            break $l$block_0;
                         }
-                        tmp_0 = tmp$ret$0;
+                        tmp_0 = tmp$ret$1;
                     } else {
                         if (tmp0_subject instanceof PDictionary) {
-                            var tmp$ret$1;
-                            $l$block_0: {
-                                var tmp2_get_0 = references.dictionaries_1;
-                                var tmp3_get_0 = element
+                            var tmp$ret$2;
+                            $l$block_1: {
+                                var tmp4_get_0 = references.dictionaries_1;
+                                var tmp5_get_0 = element
                                     .getDebugId_sdwqy0_k$()
                                     ._get_second__4255435031_njbah_k$();
-                                tmp$ret$1 = (
-                                    isInterface(tmp2_get_0, Map)
-                                        ? tmp2_get_0
+                                tmp$ret$2 = (
+                                    isInterface(tmp4_get_0, Map)
+                                        ? tmp4_get_0
                                         : THROW_CCE()
-                                ).get_1mhr4y_k$(tmp3_get_0);
-                                break $l$block_0;
+                                ).get_1mhr4y_k$(tmp5_get_0);
+                                break $l$block_1;
                             }
-                            tmp_0 = tmp$ret$1;
+                            tmp_0 = tmp$ret$2;
                         } else {
                             {
                                 throw Exception_init_$Create$(
@@ -350,19 +368,13 @@ var currentFileTable;
                     }
                 }
                 var resolved = tmp_0;
-                var tmp_1;
-                if (!(resolved == null)) {
-                    tmp_1 = resolved;
-                } else {
-                    {
-                        var tmp4_set_0 = references.queue_1;
-                        var tmp5_set_0 = element.getDebugId_sdwqy0_k$();
-                        tmp4_set_0.put_3mhbri_k$(tmp5_set_0, element);
-                        Unit_getInstance();
-                    }
-                    tmp_1 = element.getDebugId_sdwqy0_k$();
+                if (resolved == null) {
+                    var tmp6_set_0 = references.queue_1;
+                    var tmp7_set_0 = element.getDebugId_sdwqy0_k$();
+                    tmp6_set_0.put_3mhbri_k$(tmp7_set_0, element);
+                    Unit_getInstance();
                 }
-                tmp = tmp_1;
+                tmp = element.getDebugId_sdwqy0_k$();
             }
         }
         return tmp;
@@ -373,14 +385,26 @@ var currentFileTable;
         kind: "interface",
         interfaces: [],
     };
-    function DebugType(properties) {
+    function DebugType(properties, blankCopy) {
         this.properties_1 = properties;
+        this.blankCopy_1 = blankCopy;
     }
     DebugType.prototype.toString = function () {
-        return "DebugType(properties=" + this.properties_1 + ")";
+        return (
+            "DebugType(properties=" +
+            this.properties_1 +
+            ", blankCopy=" +
+            this.blankCopy_1 +
+            ")"
+        );
     };
     DebugType.prototype.hashCode = function () {
-        return hashCode(this.properties_1);
+        var result = hashCode(this.properties_1);
+        result =
+            (imul(result, 31) +
+                (this.blankCopy_1 == null ? 0 : hashCode(this.blankCopy_1))) |
+            0;
+        return result;
     };
     DebugType.prototype.equals = function (other) {
         if (this === other) return true;
@@ -391,6 +415,8 @@ var currentFileTable;
             other instanceof DebugType ? other : THROW_CCE();
         if (!equals(this.properties_1, tmp0_other_with_cast.properties_1))
             return false;
+        if (!equals(this.blankCopy_1, tmp0_other_with_cast.blankCopy_1))
+            return false;
         return true;
     };
     DebugType.$metadata$ = {
@@ -398,14 +424,26 @@ var currentFileTable;
         kind: "class",
         interfaces: [Debug],
     };
-    function DebugList(properties) {
+    function DebugList(properties, blankCopy) {
         this.properties_1 = properties;
+        this.blankCopy_1 = blankCopy;
     }
     DebugList.prototype.toString = function () {
-        return "DebugList(properties=" + this.properties_1 + ")";
+        return (
+            "DebugList(properties=" +
+            this.properties_1 +
+            ", blankCopy=" +
+            this.blankCopy_1 +
+            ")"
+        );
     };
     DebugList.prototype.hashCode = function () {
-        return hashCode(this.properties_1);
+        var result = hashCode(this.properties_1);
+        result =
+            (imul(result, 31) +
+                (this.blankCopy_1 == null ? 0 : this.blankCopy_1.hashCode())) |
+            0;
+        return result;
     };
     DebugList.prototype.equals = function (other) {
         if (this === other) return true;
@@ -416,6 +454,8 @@ var currentFileTable;
             other instanceof DebugList ? other : THROW_CCE();
         if (!equals(this.properties_1, tmp0_other_with_cast.properties_1))
             return false;
+        if (!equals(this.blankCopy_1, tmp0_other_with_cast.blankCopy_1))
+            return false;
         return true;
     };
     DebugList.$metadata$ = {
@@ -423,14 +463,26 @@ var currentFileTable;
         kind: "class",
         interfaces: [Debug],
     };
-    function DebugDictionary(properties) {
+    function DebugDictionary(properties, blankCopy) {
         this.properties_1 = properties;
+        this.blankCopy_1 = blankCopy;
     }
     DebugDictionary.prototype.toString = function () {
-        return "DebugDictionary(properties=" + this.properties_1 + ")";
+        return (
+            "DebugDictionary(properties=" +
+            this.properties_1 +
+            ", blankCopy=" +
+            this.blankCopy_1 +
+            ")"
+        );
     };
     DebugDictionary.prototype.hashCode = function () {
-        return hashCode(this.properties_1);
+        var result = hashCode(this.properties_1);
+        result =
+            (imul(result, 31) +
+                (this.blankCopy_1 == null ? 0 : this.blankCopy_1.hashCode())) |
+            0;
+        return result;
     };
     DebugDictionary.prototype.equals = function (other) {
         if (this === other) return true;
@@ -440,6 +492,8 @@ var currentFileTable;
         var tmp0_other_with_cast =
             other instanceof DebugDictionary ? other : THROW_CCE();
         if (!equals(this.properties_1, tmp0_other_with_cast.properties_1))
+            return false;
+        if (!equals(this.blankCopy_1, tmp0_other_with_cast.blankCopy_1))
             return false;
         return true;
     };
@@ -518,6 +572,74 @@ var currentFileTable;
             Object.create(References.prototype)
         );
     }
+    function getReference($this, pair) {
+        var tmp0_subject = pair._get_first__3232921377_hkbbvj_k$();
+        var tmp;
+        switch (tmp0_subject) {
+            case "Int":
+                var tmp_0 = pair._get_second__4255435031_njbah_k$();
+                tmp = new PInt(typeof tmp_0 === "number" ? tmp_0 : THROW_CCE());
+                break;
+            case "Double":
+                var tmp_1 = pair._get_second__4255435031_njbah_k$();
+                tmp = new PDouble(
+                    typeof tmp_1 === "number" ? tmp_1 : THROW_CCE()
+                );
+                break;
+            case "String":
+                var tmp_2 = pair._get_second__4255435031_njbah_k$();
+                tmp = new PString(
+                    typeof tmp_2 === "string" ? tmp_2 : THROW_CCE()
+                );
+                break;
+            case "List":
+                var tmp$ret$0;
+                $l$block: {
+                    var tmp0_get_0 = $this.lists_1;
+                    var tmp1_get_0 = pair._get_second__4255435031_njbah_k$();
+                    tmp$ret$0 = (
+                        isInterface(tmp0_get_0, Map) ? tmp0_get_0 : THROW_CCE()
+                    ).get_1mhr4y_k$(tmp1_get_0);
+                    break $l$block;
+                }
+
+                tmp = ensureNotNull(ensureNotNull(tmp$ret$0).blankCopy_1);
+                break;
+            case "Dictionary":
+                var tmp$ret$1;
+                $l$block_0: {
+                    var tmp2_get_0 = $this.dictionaries_1;
+                    var tmp3_get_0 = pair._get_second__4255435031_njbah_k$();
+                    tmp$ret$1 = (
+                        isInterface(tmp2_get_0, Map) ? tmp2_get_0 : THROW_CCE()
+                    ).get_1mhr4y_k$(tmp3_get_0);
+                    break $l$block_0;
+                }
+
+                tmp = ensureNotNull(ensureNotNull(tmp$ret$1).blankCopy_1);
+                break;
+            case "Null":
+                tmp = Utils_getInstance()._get_NULL__774226340_csycv8_k$();
+                break;
+            case "Type":
+            case "Object":
+                var tmp$ret$2;
+                $l$block_1: {
+                    var tmp4_get_0 = $this.types_1;
+                    var tmp5_get_0 = pair._get_second__4255435031_njbah_k$();
+                    tmp$ret$2 = (
+                        isInterface(tmp4_get_0, Map) ? tmp4_get_0 : THROW_CCE()
+                    ).get_1mhr4y_k$(tmp5_get_0);
+                    break $l$block_1;
+                }
+
+                tmp = ensureNotNull(ensureNotNull(tmp$ret$2).blankCopy_1);
+                break;
+            default:
+                throw Exception_init_$Create$("Unexpected reference name");
+        }
+        return tmp;
+    }
     function References(types, lists, dictionaries, queue) {
         this.types_1 = types;
         this.lists_1 = lists;
@@ -535,6 +657,171 @@ var currentFileTable;
     };
     References.prototype._get_queue__3558538464_c6g84g_k$ = function () {
         return this.queue_1;
+    };
+    References.prototype.copy_mx3fmb_k$ = function (v) {
+        var root = v.toDebugClass_dfj843_k$(this, true);
+        $l$loop: while (true) {
+            var tmp$ret$0;
+            $l$block: {
+                var tmp0_isNotEmpty_0 = this.queue_1;
+                tmp$ret$0 = !tmp0_isNotEmpty_0.isEmpty_y1axqb_k$();
+                break $l$block;
+            }
+            if (!tmp$ret$0) {
+                break $l$loop;
+            }
+            last(
+                this.queue_1._get_values__2516944425_tel787_k$()
+            ).toDebugClass_dfj843_k$(this, true);
+            Unit_getInstance();
+        }
+        {
+            var tmp1_forEach_0 = this.types_1;
+            var tmp$ret$1;
+            $l$block_0: {
+                tmp$ret$1 = tmp1_forEach_0
+                    ._get_entries__31877249_iz8n5_k$()
+                    .iterator_jk1svi_k$();
+                break $l$block_0;
+            }
+            var tmp0_iterator_1 = tmp$ret$1;
+            while (tmp0_iterator_1.hasNext_bitz1p_k$()) {
+                var element_2 = tmp0_iterator_1.next_20eer_k$();
+                {
+                    {
+                        var tmp0_forEach_0_4 =
+                            element_2._get_value__3683422336_a43j40_k$()
+                                .properties_1;
+                        var tmp$ret$2;
+                        $l$block_1: {
+                            tmp$ret$2 = tmp0_forEach_0_4
+                                ._get_entries__31877249_iz8n5_k$()
+                                .iterator_jk1svi_k$();
+                            break $l$block_1;
+                        }
+                        var tmp0_iterator_1_5 = tmp$ret$2;
+                        while (tmp0_iterator_1_5.hasNext_bitz1p_k$()) {
+                            var element_2_6 = tmp0_iterator_1_5.next_20eer_k$();
+                            {
+                                var tmp = ensureNotNull(
+                                    element_2._get_value__3683422336_a43j40_k$()
+                                        .blankCopy_1
+                                );
+                                var tmp_0 =
+                                    element_2_6._get_key__857139730_e6bh8y_k$();
+                                var tmp_1 = Utils_getInstance();
+                                var tmp_2 = getReference(
+                                    this,
+                                    element_2_6._get_value__3683422336_a43j40_k$()
+                                );
+                                tmp.setProperty_tmx3oq_k$(
+                                    tmp_0,
+                                    tmp_1.toProperty$default_127ngr_k$(
+                                        tmp_2,
+                                        null,
+                                        1,
+                                        null
+                                    )
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        {
+            var tmp2_forEach_0 = this.lists_1;
+            var tmp$ret$3;
+            $l$block_2: {
+                tmp$ret$3 = tmp2_forEach_0
+                    ._get_entries__31877249_iz8n5_k$()
+                    .iterator_jk1svi_k$();
+                break $l$block_2;
+            }
+            var tmp0_iterator_1_0 = tmp$ret$3;
+            while (tmp0_iterator_1_0.hasNext_bitz1p_k$()) {
+                var element_2_0 = tmp0_iterator_1_0.next_20eer_k$();
+                {
+                    {
+                        var tmp0_forEach_0_4_0 =
+                            element_2_0._get_value__3683422336_a43j40_k$()
+                                .properties_1;
+                        var tmp0_iterator_1_5_0 =
+                            tmp0_forEach_0_4_0.iterator_jk1svi_k$();
+                        while (tmp0_iterator_1_5_0.hasNext_bitz1p_k$()) {
+                            var element_2_6_0 =
+                                tmp0_iterator_1_5_0.next_20eer_k$();
+                            {
+                                ensureNotNull(
+                                    element_2_0._get_value__3683422336_a43j40_k$()
+                                        .blankCopy_1
+                                )
+                                    .getPValue_berniv_k$()
+                                    .add_1j60pz_k$(
+                                        getReference(this, element_2_6_0)
+                                    );
+                                Unit_getInstance();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        {
+            var tmp3_forEach_0 = this.dictionaries_1;
+            var tmp$ret$4;
+            $l$block_3: {
+                tmp$ret$4 = tmp3_forEach_0
+                    ._get_entries__31877249_iz8n5_k$()
+                    .iterator_jk1svi_k$();
+                break $l$block_3;
+            }
+            var tmp0_iterator_1_1 = tmp$ret$4;
+            while (tmp0_iterator_1_1.hasNext_bitz1p_k$()) {
+                var element_2_1 = tmp0_iterator_1_1.next_20eer_k$();
+                {
+                    {
+                        var tmp0_forEach_0_4_1 =
+                            element_2_1._get_value__3683422336_a43j40_k$()
+                                .properties_1;
+                        var tmp$ret$5;
+                        $l$block_4: {
+                            tmp$ret$5 = tmp0_forEach_0_4_1
+                                ._get_entries__31877249_iz8n5_k$()
+                                .iterator_jk1svi_k$();
+                            break $l$block_4;
+                        }
+                        var tmp0_iterator_1_5_1 = tmp$ret$5;
+                        while (tmp0_iterator_1_5_1.hasNext_bitz1p_k$()) {
+                            var element_2_6_1 =
+                                tmp0_iterator_1_5_1.next_20eer_k$();
+                            {
+                                {
+                                    var tmp0_set_0_4_7 = ensureNotNull(
+                                        element_2_1._get_value__3683422336_a43j40_k$()
+                                            .blankCopy_1
+                                    ).getPValue_berniv_k$();
+                                    var tmp1_set_0_5_8 = getReference(
+                                        this,
+                                        element_2_6_1._get_key__857139730_e6bh8y_k$()
+                                    );
+                                    var tmp2_set_0_6_9 = getReference(
+                                        this,
+                                        element_2_6_1._get_value__3683422336_a43j40_k$()
+                                    );
+                                    tmp0_set_0_4_7.put_3mhbri_k$(
+                                        tmp1_set_0_5_8,
+                                        tmp2_set_0_6_9
+                                    );
+                                    Unit_getInstance();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return getReference(this, root);
     };
     References.$metadata$ = {
         simpleName: "References",
@@ -580,7 +867,7 @@ var currentFileTable;
         preload = (dict) => {
             Object.entries(dict).forEach(([path, content]) =>
                 FileSystem_getInstance().write_kwtaoc_k$(path, content, true)
-        );
+            );
         };
         writeFromMainWorker = (path, content) => {
             if (content == null)
@@ -601,8 +888,8 @@ var currentFileTable;
                 tmp,
                 mutableListOf([""])
             );
-        createGraphJS(igc);
-        requestNextImportJS(igc);
+            createGraphJS(igc);
+            requestNextImportJS(igc);
             addImport = (fileName) => {
                 // adding import
                 addNextImportJS(igc, fileName);
@@ -631,7 +918,7 @@ var currentFileTable;
                 importGraphCreator._get_imports__1703642979_s6azc3_k$();
             var tmp1_set_0 =
                 importGraphCreator._get_mainFileName__2583226955_sb4jat_k$();
-            var tmp2_set_0 = last(
+            var tmp2_set_0 = last_0(
                 importGraphCreator._get_visitedTables__1623761026_ququ0y_k$()
             );
             tmp0_set_0.put_3mhbri_k$(tmp1_set_0, tmp2_set_0);
@@ -666,16 +953,16 @@ var currentFileTable;
             tmp$ret$0 = !tmp0_isNotEmpty_0.isEmpty_y1axqb_k$();
             break $l$block;
         }
-        if (tmp$ret$0)
+        if (tmp$ret$0) {
             sendMessage(
                 new Message(
                     "import",
-                    last(
+                    last_0(
                         importGraphCreator._get_importStack__3899561998_6jewoi_k$()
                     )._get_filePath__151144490_2hzju2_k$()
                 )
             );
-        else {
+        } else {
             startEvaluationJS(importGraphCreator);
         }
     }
@@ -723,7 +1010,9 @@ var currentFileTable;
     function Optional(value, isGood) {
         this.value_1 = value;
         this.isGood_1 = isGood;
-        if (!(this.value_1 == null)) this.isGood_1 = true;
+        if (!(this.value_1 == null)) {
+            this.isGood_1 = true;
+        }
     }
     Optional.prototype._get_value__3683422336_a43j40_k$ = function () {
         return this.value_1;
@@ -1086,13 +1375,13 @@ var currentFileTable;
                     .getPInt_2trvra_k$(args, token, "isInt")
                     .getPValue_berniv_k$() === 0
             ) {
-                var tmp_0 =
-                    FunctionFactory_getInstance().rnd_1.nextDouble_s2xvfg_k$();
-                tmp = PDouble_init_$Create$(tmp_0, null, 2, null);
+                tmp = new PDouble(
+                    FunctionFactory_getInstance().rnd_1.nextDouble_s2xvfg_k$()
+                );
             } else {
-                var tmp_1 =
-                    FunctionFactory_getInstance().rnd_1.nextInt_ujorgc_k$();
-                tmp = PInt_init_$Create$(tmp_1, null, 2, null);
+                tmp = new PInt(
+                    FunctionFactory_getInstance().rnd_1.nextInt_ujorgc_k$()
+                );
             }
             return tmp;
         };
@@ -1144,35 +1433,33 @@ var currentFileTable;
             );
             var tmp;
             if (argument instanceof PNumber) {
-                var tmp_0 = numberToInt(argument.getPValue_berniv_k$());
-                tmp = PInt_init_$Create$(tmp_0, null, 2, null);
+                tmp = new PInt(numberToInt(argument.getPValue_berniv_k$()));
             } else {
                 if (argument instanceof PString) {
-                    var tmp_1;
+                    var tmp_0;
                     try {
-                        var tmp_2 = toInt(argument.getPValue_berniv_k$());
-                        tmp_1 = PInt_init_$Create$(tmp_2, null, 2, null);
+                        tmp_0 = new PInt(toInt(argument.getPValue_berniv_k$()));
                     } catch ($p) {
-                        var tmp_3;
+                        var tmp_1;
                         if ($p instanceof NumberFormatException) {
-                            tmp_3 =
+                            tmp_1 =
                                 Utils_getInstance()._get_NULL__774226340_csycv8_k$();
                         } else {
                             {
                                 throw $p;
                             }
                         }
-                        tmp_1 = tmp_3;
+                        tmp_0 = tmp_1;
                     }
-                    tmp = tmp_1;
+                    tmp = tmp_0;
                 } else {
                     {
-                        var tmp_4 = args
+                        var tmp_2 = args
                             .getFileTable_m3scuc_k$()
                             ._get_filePath__151144490_2hzju2_k$();
                         throw PositionalException_init_$Create$(
                             "Cannot cast type to int",
-                            tmp_4,
+                            tmp_2,
                             token,
                             null,
                             0,
@@ -1194,35 +1481,37 @@ var currentFileTable;
             );
             var tmp;
             if (argument instanceof PNumber) {
-                var tmp_0 = numberToDouble(argument.getPValue_berniv_k$());
-                tmp = PDouble_init_$Create$(tmp_0, null, 2, null);
+                tmp = new PDouble(
+                    numberToDouble(argument.getPValue_berniv_k$())
+                );
             } else {
                 if (argument instanceof PString) {
-                    var tmp_1;
+                    var tmp_0;
                     try {
-                        var tmp_2 = toDouble(argument.getPValue_berniv_k$());
-                        tmp_1 = PDouble_init_$Create$(tmp_2, null, 2, null);
+                        tmp_0 = new PDouble(
+                            toDouble(argument.getPValue_berniv_k$())
+                        );
                     } catch ($p) {
-                        var tmp_3;
+                        var tmp_1;
                         if ($p instanceof NumberFormatException) {
-                            tmp_3 =
+                            tmp_1 =
                                 Utils_getInstance()._get_NULL__774226340_csycv8_k$();
                         } else {
                             {
                                 throw $p;
                             }
                         }
-                        tmp_1 = tmp_3;
+                        tmp_0 = tmp_1;
                     }
-                    tmp = tmp_1;
+                    tmp = tmp_0;
                 } else {
                     {
-                        var tmp_4 = args
+                        var tmp_2 = args
                             .getFileTable_m3scuc_k$()
                             ._get_filePath__151144490_2hzju2_k$();
                         throw PositionalException_init_$Create$(
                             "Cannot cast type to Double",
-                            tmp_4,
+                            tmp_2,
                             token,
                             null,
                             0,
@@ -1266,14 +1555,14 @@ var currentFileTable;
                             $l$block_0: {
                                 var tmp_0 = mutableMapOf([
                                     to(
-                                        new PString("key", null),
+                                        new PString("key"),
                                         Utils_getInstance().toVariable_abd9s8_k$(
                                             item_2_3._get_key__857139730_e6bh8y_k$(),
                                             token
                                         )
                                     ),
                                     to(
-                                        new PString("value", null),
+                                        new PString("value"),
                                         Utils_getInstance().toVariable_abd9s8_k$(
                                             item_2_3._get_value__3683422336_a43j40_k$(),
                                             token
@@ -1286,11 +1575,7 @@ var currentFileTable;
                                 tmp0_this_5._set_dictionaryId__2464069414_3w32dm_k$(
                                     (tmp1_6 + 1) | 0
                                 );
-                                tmp$ret$1 = new PDictionary(
-                                    tmp_0,
-                                    null,
-                                    tmp1_6
-                                );
+                                tmp$ret$1 = new PDictionary(tmp_0, tmp1_6);
                                 break $l$block_0;
                             }
                             tmp0_mapTo_0_1.add_1j60pz_k$(tmp$ret$1);
@@ -1549,6 +1834,25 @@ var currentFileTable;
             var tmp_1 = Utils_getInstance();
             var tmp_2 = mutableListOf([start, end, step]);
             return tmp_1.toVariable$default_x99qtu_k$(tmp_2, null, 1, null);
+        };
+    }
+    function FunctionFactory$initializeEmbedded$lambda_16() {
+        return function (token, args) {
+            var instance = Utils_getInstance().getIdent_dfe2u9_k$(
+                token,
+                "instance",
+                args
+            );
+            Unit_getInstance();
+            var deep = Utils_getInstance().getPInt_2trvra_k$(
+                args,
+                token,
+                "deep"
+            );
+            Unit_getInstance();
+            var r = References_init_$Create$(null, null, null, null, 15, null);
+            Unit_getInstance();
+            return r.copy_mx3fmb_k$(instance);
         };
     }
     function FunctionFactory() {
@@ -1873,6 +2177,18 @@ var currentFileTable;
             res.put_3mhbri_k$("range", tmp16_set_0);
             Unit_getInstance();
         }
+        {
+            var tmp_18 = listOf("instance");
+            var tmp_19 = listOf("deep = true");
+            var tmp17_set_0 = new EmbeddedFunction(
+                "copy",
+                tmp_18,
+                tmp_19,
+                FunctionFactory$initializeEmbedded$lambda_16()
+            );
+            res.put_3mhbri_k$("copy", tmp17_set_0);
+            Unit_getInstance();
+        }
         return res;
     };
     FunctionFactory.$metadata$ = {
@@ -2045,7 +2361,7 @@ var currentFileTable;
         {
             var tmp0_set_0 = this.imports_1;
             var tmp1_set_0 = this.mainFileName_1;
-            var tmp2_set_0 = last(this.visitedTables_1);
+            var tmp2_set_0 = last_0(this.visitedTables_1);
             tmp0_set_0.put_3mhbri_k$(tmp1_set_0, tmp2_set_0);
             Unit_getInstance();
         }
@@ -2164,7 +2480,7 @@ var currentFileTable;
             addToken($this, createNextToken($this));
         if (
             !(
-                last($this.nodes_1)._get_symbol__541899891_8ymsmr_k$() ===
+                last_0($this.nodes_1)._get_symbol__541899891_8ymsmr_k$() ===
                 "(EOF)"
             )
         ) {
@@ -2187,7 +2503,7 @@ var currentFileTable;
         }
         if ($this.nodes_1._get_size__809037418_ddoh9m_k$() >= 100000) {
             Logger_getInstance().addWarning_wjr273_k$(
-                last($this.nodes_1),
+                last_0($this.nodes_1),
                 "File too large"
             );
             Unit_getInstance();
@@ -2198,12 +2514,13 @@ var currentFileTable;
     function createNextToken($this) {
         consumeWhitespaceAndComments($this);
         Unit_getInstance();
-        if ($this.index_1 === $this.source_1.length)
+        if ($this.index_1 === $this.source_1.length) {
             return $this.registry_1.token_x5edt_k$(
                 "(EOF)",
                 "(EOF)",
                 $this.position_1
             );
+        }
         if (
             equals(
                 new Char(charSequenceGet($this.source_1, $this.index_1)),
@@ -2827,7 +3144,7 @@ var currentFileTable;
     function addToken($this, newNode) {
         if (
             !(
-                last($this.nodes_1)._get_symbol__541899891_8ymsmr_k$() ===
+                last_0($this.nodes_1)._get_symbol__541899891_8ymsmr_k$() ===
                 "(SEP)"
             )
                 ? true
@@ -2998,7 +3315,7 @@ var currentFileTable;
             ((this.tokenIndex_1 + offset) | 0) >
             _get_lastIndex__339712501(this.nodes_1)
         ) {
-            return last(this.nodes_1);
+            return last_0(this.nodes_1);
         }
         while (
             this.nodes_1
@@ -4437,7 +4754,7 @@ var currentFileTable;
         Unit_getInstance();
         isLinkable(
             $this,
-            last(node._get_children__1387553196_my42wc_k$()),
+            last_0(node._get_children__1387553196_my42wc_k$()),
             filePath
         );
         var t = parser._get_lexer__3401167429_es58e3_k$().peek_21nx7_k$();
@@ -4456,7 +4773,7 @@ var currentFileTable;
             t = parser._get_lexer__3401167429_es58e3_k$().peek_21nx7_k$();
             isLinkable(
                 $this,
-                last(node._get_children__1387553196_my42wc_k$()),
+                last_0(node._get_children__1387553196_my42wc_k$()),
                 filePath
             );
             var tmp0 = i;
@@ -4700,12 +5017,12 @@ var currentFileTable;
                     Unit_getInstance();
                     if (
                         !(
-                            last(
+                            last_0(
                                 res._get_children__1387553196_my42wc_k$()
                             )._get_symbol__541899891_8ymsmr_k$() === ":"
                         )
                     ) {
-                        var tmp_0 = last(
+                        var tmp_0 = last_0(
                             res._get_children__1387553196_my42wc_k$()
                         );
                         throw SyntaxException_init_$Create$(
@@ -6172,10 +6489,9 @@ var currentFileTable;
         ) {
             parent.setProperty_tmx3oq_k$(
                 this._get_value__3683422336_a43j40_k$(),
-                Utils_getInstance().toProperty_s7td2_k$(
+                Utils_getInstance().toProperty_q8fusx_k$(
                     value,
-                    assignment._get_right__3576132917_bvz45n_k$(),
-                    parent
+                    assignment._get_right__3576132917_bvz45n_k$()
                 )
             );
             var property = parent.getProperty_qi6v9p_k$(
@@ -6204,7 +6520,6 @@ var currentFileTable;
                     );
                 } else {
                 }
-                property._set_parent__1403382957_83u8iz_k$(parent);
                 property.setProperty_tmx3oq_k$("parent", parent);
             } else {
             }
@@ -6519,7 +6834,7 @@ var currentFileTable;
                                 .get_fkrdnv_k$(index)
                                 ._get_left__802434852_d9qyp0_k$()
                         )
-                        .copy_1tks5_k$();
+                        .copyRoot_8d9kp5_k$();
                     var tmp_2 = Utils_getInstance();
                     var tmp_3 = $this
                         ._get_children__1387553196_my42wc_k$()
@@ -6775,7 +7090,7 @@ var currentFileTable;
         return new Tuple4(tmp_7, tmp_8, null, index);
     }
     function NullValue() {
-        Variable.call(this, null);
+        Variable.call(this);
     }
     NullValue.prototype.getPropertyOrNull_191djg_k$ = function (name) {
         {
@@ -6798,7 +7113,10 @@ var currentFileTable;
             );
         }
     };
-    NullValue.prototype.toDebugClass_971qih_k$ = function (references) {
+    NullValue.prototype.toDebugClass_dfj843_k$ = function (
+        references,
+        copying
+    ) {
         {
             throw new NotImplementedError(
                 "An operation is not implemented: Not yet implemented"
@@ -6947,12 +7265,12 @@ var currentFileTable;
             );
             tmp = Type_init_$Create$(
                 "@Fictive",
-                null,
                 tmp_0,
                 tmp_1,
                 -1,
                 null,
-                32,
+                null,
+                48,
                 null
             );
         } else {
@@ -6978,7 +7296,7 @@ var currentFileTable;
             var tmp_3 = symbolTable
                 .getFileTable_m3scuc_k$()
                 ._get_filePath__151144490_2hzju2_k$();
-            var tmp_4 = last(this._get_children__1387553196_my42wc_k$());
+            var tmp_4 = last_0(this._get_children__1387553196_my42wc_k$());
             throw PositionalException_init_$Create$(
                 "Link not resolved",
                 tmp_3,
@@ -6990,9 +7308,9 @@ var currentFileTable;
             );
         } else {
         }
-        var tmp_5 = last(this._get_children__1387553196_my42wc_k$());
+        var tmp_5 = last_0(this._get_children__1387553196_my42wc_k$());
         if (tmp_5 instanceof Index) {
-            var tmp_6 = last(this._get_children__1387553196_my42wc_k$());
+            var tmp_6 = last_0(this._get_children__1387553196_my42wc_k$());
             (tmp_6 instanceof Index ? tmp_6 : THROW_CCE()).assign_9u530r_k$(
                 assignment,
                 currentParent,
@@ -7000,23 +7318,15 @@ var currentFileTable;
                 value
             );
         } else {
-            {
-                var tmp_7 = last(
+            currentParent.setProperty_tmx3oq_k$(
+                last_0(
                     this._get_children__1387553196_my42wc_k$()
-                )._get_value__3683422336_a43j40_k$();
-                var tmp_8 = Utils_getInstance();
-                var tmp_9 = assignment._get_right__3576132917_bvz45n_k$();
-                currentParent.setProperty_tmx3oq_k$(
-                    tmp_7,
-                    tmp_8.toProperty$default_h4f746_k$(
-                        value,
-                        tmp_9,
-                        null,
-                        2,
-                        null
-                    )
-                );
-            }
+                )._get_value__3683422336_a43j40_k$(),
+                Utils_getInstance().toProperty_q8fusx_k$(
+                    value,
+                    assignment._get_right__3576132917_bvz45n_k$()
+                )
+            );
         }
     };
     Link.prototype.getFirstUnassignedOrNull_pqyzpa_k$ = function (
@@ -8129,14 +8439,24 @@ var currentFileTable;
                 arg
                     ._get_left__802434852_d9qyp0_k$()
                     ._get_value__3683422336_a43j40_k$(),
-                Utils_getInstance().toProperty_s7td2_k$(
+                Utils_getInstance().toProperty_q8fusx_k$(
                     arg
                         ._get_right__3576132917_bvz45n_k$()
                         .evaluate_hfj3qo_k$(symbolTable),
-                    arg._get_left__802434852_d9qyp0_k$(),
-                    type
+                    arg._get_left__802434852_d9qyp0_k$()
                 )
             );
+            var prop = ensureNotNull(
+                type.getPropertyOrNull_191djg_k$(
+                    arg
+                        ._get_left__802434852_d9qyp0_k$()
+                        ._get_value__3683422336_a43j40_k$()
+                )
+            );
+            if (prop instanceof Type)
+                prop.setProperty_tmx3oq_k$("parent", type);
+            else {
+            }
             type.removeAssignment_c8vby8_k$(
                 arg._get_left__802434852_d9qyp0_k$()
             );
@@ -8192,7 +8512,7 @@ var currentFileTable;
         }
         if (type._get_index__3322996031_g2optt_k$() === 0) {
             return this.evaluateType_b2kdxc_k$(
-                type.copy_1tks5_k$(),
+                type.copyRoot_8d9kp5_k$(),
                 symbolTable
             );
         }
@@ -9451,14 +9771,12 @@ var currentFileTable;
                 $l$loop_0: do {
                     var i = inductionVariable;
                     inductionVariable = (inductionVariable + step) | 0;
-                    var tmp = $this
-                        ._get_left__802434852_d9qyp0_k$()
-                        ._get_value__3683422336_a43j40_k$();
-                    var tmp_0 = Utils_getInstance();
                     symbolTable.addVariable_vmj31f_k$(
-                        tmp,
-                        tmp_0.toVariable_abd9s8_k$(
-                            PInt_init_$Create$(i, null, 2, null),
+                        $this
+                            ._get_left__802434852_d9qyp0_k$()
+                            ._get_value__3683422336_a43j40_k$(),
+                        Utils_getInstance().toVariable_abd9s8_k$(
+                            new PInt(i),
                             $this._get_left__802434852_d9qyp0_k$()
                         )
                     );
@@ -9993,8 +10311,8 @@ var currentFileTable;
     }
     NodeNumber.prototype.evaluate_hfj3qo_k$ = function (symbolTable) {
         return this.isDouble_1
-            ? new PDouble(numberToDouble(this.number_1), null)
-            : new PInt(numberToInt(this.number_1), null);
+            ? new PDouble(numberToDouble(this.number_1))
+            : new PInt(numberToInt(this.number_1));
     };
     NodeNumber.$metadata$ = {
         simpleName: "NodeNumber",
@@ -10164,7 +10482,7 @@ var currentFileTable;
     }
     function Null() {
         Companion_getInstance();
-        Property.call(this, null);
+        Property.call(this);
     }
     Null.prototype.getPropertyOrNull_191djg_k$ = function (name) {
         return null;
@@ -10195,7 +10513,7 @@ var currentFileTable;
         }
         return tmp;
     };
-    Null.prototype.toDebugClass_971qih_k$ = function (references) {
+    Null.prototype.toDebugClass_dfj843_k$ = function (references, copying) {
         return new Pair("Null", "");
     };
     Null.prototype.toString = function () {
@@ -10209,12 +10527,12 @@ var currentFileTable;
     function Object_0(name, assignments, fileTable) {
         Type_init_$Init$(
             name,
-            null,
             assignments,
             fileTable,
             0,
             null,
-            32,
+            null,
+            48,
             null,
             this
         );
@@ -10301,7 +10619,7 @@ var currentFileTable;
         return this._get_name__804168992_das4rk_k$() + "-Object";
     };
     Object_0.prototype.getDebugId_sdwqy0_k$ = function () {
-        return new Pair("object", this.toString());
+        return new Pair("Object", this.toString());
     };
     Object_0.prototype.getPropertyOrNull_191djg_k$ = function (name) {
         if (
@@ -10398,15 +10716,9 @@ var currentFileTable;
         kind: "class",
         interfaces: [],
     };
-    function Property(parent) {
-        Variable.call(this, parent);
+    function Property() {
+        Variable.call(this);
     }
-    Property.prototype.getParentOrNull_shi3au_k$ = function () {
-        var tmp0_elvis_lhs = this._get_parent__1491962785_oo9xup_k$();
-        return tmp0_elvis_lhs == null
-            ? Utils_getInstance()._get_NULL__774226340_csycv8_k$()
-            : tmp0_elvis_lhs;
-    };
     Property.$metadata$ = {
         simpleName: "Property",
         kind: "class",
@@ -10792,7 +11104,7 @@ var currentFileTable;
         interfaces: [],
     };
     function containerBfs($this, containerStack, visited, visitedTypes) {
-        var tmp0_iterator = last(containerStack)
+        var tmp0_iterator = last_0(containerStack)
             .getCollection_xq05f0_k$()
             .iterator_jk1svi_k$();
         while (tmp0_iterator.hasNext_bitz1p_k$()) {
@@ -10940,44 +11252,54 @@ var currentFileTable;
     }
     function Type_init_$Init$(
         name,
-        parent,
         assignments,
         fileTable,
         index,
         supertype,
+        properties,
         $mask0,
         $marker,
         $this
     ) {
-        if (!(($mask0 & 32) === 0)) supertype = null;
+        if (!(($mask0 & 16) === 0)) supertype = null;
+        if (!(($mask0 & 32) === 0)) {
+            var tmp$ret$0;
+            var tmp$ret$0_0;
+            $l$block: {
+                tmp$ret$0 = LinkedHashMap_init_$Create$();
+                tmp$ret$0_0 = Unit_getInstance();
+                break $l$block;
+            }
+            properties = tmp$ret$0;
+        }
         Type.call(
             $this,
             name,
-            parent,
             assignments,
             fileTable,
             index,
-            supertype
+            supertype,
+            properties
         );
         return $this;
     }
     function Type_init_$Create$(
         name,
-        parent,
         assignments,
         fileTable,
         index,
         supertype,
+        properties,
         $mask0,
         $marker
     ) {
         return Type_init_$Init$(
             name,
-            parent,
             assignments,
             fileTable,
             index,
             supertype,
+            properties,
             $mask0,
             $marker,
             Object.create(Type.prototype)
@@ -11159,28 +11481,22 @@ var currentFileTable;
         if (Companion_instance_1 == null) new Companion_1();
         return Companion_instance_1;
     }
-    function Type(name, parent, assignments, fileTable, index, supertype) {
+    function Type(name, assignments, fileTable, index, supertype, properties) {
         Companion_getInstance_1();
-        Property.call(this, parent);
+        Property.call(this);
         this.name_1 = name;
         this.assignments_1 = assignments;
         this.fileTable_1 = fileTable;
         this.index_1 = index;
         this.supertype_1 = supertype;
+        this.properties_1 = properties;
         var tmp = this;
-        var tmp$ret$0;
+        var tmp$ret$1;
         $l$block: {
-            tmp$ret$0 = LinkedHashMap_init_$Create$();
+            tmp$ret$1 = LinkedHashSet_init_$Create$();
             break $l$block;
         }
-        tmp.properties_1 = tmp$ret$0;
-        var tmp_0 = this;
-        var tmp$ret$1;
-        $l$block_0: {
-            tmp$ret$1 = LinkedHashSet_init_$Create$();
-            break $l$block_0;
-        }
-        tmp_0.functions_1 = tmp$ret$1;
+        tmp.functions_1 = tmp$ret$1;
     }
     Type.prototype._get_name__804168992_das4rk_k$ = function () {
         return this.name_1;
@@ -11392,9 +11708,9 @@ var currentFileTable;
         var tmp0_this = Companion_getInstance_8();
         var tmp1 = tmp0_this._get_dictionaryId__3404222234_eqbrae_k$();
         tmp0_this._set_dictionaryId__2464069414_3w32dm_k$((tmp1 + 1) | 0);
-        return new PDictionary(tmp_1, this, tmp1);
+        return new PDictionary(tmp_1, tmp1);
     };
-    Type.prototype.toDebugClass_971qih_k$ = function (references) {
+    Type.prototype.toDebugClass_dfj843_k$ = function (references, copying) {
         var id = this.getDebugId_sdwqy0_k$();
         references._get_queue__3558538464_c6g84g_k$().remove_8hbkc0_k$(id);
         Unit_getInstance();
@@ -11407,59 +11723,122 @@ var currentFileTable;
             ).get_1mhr4y_k$(tmp1_get_0);
             break $l$block;
         }
-        if (!(tmp$ret$0 == null)) {
-            return id;
-        } else {
+        if (!(tmp$ret$0 == null)) return id;
+        else {
         }
-        var tmp$ret$4;
-        $l$block_3: {
-            var tmp2_map_0 = this.properties_1;
+        var copy;
+        if (copying) {
+            var tmp0_this = this.fileTable_1;
+            tmp0_this._set_numberInstances__3771442672_fzfgw0_k$(
+                (tmp0_this._get_numberInstances__87398780_1g19bw_k$() + 1) | 0
+            );
+            var index =
+                this.fileTable_1._get_numberInstances__87398780_1g19bw_k$();
+            var tmp1_name = this.name_1;
             var tmp$ret$3;
             $l$block_2: {
-                var tmp0_mapTo_0_1 = ArrayList_init_$Create$_0(
-                    tmp2_map_0._get_size__809037418_ddoh9m_k$()
+                var tmp2_map_0 = plus_0(
+                    this.assignments_1,
+                    getInheritedAssignments(this)
                 );
-                var tmp$ret$1;
-                $l$block_0: {
-                    tmp$ret$1 = tmp2_map_0
+                var tmp$ret$2;
+                $l$block_1: {
+                    var tmp0_mapTo_0_1 = ArrayList_init_$Create$_0(
+                        collectionSizeOrDefault(tmp2_map_0, 10)
+                    );
+                    var tmp0_iterator_1_2 = tmp2_map_0.iterator_jk1svi_k$();
+                    while (tmp0_iterator_1_2.hasNext_bitz1p_k$()) {
+                        var item_2_3 = tmp0_iterator_1_2.next_20eer_k$();
+                        var tmp$ret$1;
+                        $l$block_0: {
+                            var tmp = TokenFactory_getInstance();
+                            var tmp_0 = tmp.copy$default_gvqacf_k$(
+                                item_2_3,
+                                0,
+                                0,
+                                6,
+                                null
+                            );
+                            tmp$ret$1 =
+                                tmp_0 instanceof Assignment
+                                    ? tmp_0
+                                    : THROW_CCE();
+                            break $l$block_0;
+                        }
+                        tmp0_mapTo_0_1.add_1j60pz_k$(tmp$ret$1);
+                        Unit_getInstance();
+                    }
+                    tmp$ret$2 = tmp0_mapTo_0_1;
+                    break $l$block_1;
+                }
+                tmp$ret$3 = tmp$ret$2;
+                break $l$block_2;
+            }
+            var tmp2_assignments = toMutableSet(tmp$ret$3);
+            var tmp3_fileTable = this.fileTable_1;
+            var tmp4_supertype = this.supertype_1;
+            copy = Type_init_$Create$(
+                tmp1_name,
+                tmp2_assignments,
+                tmp3_fileTable,
+                index,
+                tmp4_supertype,
+                null,
+                32,
+                null
+            );
+            copy.functions_1.addAll_oxxjjk_k$(this.functions_1);
+            Unit_getInstance();
+        } else copy = null;
+        var tmp$ret$7;
+        $l$block_6: {
+            var tmp3_map_0 = this.properties_1;
+            var tmp$ret$6;
+            $l$block_5: {
+                var tmp0_mapTo_0_1_0 = ArrayList_init_$Create$_0(
+                    tmp3_map_0._get_size__809037418_ddoh9m_k$()
+                );
+                var tmp$ret$4;
+                $l$block_3: {
+                    tmp$ret$4 = tmp3_map_0
                         ._get_entries__31877249_iz8n5_k$()
                         .iterator_jk1svi_k$();
-                    break $l$block_0;
+                    break $l$block_3;
                 }
-                var tmp0_iterator_1_2 = tmp$ret$1;
-                while (tmp0_iterator_1_2.hasNext_bitz1p_k$()) {
-                    var item_2_3 = tmp0_iterator_1_2.next_20eer_k$();
-                    var tmp$ret$2;
-                    $l$block_1: {
-                        tmp$ret$2 = to(
-                            item_2_3._get_key__857139730_e6bh8y_k$(),
+                var tmp0_iterator_1_2_0 = tmp$ret$4;
+                while (tmp0_iterator_1_2_0.hasNext_bitz1p_k$()) {
+                    var item_2_3_0 = tmp0_iterator_1_2_0.next_20eer_k$();
+                    var tmp$ret$5;
+                    $l$block_4: {
+                        tmp$ret$5 = to(
+                            item_2_3_0._get_key__857139730_e6bh8y_k$(),
                             equals(
-                                item_2_3._get_value__3683422336_a43j40_k$(),
+                                item_2_3_0._get_value__3683422336_a43j40_k$(),
                                 this
                             )
                                 ? id
                                 : elementToDebug(
-                                      item_2_3._get_value__3683422336_a43j40_k$(),
+                                      item_2_3_0._get_value__3683422336_a43j40_k$(),
                                       references
                                   )
                         );
-                        break $l$block_1;
+                        break $l$block_4;
                     }
-                    tmp0_mapTo_0_1.add_1j60pz_k$(tmp$ret$2);
+                    tmp0_mapTo_0_1_0.add_1j60pz_k$(tmp$ret$5);
                     Unit_getInstance();
                 }
-                tmp$ret$3 = tmp0_mapTo_0_1;
-                break $l$block_2;
+                tmp$ret$6 = tmp0_mapTo_0_1_0;
+                break $l$block_5;
             }
-            tmp$ret$4 = tmp$ret$3;
-            break $l$block_3;
+            tmp$ret$7 = tmp$ret$6;
+            break $l$block_6;
         }
-        var res = new DebugType(toMutableMap(toMap(tmp$ret$4)));
+        var res = new DebugType(toMutableMap(toMap(tmp$ret$7)), copy);
         {
-            var tmp3_set_0 = references._get_types__3648432760_aoxh8o_k$();
-            var tmp = id._get_second__4255435031_njbah_k$();
-            var tmp4_set_0 = typeof tmp === "string" ? tmp : THROW_CCE();
-            tmp3_set_0.put_3mhbri_k$(tmp4_set_0, res);
+            var tmp4_set_0 = references._get_types__3648432760_aoxh8o_k$();
+            var tmp_1 = id._get_second__4255435031_njbah_k$();
+            var tmp5_set_0 = typeof tmp_1 === "string" ? tmp_1 : THROW_CCE();
+            tmp4_set_0.put_3mhbri_k$(tmp5_set_0, res);
             Unit_getInstance();
         }
         return id;
@@ -11469,47 +11848,35 @@ var currentFileTable;
     };
     Type.prototype.getPropertyOrNull_191djg_k$ = function (name) {
         var tmp0_subject = name;
-        switch (tmp0_subject) {
-            case "parent":
-                return this.getParentOrNull_shi3au_k$();
-            case "properties":
-                return this.getProperties_k8mbbr_k$();
-            default:
-                return this.properties_1.get_1mhr4y_k$(name);
-        }
+        return tmp0_subject === "properties"
+            ? this.getProperties_k8mbbr_k$()
+            : this.properties_1.get_1mhr4y_k$(name);
     };
     Type.prototype.getProperty_qi6v9p_k$ = function (node, fileTable) {
         var tmp0_subject = node._get_value__3683422336_a43j40_k$();
         var tmp;
-        switch (tmp0_subject) {
-            case "parent":
-                tmp = this.getParentOrNull_shi3au_k$();
-                break;
-            case "properties":
-                tmp = this.getProperties_k8mbbr_k$();
-                break;
-            default:
-                var tmp1_elvis_lhs = this.properties_1.get_1mhr4y_k$(
-                    node._get_value__3683422336_a43j40_k$()
+        if (tmp0_subject === "properties") {
+            tmp = this.getProperties_k8mbbr_k$();
+        } else {
+            var tmp1_elvis_lhs = this.properties_1.get_1mhr4y_k$(
+                node._get_value__3683422336_a43j40_k$()
+            );
+            var tmp_0;
+            if (tmp1_elvis_lhs == null) {
+                var tmp_1 = fileTable._get_filePath__151144490_2hzju2_k$();
+                throw PositionalException_init_$Create$(
+                    "Property not found",
+                    tmp_1,
+                    node,
+                    null,
+                    0,
+                    24,
+                    null
                 );
-                var tmp_0;
-                if (tmp1_elvis_lhs == null) {
-                    var tmp_1 = fileTable._get_filePath__151144490_2hzju2_k$();
-                    throw PositionalException_init_$Create$(
-                        "Property not found",
-                        tmp_1,
-                        node,
-                        null,
-                        0,
-                        24,
-                        null
-                    );
-                } else {
-                    tmp_0 = tmp1_elvis_lhs;
-                }
-
-                tmp = tmp_0;
-                break;
+            } else {
+                tmp_0 = tmp1_elvis_lhs;
+            }
+            tmp = tmp_0;
         }
         return tmp;
     };
@@ -11539,7 +11906,9 @@ var currentFileTable;
         var tmp_0 = this.fileTable_1._get_filePath__151144490_2hzju2_k$();
         if (contains$default(tmp_0, "/", false, 2, null)) {
             var tmp_1 = this.fileTable_1._get_filePath__151144490_2hzju2_k$();
-            tmp = first_1(last(split$default(tmp_1, ["/"], false, 0, 6, null)));
+            tmp = first_1(
+                last_0(split$default(tmp_1, ["/"], false, 0, 6, null))
+            );
         } else {
             {
                 tmp = first_1(
@@ -11580,18 +11949,13 @@ var currentFileTable;
         }
         return tmp;
     };
-    Type.prototype.copy_1tks5_k$ = function () {
+    Type.prototype.copyRoot_8d9kp5_k$ = function () {
         var tmp0_this = this.fileTable_1;
         tmp0_this._set_numberInstances__3771442672_fzfgw0_k$(
             (tmp0_this._get_numberInstances__87398780_1g19bw_k$() + 1) | 0
         );
         var index = this.fileTable_1._get_numberInstances__87398780_1g19bw_k$();
-        var tmp2_name = this.name_1;
-        var tmp1_safe_receiver = this._get_parent__1491962785_oo9xup_k$();
-        var tmp3_parent =
-            tmp1_safe_receiver == null
-                ? null
-                : tmp1_safe_receiver.copy_1tks5_k$();
+        var tmp1_name = this.name_1;
         var tmp$ret$2;
         $l$block_1: {
             var tmp0_map_0 = plus_0(
@@ -11629,16 +11993,18 @@ var currentFileTable;
             tmp$ret$2 = tmp$ret$1;
             break $l$block_1;
         }
-        var tmp4_assignments = toMutableSet(tmp$ret$2);
-        var tmp5_fileTable = this.fileTable_1;
-        var tmp6_supertype = this.supertype_1;
-        var copy = new Type(
-            tmp2_name,
-            tmp3_parent,
-            tmp4_assignments,
-            tmp5_fileTable,
+        var tmp2_assignments = toMutableSet(tmp$ret$2);
+        var tmp3_fileTable = this.fileTable_1;
+        var tmp4_supertype = this.supertype_1;
+        var copy = Type_init_$Create$(
+            tmp1_name,
+            tmp2_assignments,
+            tmp3_fileTable,
             index,
-            tmp6_supertype
+            tmp4_supertype,
+            null,
+            32,
+            null
         );
         {
             var tmp1_forEach_0 = copy.assignments_1;
@@ -11662,16 +12028,17 @@ var currentFileTable;
         kind: "class",
         interfaces: [NestableDebug],
     };
-    function Variable(parent) {
-        this.parent_1 = parent;
-    }
-    Variable.prototype._set_parent__1403382957_83u8iz_k$ = function (
-        _set____804775014
+    function Variable() {}
+    Variable.prototype.toDebugClass$default_jlj1oy_k$ = function (
+        references,
+        copying,
+        $mask0,
+        $handler
     ) {
-        this.parent_1 = _set____804775014;
-    };
-    Variable.prototype._get_parent__1491962785_oo9xup_k$ = function () {
-        return this.parent_1;
+        if (!(($mask0 & 2) === 0)) copying = false;
+        return $handler == null
+            ? this.toDebugClass_dfj843_k$(references, copying)
+            : $handler(references, copying);
     };
     Variable.$metadata$ = {
         simpleName: "Variable",
@@ -11687,11 +12054,12 @@ var currentFileTable;
     function PDictionary$Companion$initializeDictionaryProperties$lambda() {
         return function (pr) {
             var tmp = Utils_getInstance();
-            var tmp_0 = (pr instanceof PDictionary ? pr : THROW_CCE())
-                .getPValue_berniv_k$()
-                ._get_size__809037418_ddoh9m_k$();
-            var tmp_1 = PInt_init_$Create$(tmp_0, null, 2, null);
-            return tmp.toProperty$default_h4f746_k$(tmp_1, null, null, 3, null);
+            var tmp_0 = new PInt(
+                (pr instanceof PDictionary ? pr : THROW_CCE())
+                    .getPValue_berniv_k$()
+                    ._get_size__809037418_ddoh9m_k$()
+            );
+            return tmp.toProperty$default_127ngr_k$(tmp_0, null, 1, null);
         };
     }
     function PDictionary$Companion$initializeDictionaryProperties$lambda_0() {
@@ -11702,7 +12070,7 @@ var currentFileTable;
                     .getPValue_berniv_k$()
                     ._get_keys__801529559_d97k5z_k$()
             );
-            return tmp.toProperty$default_h4f746_k$(tmp_0, null, null, 3, null);
+            return tmp.toProperty$default_127ngr_k$(tmp_0, null, 1, null);
         };
     }
     function PDictionary$Companion$initializeDictionaryProperties$lambda_1() {
@@ -11713,7 +12081,7 @@ var currentFileTable;
                     .getPValue_berniv_k$()
                     ._get_values__2516944425_tel787_k$()
             );
-            return tmp.toProperty$default_h4f746_k$(tmp_0, null, null, 3, null);
+            return tmp.toProperty$default_127ngr_k$(tmp_0, null, 1, null);
         };
     }
     function PDictionary$Companion$initializeDictionaryProperties$lambda_2() {
@@ -11779,7 +12147,7 @@ var currentFileTable;
                             tmp0_this_5._set_dictionaryId__2464069414_3w32dm_k$(
                                 (tmp1_6 + 1) | 0
                             );
-                            tmp$ret$1 = new PDictionary(tmp_6, null, tmp1_6);
+                            tmp$ret$1 = new PDictionary(tmp_6, tmp1_6);
                             break $l$block_0;
                         }
                         tmp0_mapTo_0_1.add_1j60pz_k$(tmp$ret$1);
@@ -11792,7 +12160,7 @@ var currentFileTable;
                 break $l$block_2;
             }
             var tmp_7 = tmp$ret$3;
-            return tmp.toProperty$default_h4f746_k$(tmp_7, null, null, 3, null);
+            return tmp.toProperty$default_127ngr_k$(tmp_7, null, 1, null);
         };
     }
     function PDictionary$Companion$initializeDictionaryFunctions$lambda() {
@@ -11871,7 +12239,7 @@ var currentFileTable;
                 tmp$ret$0 = LinkedHashMap_init_$Create$();
                 break $l$block;
             }
-            var p = new PDictionary(tmp$ret$0, null, -1);
+            var p = new PDictionary(tmp$ret$0, -1);
             var tmp = Companion_getInstance_8();
             tmp.setProperty_o08ehl_k$(
                 p,
@@ -11904,7 +12272,7 @@ var currentFileTable;
                 tmp$ret$0 = LinkedHashMap_init_$Create$();
                 break $l$block;
             }
-            var p = new PDictionary(tmp$ret$0, null, -1);
+            var p = new PDictionary(tmp$ret$0, -1);
             var tmp = Companion_getInstance_8();
             tmp.setFunction_9hbg6v_k$(
                 p,
@@ -11954,9 +12322,9 @@ var currentFileTable;
         if (Companion_instance_2 == null) new Companion_2();
         return Companion_instance_2;
     }
-    function PDictionary(value, parent, id) {
+    function PDictionary(value, id) {
         Companion_getInstance_2();
-        Primitive.call(this, value, parent);
+        Primitive.call(this, value);
         this.id_1 = id;
     }
     PDictionary.prototype.getIndex_wcnjmk_k$ = function () {
@@ -12058,7 +12426,10 @@ var currentFileTable;
         Unit_getInstance();
         return res.toString();
     };
-    PDictionary.prototype.toDebugClass_971qih_k$ = function (references) {
+    PDictionary.prototype.toDebugClass_dfj843_k$ = function (
+        references,
+        copying
+    ) {
         var id = this.getDebugId_sdwqy0_k$();
         references._get_queue__3558538464_c6g84g_k$().remove_8hbkc0_k$(id);
         Unit_getInstance();
@@ -12096,36 +12467,16 @@ var currentFileTable;
                     var item_2_3 = tmp0_iterator_1_2.next_20eer_k$();
                     var tmp$ret$2;
                     $l$block_1: {
-                        var tmp0_subject_5 =
-                            item_2_3._get_key__857139730_e6bh8y_k$();
-                        var tmp;
-                        if (tmp0_subject_5 instanceof Variable) {
-                            var tmp_0;
-                            if (
-                                equals(
-                                    item_2_3._get_key__857139730_e6bh8y_k$(),
-                                    this
-                                )
-                            ) {
-                                tmp_0 = id;
-                            } else {
-                                var tmp_1 =
-                                    item_2_3._get_key__857139730_e6bh8y_k$();
-                                tmp_0 = elementToDebug(
-                                    tmp_1 instanceof Variable
-                                        ? tmp_1
-                                        : THROW_CCE(),
-                                    references
-                                );
-                            }
-                            tmp = tmp_0;
-                        } else {
-                            {
-                                tmp = item_2_3._get_key__857139730_e6bh8y_k$();
-                            }
-                        }
                         tmp$ret$2 = to(
-                            tmp,
+                            equals(
+                                item_2_3._get_key__857139730_e6bh8y_k$(),
+                                this
+                            )
+                                ? id
+                                : elementToDebug(
+                                      item_2_3._get_key__857139730_e6bh8y_k$(),
+                                      references
+                                  ),
                             equals(
                                 item_2_3._get_value__3683422336_a43j40_k$(),
                                 this
@@ -12147,7 +12498,23 @@ var currentFileTable;
             tmp$ret$4 = tmp$ret$3;
             break $l$block_3;
         }
-        var res = new DebugDictionary(toMutableMap(toMap(tmp$ret$4)));
+        var tmp = toMutableMap(toMap(tmp$ret$4));
+        var tmp_0;
+        if (copying) {
+            var tmp$ret$5;
+            $l$block_4: {
+                tmp$ret$5 = LinkedHashMap_init_$Create$();
+                break $l$block_4;
+            }
+            var tmp_1 = tmp$ret$5;
+            var tmp0_this = Companion_getInstance_8();
+            var tmp1 = tmp0_this._get_dictionaryId__3404222234_eqbrae_k$();
+            tmp0_this._set_dictionaryId__2464069414_3w32dm_k$((tmp1 + 1) | 0);
+            tmp_0 = new PDictionary(tmp_1, tmp1);
+        } else {
+            tmp_0 = null;
+        }
+        var res = new DebugDictionary(tmp, tmp_0);
         {
             var tmp3_set_0 =
                 references._get_dictionaries__3403772951_eqldyh_k$();
@@ -12178,40 +12545,26 @@ var currentFileTable;
     function PDouble$Companion$initializeDoubleProperties$lambda() {
         return function (it) {
             var tmp = Utils_getInstance();
-            var tmp_0 =
-                DoubleCompanionObject_getInstance()._get_MIN_VALUE__1378605517_mssatp_k$();
-            var tmp_1 = PDouble_init_$Create$(tmp_0, null, 2, null);
-            return tmp.toProperty$default_h4f746_k$(tmp_1, null, null, 3, null);
+            var tmp_0 = new PDouble(
+                DoubleCompanionObject_getInstance()._get_MIN_VALUE__1378605517_mssatp_k$()
+            );
+            return tmp.toProperty$default_127ngr_k$(tmp_0, null, 1, null);
         };
     }
     function PDouble$Companion$initializeDoubleProperties$lambda_0() {
         return function (it) {
             var tmp = Utils_getInstance();
-            var tmp_0 =
-                DoubleCompanionObject_getInstance()._get_MAX_VALUE__3201573499_i2z81x_k$();
-            var tmp_1 = PDouble_init_$Create$(tmp_0, null, 2, null);
-            return tmp.toProperty$default_h4f746_k$(tmp_1, null, null, 3, null);
+            var tmp_0 = new PDouble(
+                DoubleCompanionObject_getInstance()._get_MAX_VALUE__3201573499_i2z81x_k$()
+            );
+            return tmp.toProperty$default_127ngr_k$(tmp_0, null, 1, null);
         };
-    }
-    function PDouble_init_$Init$(value, parent, $mask0, $marker, $this) {
-        if (!(($mask0 & 2) === 0)) parent = null;
-        PDouble.call($this, value, parent);
-        return $this;
-    }
-    function PDouble_init_$Create$(value, parent, $mask0, $marker) {
-        return PDouble_init_$Init$(
-            value,
-            parent,
-            $mask0,
-            $marker,
-            Object.create(PDouble.prototype)
-        );
     }
     function Companion_3() {
         Companion_instance_3 = this;
     }
     Companion_3.prototype.initializeDoubleProperties_h2jxrx_k$ = function () {
-        var d = PDouble_init_$Create$(0.0, null, 2, null);
+        var d = new PDouble(0.0);
         var tmp = Companion_getInstance_8();
         tmp.setProperty_o08ehl_k$(
             d,
@@ -12227,7 +12580,7 @@ var currentFileTable;
     };
     Companion_3.prototype.initializeEmbeddedDoubleFunctions_tdandr_k$ =
         function () {
-            var d = PDouble_init_$Create$(0.0, null, 2, null);
+            var d = new PDouble(0.0);
         };
     Companion_3.$metadata$ = {
         simpleName: "Companion",
@@ -12239,9 +12592,9 @@ var currentFileTable;
         if (Companion_instance_3 == null) new Companion_3();
         return Companion_instance_3;
     }
-    function PDouble(value, parent) {
+    function PDouble(value) {
         Companion_getInstance_3();
-        PNumber.call(this, value, parent);
+        PNumber.call(this, value);
     }
     PDouble.prototype.getIndex_wcnjmk_k$ = function () {
         return 3;
@@ -12250,36 +12603,35 @@ var currentFileTable;
         var tmp = this._get_value__3683422336_a43j40_k$();
         return typeof tmp === "number" ? tmp : THROW_CCE();
     };
-    PDouble.prototype.toDebugClass_971qih_k$ = function (references) {
+    PDouble.prototype.toDebugClass_dfj843_k$ = function (references, copying) {
         return new Pair("Double", this.getPValue_berniv_k$());
     };
     PDouble.prototype.plus_85cudg_k$ = function (number) {
-        var tmp =
+        return new PDouble(
             this.getPValue_berniv_k$() +
-            numberToDouble(number.getPValue_berniv_k$());
-        return PDouble_init_$Create$(tmp, null, 2, null);
+                numberToDouble(number.getPValue_berniv_k$())
+        );
     };
     PDouble.prototype.minus_x4b36i_k$ = function (number) {
-        var tmp =
+        return new PDouble(
             this.getPValue_berniv_k$() -
-            numberToDouble(number.getPValue_berniv_k$());
-        return PDouble_init_$Create$(tmp, null, 2, null);
+                numberToDouble(number.getPValue_berniv_k$())
+        );
     };
     PDouble.prototype.times_q0lma8_k$ = function (number) {
-        var tmp =
+        return new PDouble(
             this.getPValue_berniv_k$() *
-            numberToDouble(number.getPValue_berniv_k$());
-        return PDouble_init_$Create$(tmp, null, 2, null);
+                numberToDouble(number.getPValue_berniv_k$())
+        );
     };
     PDouble.prototype.rem_lfazes_k$ = function (number) {
-        var tmp =
+        return new PDouble(
             this.getPValue_berniv_k$() %
-            numberToDouble(number.getPValue_berniv_k$());
-        return PDouble_init_$Create$(tmp, null, 2, null);
+                numberToDouble(number.getPValue_berniv_k$())
+        );
     };
     PDouble.prototype.unaryMinus_6uz0qp_k$ = function () {
-        var tmp = -this.getPValue_berniv_k$();
-        return PDouble_init_$Create$(tmp, null, 2, null);
+        return new PDouble(-this.getPValue_berniv_k$());
     };
     PDouble.$metadata$ = {
         simpleName: "PDouble",
@@ -12289,40 +12641,26 @@ var currentFileTable;
     function PInt$Companion$initializeIntProperties$lambda() {
         return function (p) {
             var tmp = Utils_getInstance();
-            var tmp_0 =
-                IntCompanionObject_getInstance()._get_MIN_VALUE__1378605517_mssatp_k$();
-            var tmp_1 = PInt_init_$Create$(tmp_0, null, 2, null);
-            return tmp.toProperty$default_h4f746_k$(tmp_1, null, null, 3, null);
+            var tmp_0 = new PInt(
+                IntCompanionObject_getInstance()._get_MIN_VALUE__1378605517_mssatp_k$()
+            );
+            return tmp.toProperty$default_127ngr_k$(tmp_0, null, 1, null);
         };
     }
     function PInt$Companion$initializeIntProperties$lambda_0() {
         return function (p) {
             var tmp = Utils_getInstance();
-            var tmp_0 =
-                IntCompanionObject_getInstance()._get_MAX_VALUE__3201573499_i2z81x_k$();
-            var tmp_1 = PInt_init_$Create$(tmp_0, null, 2, null);
-            return tmp.toProperty$default_h4f746_k$(tmp_1, null, null, 3, null);
+            var tmp_0 = new PInt(
+                IntCompanionObject_getInstance()._get_MAX_VALUE__3201573499_i2z81x_k$()
+            );
+            return tmp.toProperty$default_127ngr_k$(tmp_0, null, 1, null);
         };
-    }
-    function PInt_init_$Init$(value, parent, $mask0, $marker, $this) {
-        if (!(($mask0 & 2) === 0)) parent = null;
-        PInt.call($this, value, parent);
-        return $this;
-    }
-    function PInt_init_$Create$(value, parent, $mask0, $marker) {
-        return PInt_init_$Init$(
-            value,
-            parent,
-            $mask0,
-            $marker,
-            Object.create(PInt.prototype)
-        );
     }
     function Companion_4() {
         Companion_instance_4 = this;
     }
     Companion_4.prototype.initializeIntProperties_l5apoh_k$ = function () {
-        var i = new PInt(0, null);
+        var i = new PInt(0);
         var tmp = Companion_getInstance_8();
         tmp.setProperty_o08ehl_k$(
             i,
@@ -12346,9 +12684,9 @@ var currentFileTable;
         if (Companion_instance_4 == null) new Companion_4();
         return Companion_instance_4;
     }
-    function PInt(value, parent) {
+    function PInt(value) {
         Companion_getInstance_4();
-        PNumber.call(this, value, parent);
+        PNumber.call(this, value);
     }
     PInt.prototype.getIndex_wcnjmk_k$ = function () {
         return 2;
@@ -12357,7 +12695,7 @@ var currentFileTable;
         var tmp = this._get_value__3683422336_a43j40_k$();
         return typeof tmp === "number" ? tmp : THROW_CCE();
     };
-    PInt.prototype.toDebugClass_971qih_k$ = function (references) {
+    PInt.prototype.toDebugClass_dfj843_k$ = function (references, copying) {
         return new Pair("Int", this.getPValue_berniv_k$());
     };
     PInt.prototype.plus_85cudg_k$ = function (number) {
@@ -12368,21 +12706,20 @@ var currentFileTable;
         var tmp = this.getPValue_berniv_k$();
         var tmp_0 = number.getPValue_berniv_k$();
         return new PInt(
-            (tmp + (typeof tmp_0 === "number" ? tmp_0 : THROW_CCE())) | 0,
-            null
+            (tmp + (typeof tmp_0 === "number" ? tmp_0 : THROW_CCE())) | 0
         );
     };
     PInt.prototype.minus_x4b36i_k$ = function (number) {
         if (number instanceof PDouble) {
-            var tmp = this.getPValue_berniv_k$() - number.getPValue_berniv_k$();
-            return PDouble_init_$Create$(tmp, null, 2, null);
+            return new PDouble(
+                this.getPValue_berniv_k$() - number.getPValue_berniv_k$()
+            );
         } else {
         }
-        var tmp_0 = this.getPValue_berniv_k$();
-        var tmp_1 = number.getPValue_berniv_k$();
+        var tmp = this.getPValue_berniv_k$();
+        var tmp_0 = number.getPValue_berniv_k$();
         return new PInt(
-            (tmp_0 - (typeof tmp_1 === "number" ? tmp_1 : THROW_CCE())) | 0,
-            null
+            (tmp - (typeof tmp_0 === "number" ? tmp_0 : THROW_CCE())) | 0
         );
     };
     PInt.prototype.times_q0lma8_k$ = function (number) {
@@ -12393,27 +12730,24 @@ var currentFileTable;
         var tmp = this.getPValue_berniv_k$();
         var tmp_0 = number.getPValue_berniv_k$();
         return new PInt(
-            imul(tmp, typeof tmp_0 === "number" ? tmp_0 : THROW_CCE()),
-            null
+            imul(tmp, typeof tmp_0 === "number" ? tmp_0 : THROW_CCE())
         );
     };
     PInt.prototype.rem_lfazes_k$ = function (number) {
         if (number instanceof PDouble) {
             return new PDouble(
-                this.getPValue_berniv_k$() % number.getPValue_berniv_k$(),
-                null
+                this.getPValue_berniv_k$() % number.getPValue_berniv_k$()
             );
         } else {
         }
         var tmp = this.getPValue_berniv_k$();
         var tmp_0 = number.getPValue_berniv_k$();
         return new PInt(
-            tmp % (typeof tmp_0 === "number" ? tmp_0 : THROW_CCE()),
-            null
+            tmp % (typeof tmp_0 === "number" ? tmp_0 : THROW_CCE())
         );
     };
     PInt.prototype.unaryMinus_6uz0qp_k$ = function () {
-        return new PInt(-this.getPValue_berniv_k$() | 0, null);
+        return new PInt(-this.getPValue_berniv_k$() | 0);
     };
     PInt.$metadata$ = {
         simpleName: "PInt",
@@ -12566,11 +12900,12 @@ var currentFileTable;
     function PList$Companion$initializeListProperties$lambda() {
         return function (pr) {
             var tmp = Utils_getInstance();
-            var tmp_0 = (pr instanceof PList ? pr : THROW_CCE())
-                .getPValue_berniv_k$()
-                ._get_size__809037418_ddoh9m_k$();
-            var tmp_1 = PInt_init_$Create$(tmp_0, null, 2, null);
-            return tmp.toProperty$default_h4f746_k$(tmp_1, null, null, 3, null);
+            var tmp_0 = new PInt(
+                (pr instanceof PList ? pr : THROW_CCE())
+                    .getPValue_berniv_k$()
+                    ._get_size__809037418_ddoh9m_k$()
+            );
+            return tmp.toProperty$default_127ngr_k$(tmp_0, null, 1, null);
         };
     }
     function PList$Companion$initializeEmbeddedListFunctions$lambda() {
@@ -12669,8 +13004,7 @@ var currentFileTable;
                     } else {
                     }
                 }
-                var tmp_1 = removedIndex;
-                tmp = PInt_init_$Create$(tmp_1, null, 2, null);
+                tmp = new PInt(removedIndex);
             } else {
                 {
                     var removedIndex_0 = list
@@ -12682,7 +13016,7 @@ var currentFileTable;
                         );
                         Unit_getInstance();
                     }
-                    tmp = PInt_init_$Create$(removedIndex_0, null, 2, null);
+                    tmp = new PInt(removedIndex_0);
                 }
             }
             return tmp;
@@ -12809,8 +13143,9 @@ var currentFileTable;
                 args
             );
             Unit_getInstance();
-            var tmp = list.getPValue_berniv_k$().indexOf_dcv8dt_k$(element);
-            return PInt_init_$Create$(tmp, null, 2, null);
+            return new PInt(
+                list.getPValue_berniv_k$().indexOf_dcv8dt_k$(element)
+            );
         };
     }
     function PList$Companion$initializeEmbeddedListFunctions$lambda$lambda(
@@ -13016,7 +13351,7 @@ var currentFileTable;
         var tmp0_this = Companion_getInstance_8();
         var tmp1 = tmp0_this._get_listId__2467282898_u85mb2_k$();
         tmp0_this._set_listId__2378703070_pghfrm_k$((tmp1 + 1) | 0);
-        var p = new PList(tmp, null, tmp1);
+        var p = new PList(tmp, tmp1);
         var tmp_0 = Companion_getInstance_8();
         tmp_0.setProperty_o08ehl_k$(
             p,
@@ -13035,7 +13370,7 @@ var currentFileTable;
             var tmp0_this = Companion_getInstance_8();
             var tmp1 = tmp0_this._get_listId__2467282898_u85mb2_k$();
             tmp0_this._set_listId__2378703070_pghfrm_k$((tmp1 + 1) | 0);
-            var p = new PList(tmp, null, tmp1);
+            var p = new PList(tmp, tmp1);
             var tmp_0 = Companion_getInstance_8();
             tmp_0.setFunction_9hbg6v_k$(
                 p,
@@ -13206,9 +13541,9 @@ var currentFileTable;
         if (Companion_instance_5 == null) new Companion_5();
         return Companion_instance_5;
     }
-    function PList(value, parent, id) {
+    function PList(value, id) {
         Companion_getInstance_5();
-        Primitive.call(this, value, parent);
+        Primitive.call(this, value);
         this.id_1 = id;
     }
     PList.prototype.getIndex_wcnjmk_k$ = function () {
@@ -13253,7 +13588,7 @@ var currentFileTable;
             index.getPValue_berniv_k$()
         );
     };
-    PList.prototype.toDebugClass_971qih_k$ = function (references) {
+    PList.prototype.toDebugClass_dfj843_k$ = function (references, copying) {
         var id = this.getDebugId_sdwqy0_k$();
         references._get_queue__3558538464_c6g84g_k$().remove_8hbkc0_k$(id);
         Unit_getInstance();
@@ -13297,11 +13632,27 @@ var currentFileTable;
             tmp$ret$3 = tmp$ret$2;
             break $l$block_2;
         }
-        var res = new DebugList(tmp$ret$3);
+        var tmp = tmp$ret$3;
+        var tmp_0;
+        if (copying) {
+            var tmp$ret$4;
+            $l$block_3: {
+                tmp$ret$4 = ArrayList_init_$Create$();
+                break $l$block_3;
+            }
+            var tmp_1 = tmp$ret$4;
+            var tmp0_this = Companion_getInstance_8();
+            var tmp1 = tmp0_this._get_listId__2467282898_u85mb2_k$();
+            tmp0_this._set_listId__2378703070_pghfrm_k$((tmp1 + 1) | 0);
+            tmp_0 = new PList(tmp_1, tmp1);
+        } else {
+            tmp_0 = null;
+        }
+        var res = new DebugList(tmp, tmp_0);
         {
             var tmp3_set_0 = references._get_lists__3404727004_eq0xt0_k$();
-            var tmp = id._get_second__4255435031_njbah_k$();
-            var tmp4_set_0 = typeof tmp === "number" ? tmp : THROW_CCE();
+            var tmp_2 = id._get_second__4255435031_njbah_k$();
+            var tmp4_set_0 = typeof tmp_2 === "number" ? tmp_2 : THROW_CCE();
             tmp3_set_0.put_3mhbri_k$(tmp4_set_0, res);
             Unit_getInstance();
         }
@@ -13450,8 +13801,7 @@ var currentFileTable;
                 tmp$ret$0 = Math.pow(tmp0_pow_0, tmp1_pow_0);
                 break $l$block;
             }
-            var tmp = tmp$ret$0;
-            return PDouble_init_$Create$(tmp, null, 2, null);
+            return new PDouble(tmp$ret$0);
         };
     }
     function PNumber$Companion$initializeEmbeddedNumberFunctions$lambda_4() {
@@ -13480,15 +13830,15 @@ var currentFileTable;
                 tmp = new PDouble(
                     roundToInt(
                         numberToDouble(number.getPValue_berniv_k$()) / divisor
-                    ) * divisor,
-                    null
+                    ) * divisor
                 );
             } else {
-                var tmp_0 = round(
-                    numberToDouble(number.getPValue_berniv_k$()),
-                    digits.getPValue_berniv_k$()
+                tmp = new PDouble(
+                    round(
+                        numberToDouble(number.getPValue_berniv_k$()),
+                        digits.getPValue_berniv_k$()
+                    )
                 );
-                tmp = PDouble_init_$Create$(tmp_0, null, 2, null);
             }
             return tmp;
         };
@@ -13507,8 +13857,7 @@ var currentFileTable;
                 tmp$ret$0 = Math.floor(tmp0_floor_0);
                 break $l$block;
             }
-            var tmp = numberToInt(tmp$ret$0);
-            return PInt_init_$Create$(tmp, null, 2, null);
+            return new PInt(numberToInt(tmp$ret$0));
         };
     }
     function PNumber$Companion$initializeEmbeddedNumberFunctions$lambda_6() {
@@ -13525,8 +13874,7 @@ var currentFileTable;
                 tmp$ret$0 = Math.ceil(tmp0_ceil_0);
                 break $l$block;
             }
-            var tmp = numberToInt(tmp$ret$0);
-            return PInt_init_$Create$(tmp, null, 2, null);
+            return new PInt(numberToInt(tmp$ret$0));
         };
     }
     function PNumber$Companion$initializeEmbeddedNumberFunctions$lambda_7() {
@@ -13562,8 +13910,7 @@ var currentFileTable;
                 tmp$ret$0 = Math.sin(tmp0_sin_0);
                 break $l$block;
             }
-            var tmp = tmp$ret$0;
-            return PDouble_init_$Create$(tmp, null, 2, null);
+            return new PDouble(tmp$ret$0);
         };
     }
     function PNumber$Companion$initializeEmbeddedNumberFunctions$lambda_9() {
@@ -13578,8 +13925,7 @@ var currentFileTable;
                 tmp$ret$0 = Math.cos(tmp0_cos_0);
                 break $l$block;
             }
-            var tmp = tmp$ret$0;
-            return PDouble_init_$Create$(tmp, null, 2, null);
+            return new PDouble(tmp$ret$0);
         };
     }
     function PNumber$Companion$initializeEmbeddedNumberFunctions$lambda_10() {
@@ -13594,8 +13940,7 @@ var currentFileTable;
                 tmp$ret$0 = Math.sqrt(tmp0_sqrt_0);
                 break $l$block;
             }
-            var tmp = tmp$ret$0;
-            return PDouble_init_$Create$(tmp, null, 2, null);
+            return new PDouble(tmp$ret$0);
         };
     }
     function PNumber$Companion$initializeEmbeddedNumberFunctions$lambda_11() {
@@ -13610,8 +13955,7 @@ var currentFileTable;
                 tmp$ret$0 = Math.asin(tmp0_asin_0);
                 break $l$block;
             }
-            var tmp = tmp$ret$0;
-            return PDouble_init_$Create$(tmp, null, 2, null);
+            return new PDouble(tmp$ret$0);
         };
     }
     function PNumber$Companion$initializeEmbeddedNumberFunctions$lambda_12() {
@@ -13626,8 +13970,7 @@ var currentFileTable;
                 tmp$ret$0 = Math.acos(tmp0_acos_0);
                 break $l$block;
             }
-            var tmp = tmp$ret$0;
-            return PDouble_init_$Create$(tmp, null, 2, null);
+            return new PDouble(tmp$ret$0);
         };
     }
     function Companion_6() {
@@ -13635,7 +13978,7 @@ var currentFileTable;
     }
     Companion_6.prototype.initializeEmbeddedNumberFunctions_y7q5if_k$ =
         function () {
-            var n = new PNumber(0, null);
+            var n = new PNumber(0);
             var tmp = Companion_getInstance_8();
             tmp.setFunction_9hbg6v_k$(
                 n,
@@ -13820,9 +14163,9 @@ var currentFileTable;
         if (Companion_instance_6 == null) new Companion_6();
         return Companion_instance_6;
     }
-    function PNumber(value, parent) {
+    function PNumber(value) {
         Companion_getInstance_6();
-        Primitive.call(this, value, parent);
+        Primitive.call(this, value);
     }
     PNumber.prototype.getIndex_wcnjmk_k$ = function () {
         return 1;
@@ -13847,7 +14190,7 @@ var currentFileTable;
     PNumber.prototype.hashCode = function () {
         return hashCode(this.getPValue_berniv_k$());
     };
-    PNumber.prototype.toDebugClass_971qih_k$ = function (references) {
+    PNumber.prototype.toDebugClass_dfj843_k$ = function (references, copying) {
         throw Exception_init_$Create$("class is not instantiable");
     };
     PNumber.prototype.compareTo_hp6kpi_k$ = function (number) {
@@ -13864,8 +14207,7 @@ var currentFileTable;
     PNumber.prototype.div_scc0gr_k$ = function (number) {
         return new PDouble(
             numberToDouble(this.getPValue_berniv_k$()) /
-                numberToDouble(number.getPValue_berniv_k$()),
-            null
+                numberToDouble(number.getPValue_berniv_k$())
         );
     };
     PNumber.prototype.plus_85cudg_k$ = function (number) {
@@ -13891,11 +14233,13 @@ var currentFileTable;
     function PString$Companion$initializeStringProperties$lambda() {
         return function (p) {
             var tmp = Utils_getInstance();
-            var tmp_0 = (
-                p instanceof PString ? p : THROW_CCE()
-            ).getPValue_berniv_k$().length;
-            var tmp_1 = PInt_init_$Create$(tmp_0, null, 2, null);
-            return tmp.toProperty$default_h4f746_k$(tmp_1, null, null, 3, null);
+            var tmp_0 = new PInt(
+                (p instanceof PString
+                    ? p
+                    : THROW_CCE()
+                ).getPValue_berniv_k$().length
+            );
+            return tmp.toProperty$default_127ngr_k$(tmp_0, null, 1, null);
         };
     }
     function PString$Companion$initializeEmbeddedStringFunctions$lambda() {
@@ -13921,8 +14265,7 @@ var currentFileTable;
             Unit_getInstance();
             var tmp = string.getPValue_berniv_k$();
             var tmp_0 = found.getPValue_berniv_k$();
-            var tmp_1 = indexOf$default(tmp, tmp_0, 0, false, 6, null);
-            return PInt_init_$Create$(tmp_1, null, 2, null);
+            return new PInt(indexOf$default(tmp, tmp_0, 0, false, 6, null));
         };
     }
     function PString$Companion$initializeEmbeddedStringFunctions$lambda_1() {
@@ -14063,25 +14406,11 @@ var currentFileTable;
             return tmp$ret$1;
         };
     }
-    function PString_init_$Init$(value, parent, $mask0, $marker, $this) {
-        if (!(($mask0 & 2) === 0)) parent = null;
-        PString.call($this, value, parent);
-        return $this;
-    }
-    function PString_init_$Create$(value, parent, $mask0, $marker) {
-        return PString_init_$Init$(
-            value,
-            parent,
-            $mask0,
-            $marker,
-            Object.create(PString.prototype)
-        );
-    }
     function Companion_7() {
         Companion_instance_7 = this;
     }
     Companion_7.prototype.initializeStringProperties_si2tfh_k$ = function () {
-        var s = new PString("", null);
+        var s = new PString("");
         var tmp = Companion_getInstance_8();
         tmp.setProperty_o08ehl_k$(
             s,
@@ -14091,7 +14420,7 @@ var currentFileTable;
     };
     Companion_7.prototype.initializeEmbeddedStringFunctions_f93g67_k$ =
         function () {
-            var s = PString_init_$Create$("", null, 2, null);
+            var s = new PString("");
             var tmp = Companion_getInstance_8();
             tmp.setFunction_9hbg6v_k$(
                 s,
@@ -14202,9 +14531,9 @@ var currentFileTable;
         if (Companion_instance_7 == null) new Companion_7();
         return Companion_instance_7;
     }
-    function PString(value, parent) {
+    function PString(value) {
         Companion_getInstance_7();
-        Primitive.call(this, value, parent);
+        Primitive.call(this, value);
     }
     PString.prototype.getIndex_wcnjmk_k$ = function () {
         return 4;
@@ -14249,7 +14578,7 @@ var currentFileTable;
         }
         return new Char(charSequenceGet(this.getPValue_berniv_k$(), index));
     };
-    PString.prototype.toDebugClass_971qih_k$ = function (references) {
+    PString.prototype.toDebugClass_dfj843_k$ = function (references, copying) {
         return new Pair("String", this.getPValue_berniv_k$());
     };
     PString.prototype.set_g480bi_k$ = function (
@@ -14286,7 +14615,7 @@ var currentFileTable;
         $l$block_0: {
             var tmp = toString_0(getKClassFromExpression($this));
             var tmp_0 = charArrayOf([_Char___init__impl__380027157(46)]);
-            var tmp0_substring_0 = last(
+            var tmp0_substring_0 = last_0(
                 split$default_0(tmp, tmp_0, false, 0, 6, null)
             );
             var tmp$ret$0;
@@ -14447,15 +14776,11 @@ var currentFileTable;
         }
         return tmp$ret$2;
     };
-    Companion_8.prototype.createPrimitive_b3bsnv_k$ = function (
-        value,
-        parent,
-        node
-    ) {
+    Companion_8.prototype.createPrimitive_45m8ma_k$ = function (value, node) {
         var tmp0_subject = value;
         var tmp;
         if (typeof tmp0_subject === "string") {
-            tmp = new PString(value, parent);
+            tmp = new PString(value);
         } else {
             if (isInterface(tmp0_subject, List)) {
                 var tmp_0 = isInterface(value, MutableList)
@@ -14464,7 +14789,7 @@ var currentFileTable;
                 var tmp1_this = this;
                 var tmp2 = tmp1_this.listId_1;
                 tmp1_this.listId_1 = (tmp2 + 1) | 0;
-                tmp = new PList(tmp_0, parent, tmp2);
+                tmp = new PList(tmp_0, tmp2);
             } else {
                 if (isInterface(tmp0_subject, MutableMap)) {
                     var tmp_1 = isInterface(value, MutableMap)
@@ -14473,7 +14798,7 @@ var currentFileTable;
                     var tmp3_this = this;
                     var tmp4 = tmp3_this.dictionaryId_1;
                     tmp3_this.dictionaryId_1 = (tmp4 + 1) | 0;
-                    tmp = new PDictionary(tmp_1, parent, tmp4);
+                    tmp = new PDictionary(tmp_1, tmp4);
                 } else {
                     {
                         var tmp_2 =
@@ -14505,9 +14830,9 @@ var currentFileTable;
         if (Companion_instance_8 == null) new Companion_8();
         return Companion_instance_8;
     }
-    function Primitive(value, parent) {
+    function Primitive(value) {
         Companion_getInstance_8();
-        Property.call(this, parent);
+        Property.call(this);
         this.value_1 = value;
     }
     Primitive.prototype._get_value__3683422336_a43j40_k$ = function () {
@@ -14545,9 +14870,6 @@ var currentFileTable;
         switch (tmp0_subject) {
             case "this":
                 tmp = this;
-                break;
-            case "parent":
-                tmp = this.getParentOrNull_shi3au_k$();
                 break;
             case "properties":
                 tmp = this.getProperties_k8mbbr_k$();
@@ -14737,7 +15059,7 @@ var currentFileTable;
         var tmp0_this = Companion_getInstance_8();
         var tmp1 = tmp0_this.dictionaryId_1;
         tmp0_this.dictionaryId_1 = (tmp1 + 1) | 0;
-        return new PDictionary(tmp_0, null, tmp1);
+        return new PDictionary(tmp_0, tmp1);
     };
     Primitive.prototype.getFunction_ken7yo_k$ = function (node, fileTable) {
         var tmp0_elvis_lhs = this.getFunctionOrNull_p690c9_k$(node);
@@ -14934,7 +15256,7 @@ var currentFileTable;
             var tmp0_safe_receiver = tmp$ret$2;
             return tmp0_safe_receiver == null
                 ? null
-                : tmp0_safe_receiver.copy_1tks5_k$();
+                : tmp0_safe_receiver.copyRoot_8d9kp5_k$();
         };
     }
     function FileTable$getObjectOrNull$lambda($name) {
@@ -15044,12 +15366,12 @@ var currentFileTable;
         var functions = tmp0_container.component2_7eebsb_k$();
         var added = Type_init_$Create$(
             name,
-            null,
             assignments,
             this,
             0,
             null,
-            32,
+            null,
+            48,
             null
         );
         added
@@ -15171,7 +15493,7 @@ var currentFileTable;
         }
         this.objects_1.add_1j60pz_k$(new Object_0(name, assignments, this));
         Unit_getInstance();
-        last_0(this.objects_1)
+        last(this.objects_1)
             ._get_functions__2924404246_mnzx7u_k$()
             .addAll_oxxjjk_k$(functions);
         Unit_getInstance();
@@ -16111,7 +16433,12 @@ var currentFileTable;
                         var variable_5 = tmp$ret$3;
                         {
                             var tmp0_set_0_6 =
-                                variable_5.toDebugClass_971qih_k$(references);
+                                variable_5.toDebugClass$default_jlj1oy_k$(
+                                    references,
+                                    false,
+                                    2,
+                                    null
+                                );
                             res.put_3mhbri_k$(name_4, tmp0_set_0_6);
                             Unit_getInstance();
                         }
@@ -16124,9 +16451,13 @@ var currentFileTable;
         var tmp = this.variableTable_1;
         if (tmp instanceof Type) {
             {
-                var tmp0_set_0 = ensureNotNull(
-                    this.variableTable_1
-                ).toDebugClass_971qih_k$(references);
+                var tmp_0 = ensureNotNull(this.variableTable_1);
+                var tmp0_set_0 = tmp_0.toDebugClass$default_jlj1oy_k$(
+                    references,
+                    false,
+                    2,
+                    null
+                );
                 res.put_3mhbri_k$("@this", tmp0_set_0);
                 Unit_getInstance();
             }
@@ -16143,11 +16474,12 @@ var currentFileTable;
             if (!tmp$ret$4) {
                 break $l$loop;
             }
-            last_0(
+            var tmp_1 = last(
                 references
                     ._get_queue__3558538464_c6g84g_k$()
                     ._get_values__2516944425_tel787_k$()
-            ).toDebugClass_971qih_k$(references);
+            );
+            tmp_1.toDebugClass$default_jlj1oy_k$(references, false, 2, null);
             Unit_getInstance();
         }
         {
@@ -17801,10 +18133,8 @@ var currentFileTable;
     function Utils() {
         Utils_instance = this;
         this.NULL_1 = new Null();
-        var tmp = this;
-        tmp.FALSE_1 = PInt_init_$Create$(0, null, 2, null);
-        var tmp_0 = this;
-        tmp_0.TRUE_1 = PInt_init_$Create$(1, null, 2, null);
+        this.FALSE_1 = new PInt(0);
+        this.TRUE_1 = new PInt(1);
         Companion_getInstance_5().initializeEmbeddedListFunctions_8qp7m6_k$();
         Companion_getInstance_7().initializeEmbeddedStringFunctions_f93g67_k$();
         Companion_getInstance_6().initializeEmbeddedNumberFunctions_y7q5if_k$();
@@ -17860,9 +18190,8 @@ var currentFileTable;
             tmp = _this__1828080292;
         } else {
             {
-                tmp = Companion_getInstance_8().createPrimitive_b3bsnv_k$(
+                tmp = Companion_getInstance_8().createPrimitive_45m8ma_k$(
                     _this__1828080292,
-                    null,
                     node
                 );
             }
@@ -17880,37 +18209,30 @@ var currentFileTable;
         }
         return this.toVariable_abd9s8_k$(_this__1828080292, node);
     };
-    Utils.prototype.toProperty_s7td2_k$ = function (
-        _this__1828080292,
-        node,
-        parent
-    ) {
+    Utils.prototype.toProperty_q8fusx_k$ = function (_this__1828080292, node) {
         var tmp;
         if (_this__1828080292 instanceof Property) {
             tmp = _this__1828080292;
         } else {
             {
-                tmp = Companion_getInstance_8().createPrimitive_b3bsnv_k$(
+                tmp = Companion_getInstance_8().createPrimitive_45m8ma_k$(
                     _this__1828080292,
-                    parent,
                     node
                 );
             }
         }
         return tmp;
     };
-    Utils.prototype.toProperty$default_h4f746_k$ = function (
+    Utils.prototype.toProperty$default_127ngr_k$ = function (
         _this__1828080292,
         node,
-        parent,
         $mask0,
         $handler
     ) {
         if (!(($mask0 & 1) === 0)) {
             node = Node_init_$Create$(null, null, null, null, 15, null);
         }
-        if (!(($mask0 & 2) === 0)) parent = null;
-        return this.toProperty_s7td2_k$(_this__1828080292, node, parent);
+        return this.toProperty_q8fusx_k$(_this__1828080292, node);
     };
     Utils.prototype.parseAssignment_qe0mu7_k$ = function (assignment) {
         var tmp = first(
@@ -18074,7 +18396,7 @@ var currentFileTable;
             tmp = "Index";
         } else {
             var tmp_0 = toString_0(mapped);
-            tmp = last(split$default(tmp_0, ["."], false, 0, 6, null));
+            tmp = last_0(split$default(tmp_0, ["."], false, 0, 6, null));
         }
         return tmp;
     };
@@ -18192,7 +18514,7 @@ var currentFileTable;
         written = false
     ) {
         if (!written)
-        sendMessage(new Message("write", new Pair(path, content)));
+            sendMessage(new Message("write", new Pair(path, content)));
         {
             var tmp0_set_0 = this.fileSystem_1;
             tmp0_set_0.put_3mhbri_k$(path, content);
@@ -18234,8 +18556,8 @@ var currentFileTable;
     }
     function sendMessage(m) {
         postMessage({ type: m.type, content: m.content });
-            Unit_getInstance();
-        }
+        Unit_getInstance();
+    }
 
     function round$outlinedJsCode$(num, digits) {
         var nnum = num < 0 ? -num : num;
@@ -18261,24 +18583,18 @@ var currentFileTable;
 });
 
 onmessage = (e) => {
-   try {
-        switch (e.data.data) {
-            case "write":
-                writeFromMainWorker(
-                    e.data.content.path,
-                    e.data.content.content
-                );
+    try {
+    switch (e.data.data) {
+        case "write":
+            writeFromMainWorker(e.data.content.path, e.data.content.content);
 
-                addImport(e.data.content.path);
-                break;
-            case "start":
-                writeFromMainWorker(
-                    e.data.content.path,
-                    e.data.content.content
-                );
-                startImport(e.data.content.path);
-                break;
-        }
+            addImport(e.data.content.path);
+            break;
+        case "start":
+            writeFromMainWorker(e.data.content.path, e.data.content.content);
+            startImport(e.data.content.path);
+            break;
+    }
     } catch (exception) {
         if (exception.token_1 != null) exception.node_1 = exception.token_1;
         postMessage({

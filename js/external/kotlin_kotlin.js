@@ -214,6 +214,22 @@
     return buffer;
   }
   function last(_this__1828080292) {
+    var tmp0_subject = _this__1828080292;
+    if (isInterface(tmp0_subject, List))
+      return last_0(_this__1828080292);
+    else {
+      {
+        var iterator = _this__1828080292.iterator_jk1svi_k$();
+        if (!iterator.hasNext_bitz1p_k$())
+          throw NoSuchElementException_init_$Create$_0('Collection is empty.');
+        var last = iterator.next_20eer_k$();
+        while (iterator.hasNext_bitz1p_k$())
+          last = iterator.next_20eer_k$();
+        return last;
+      }
+    }
+  }
+  function last_0(_this__1828080292) {
     if (_this__1828080292.isEmpty_y1axqb_k$())
       throw NoSuchElementException_init_$Create$_0('List is empty.');
     return _this__1828080292.get_fkrdnv_k$(_get_lastIndex__339712501_0(_this__1828080292));
@@ -369,22 +385,6 @@
       break $l$block_1;
     }
     return tmp$ret$2;
-  }
-  function last_0(_this__1828080292) {
-    var tmp0_subject = _this__1828080292;
-    if (isInterface(tmp0_subject, List))
-      return last(_this__1828080292);
-    else {
-      {
-        var iterator = _this__1828080292.iterator_jk1svi_k$();
-        if (!iterator.hasNext_bitz1p_k$())
-          throw NoSuchElementException_init_$Create$_0('Collection is empty.');
-        var last_0 = iterator.next_20eer_k$();
-        while (iterator.hasNext_bitz1p_k$())
-          last_0 = iterator.next_20eer_k$();
-        return last_0;
-      }
-    }
   }
   function joinTo_0(_this__1828080292, buffer, separator, prefix, postfix, limit, truncated, transform) {
     buffer.append_oz4qxs_k$(prefix);
@@ -1172,6 +1172,17 @@
       new EmptyList();
     return EmptyList_instance;
   }
+  function optimizeReadOnlyList(_this__1828080292) {
+    var tmp0_subject = _this__1828080292._get_size__809037418_ddoh9m_k$();
+    switch (tmp0_subject) {
+      case 0:
+        return emptyList();
+      case 1:
+        return listOf_0(_this__1828080292.get_fkrdnv_k$(0));
+      default:
+        return _this__1828080292;
+    }
+  }
   function ArrayAsCollection(values, isVarargs) {
     this.values_1 = values;
     this.isVarargs_1 = isVarargs;
@@ -1263,17 +1274,6 @@
     if (EmptyIterator_instance == null)
       new EmptyIterator();
     return EmptyIterator_instance;
-  }
-  function optimizeReadOnlyList(_this__1828080292) {
-    var tmp0_subject = _this__1828080292._get_size__809037418_ddoh9m_k$();
-    switch (tmp0_subject) {
-      case 0:
-        return emptyList();
-      case 1:
-        return listOf_0(_this__1828080292.get_fkrdnv_k$(0));
-      default:
-        return _this__1828080292;
-    }
   }
   function asCollection(_this__1828080292) {
     return new ArrayAsCollection(_this__1828080292, false);
@@ -6639,6 +6639,13 @@
     kind: 'interface',
     interfaces: [Collection]
   };
+  function MutableCollection() {
+  }
+  MutableCollection.$metadata$ = {
+    simpleName: 'MutableCollection',
+    kind: 'interface',
+    interfaces: [Collection, MutableIterable]
+  };
   function MutableList() {
   }
   MutableList.$metadata$ = {
@@ -6659,13 +6666,6 @@
     simpleName: 'MutableSet',
     kind: 'interface',
     interfaces: [Set, MutableCollection]
-  };
-  function MutableCollection() {
-  }
-  MutableCollection.$metadata$ = {
-    simpleName: 'MutableCollection',
-    kind: 'interface',
-    interfaces: [Collection, MutableIterable]
   };
   function Collection() {
   }
@@ -8457,8 +8457,8 @@
   _.$crossModule$.first = first;
   _.$crossModule$.first_1 = first_0;
   _.$crossModule$._get_lastIndex__339712501 = _get_lastIndex__339712501_0;
-  _.$crossModule$.last = last;
-  _.$crossModule$.last_1 = last_0;
+  _.$crossModule$.last = last_0;
+  _.$crossModule$.last_1 = last;
   _.$crossModule$.listOf = listOf_0;
   _.$crossModule$.listOf_1 = listOf;
   _.$crossModule$.mapCapacity = mapCapacity;

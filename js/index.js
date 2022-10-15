@@ -8,7 +8,6 @@ import { addTreeElement, deleteFile } from "./filetree.js";
 import { closeTab } from "./tab.js";
 
 window.tabs = {};
-
 window.onbeforeunload = closingCode;
 function closingCode() {
     for (let [path, tab] of Object.entries(window.tabs)) closeTab(tab);

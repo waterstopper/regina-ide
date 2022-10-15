@@ -97,7 +97,7 @@ require(["vs/editor/editor.main"], function () {
             "import",
             "null",
             "true",
-            "false"
+            "false",
         ],
         operators: [
             "=",
@@ -184,7 +184,7 @@ require(["vs/editor/editor.main"], function () {
                         bracket: "@open",
                         next: "@string",
                     },
-                ]
+                ],
             ],
 
             comment: [
@@ -361,7 +361,11 @@ require(["vs/editor/editor.main"], function () {
     window.editor = monaco.editor.create(document.getElementById("container"), {
         value:
             localStorage.getItem("main.rgn") == null
-                ? ["Hello, it is your first visit!", "Reload the page to proceed", ""].join("\n")
+                ? [
+                      "Hello, it is your first visit!",
+                      "Reload the page to proceed",
+                      "",
+                  ].join("\n")
                 : JSON.parse(localStorage.getItem("main.rgn")).code,
         language: "Regina",
         glyphMargin: true,
@@ -416,6 +420,7 @@ require(["vs/editor/editor.main"], function () {
     window.editor.setBreakpoints = function (list) {
         breakpoints = window.editor.deltaDecorations(breakpoints, list);
     };
+    window.editor.removeException = () => {};
 
     monaco.languages.registerCodeLensProvider("Regina", {
         provideCodeLenses: function (model, token) {
@@ -440,6 +445,27 @@ require(["vs/editor/editor.main"], function () {
         },
         resolveCodeLens: function (model, codeLens, token) {
             return codeLens;
+        },
+    });
+
+    window.editor.addAction({
+        id: "comment-selection-action-id",
+
+        // A label of the action that will be presented to the user.
+        label: "Comment selection",
+
+        // An optional array of keybindings for the action.
+        keybindings: [
+            monaco.KeyMod.CtrlCmd | monaco.KeyCode.Slash
+        ],
+        precondition: null,
+        keybindingContext: null,
+        contextMenuGroupId: "navigation",
+        contextMenuOrder: 1.5,
+        run: function (ed) {
+            for(let i = ed.getSelection().startLineNumber; i <=ed.getSelection().endLineNumber; i++) {
+                ed.executeEdits("my-source", [{text: "//", range: new monaco.Range(i, 1, i, 1)}])
+            }
         },
     });
 
