@@ -515,6 +515,7 @@ require(["vs/editor/editor.main"], function () {
     window.editor.switchFile = function (path) {
         window.editor.setModel(openedFiles[path]);
     };
+    // comment
 });
 
 document.documentElement.setAttribute("data-theme", "light");
