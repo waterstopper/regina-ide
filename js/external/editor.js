@@ -515,16 +515,6 @@ require(["vs/editor/editor.main"], function () {
     window.editor.switchFile = function (path) {
         window.editor.setModel(openedFiles[path]);
     };
-    // window.editor.openFile("s")
-    // window.editor.closeFile("s")
-    // window.editor.openFile("s")
-    //window.m1 = monaco.editor.createModel()
-    //window.m2 = monaco.editor.createModel()
-
-    //console.log(window.editor)
-    //console.log(window.m1)
-    //window.editor.setModel(window.m1)
-    //state1 = window.editor.saveViewState()
 });
 
 document.documentElement.setAttribute("data-theme", "light");
