@@ -4,7 +4,7 @@ import * as themes from "./themes.js";
 async function getFile(path) {
     // lib file
     if (localStorage.getItem(path) == null) {
-        let res=(await (
+         let res=(await (
                 await fetch("https://alex5041.github.io/reginafiles/" + path)
             ).text()
         ).toString();
