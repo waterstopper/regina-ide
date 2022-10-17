@@ -265,6 +265,11 @@ assignToDescribedElements(setHoverDescription);
 
 var canDescribe = false;
 
+let mainInput = document.getElementById("main-file") 
+mainInput.oninput = (e) => {
+    mainInput.style.width = Math.max(mainInput.value.length, 6.5)+ "ch";
+}
+
 document.getElementById("help-toggle").oninput = (e) => {
     if (e.target.checked) {
         showDescribable();

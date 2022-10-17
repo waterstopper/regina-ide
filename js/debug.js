@@ -118,8 +118,9 @@ function addBreakpoint(point) {
 
 function traverseMap(map) {
     // non-map
-    if (typeof map != "object") return map;
+    if (map == null || typeof map != "object") return map;
     if (isLinkedHashMap(map)) map = transformLinkedHashMap(map);
+    console.log(map);
     // normal map
     for (const [key, value] of Object.entries(map)) {
         map[key] = traverseMap(value);
@@ -221,9 +222,9 @@ function createCollection(
                 scope,
                 parentText.getAttribute("cValue")
             );
-        else if (parentText.getAttribute("cType") == "Type")
+        else if (parentText.getAttribute("cType") == "Type" || parentText.getAttribute("cType") == "Object")
             addChildrenToType(tree, scope, parentText.getAttribute("cValue"));
-        parentText.setAttribute("added", "true")
+        parentText.setAttribute("added", "true");
     };
 }
 
@@ -350,7 +351,7 @@ function getType(id, scope) {
 }
 
 function getArray(id, scope) {
-    console.log(scope)
+    console.log(scope);
     return scope["@references"].lists_1[id].properties_1.array_1;
 }
 
@@ -406,7 +407,7 @@ function getArraySpan(id, scope) {
 function createSimpleSpan(value, type) {
     let res = document.createElement("span");
     res.textContent = type == "String" ? '"' + value + '"' : value;
-    if (type != "Type")
+    if (type != "Type" && type != "Object")
         res.style.color =
             type == "String" ? "var(--string-color)" : "var(--number-color)";
     return res;
@@ -427,9 +428,24 @@ function createNonCollection(
 
 function createValue(parent, value, type) {
     let valueSpan = document.createElement("span");
-    valueSpan.textContent = type == "String" ? '"' + value + '" ' : value + " ";
-    valueSpan.style.color =
-        type == "String" ? "var(--string-color)" : "var(--number-color)";
+    switch (type) {
+        case "String":
+            valueSpan.textContent = '"' + value + '" ';
+            valueSpan.style.color = "var(--string-color)";
+            break;
+        case "Null":
+            valueSpan.textContent = "null";
+            break;
+        case "Int":
+            valueSpan.textContent = value;
+            valueSpan.style.color = "var(--number-color)";
+            break;
+        case "Double":
+            valueSpan.textContent =
+                value + (Number.isInteger(value) ? ".0" : "");
+            valueSpan.style.color = "var(--number-color)";
+            break;
+    }
     parent.appendChild(valueSpan);
 }
 
@@ -443,7 +459,7 @@ function createIdentifier(parent, name) {
 
 function isCollection(e) {
     return (
-        e.first_1 == "Type" || e.first_1 == "List" || e.first_1 == "Dictionary"
+        e.first_1 == "Type" || e.first_1 == "List" || e.first_1 == "Dictionary" || e.first_1 == "Object"
     );
 }
 

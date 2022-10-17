@@ -1,0 +1,5 @@
+animal.svg
+node_modules
+package-lock.json
+.huskyrc.js
+.lintstagedrc.js

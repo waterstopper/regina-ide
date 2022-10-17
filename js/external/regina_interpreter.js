@@ -72,7 +72,6 @@ var currentFileTable;
         kotlin_kotlin.$crossModule$._get_lastIndex__339712501;
     var listOf_0 = kotlin_kotlin.$crossModule$.listOf_1;
     var getStringHashCode = kotlin_kotlin.$crossModule$.getStringHashCode;
-    var ensureNotNull = kotlin_kotlin.$crossModule$.ensureNotNull;
     var Pair = kotlin_kotlin.$crossModule$.Pair;
     var Char = kotlin_kotlin.$crossModule$.Char;
     var _Char___init__impl__380027157 =
@@ -151,7 +150,6 @@ var currentFileTable;
     var reversed_0 = kotlin_kotlin.$crossModule$.reversed_1;
     var charArrayOf = kotlin_kotlin.$crossModule$.charArrayOf;
     var split$default_0 = kotlin_kotlin.$crossModule$.split$default;
-    var last_0 = kotlin_kotlin.$crossModule$.last_1;
     var println = kotlin_kotlin.$crossModule$.println;
     //endregion
     ("use strict");
@@ -1953,14 +1951,14 @@ var currentFileTable;
         {
             var tmp = listOf("x");
             var tmp0_set_0 = EmbeddedFunction_init_$Create$(
-                "log",
+                "print",
                 tmp,
                 null,
                 FunctionFactory$initializeEmbedded$lambda(),
                 4,
                 null
             );
-            res.put_3mhbri_k$("log", tmp0_set_0);
+            res.put_3mhbri_k$("print", tmp0_set_0);
             Unit_getInstance();
         }
         {
@@ -6968,14 +6966,9 @@ var currentFileTable;
         var tmp_1 = $this
             ._get_children__1387553196_my42wc_k$()
             .get_fkrdnv_k$(index);
-        var tmp_2 = tmp_1 instanceof Call ? tmp_1 : THROW_CCE();
-        var functionResult = tmp_2.evaluateFunction$default_jzs6o3_k$(
-            tableForEvaluation,
-            function_0,
-            null,
-            4,
-            null
-        );
+        var functionResult = (
+            tmp_1 instanceof Call ? tmp_1 : THROW_CCE()
+        ).evaluateFunction_gez3ba_k$(tableForEvaluation, function_0);
         return Utils_getInstance().toVariable_abd9s8_k$(
             functionResult,
             $this._get_children__1387553196_my42wc_k$().get_fkrdnv_k$(index)
@@ -8147,13 +8140,7 @@ var currentFileTable;
             ResolvingMode_FUNCTION_getInstance()
         );
         this.argumentsToParameters_rkc6j4_k$(function_0, symbolTable, newTable);
-        return this.evaluateFunction$default_jzs6o3_k$(
-            newTable,
-            function_0,
-            null,
-            4,
-            null
-        );
+        return this.evaluateFunction_gez3ba_k$(newTable, function_0);
     };
     Call.prototype.argumentsToParameters_rkc6j4_k$ = function (
         function_0,
@@ -8336,13 +8323,10 @@ var currentFileTable;
         argTable._set_resolvingType__2046672930_ezepws_k$(argResolvingMode);
         paramTable._set_resolvingType__2046672930_ezepws_k$(paramResolvingMode);
     };
-    Call.prototype.evaluateFunction_gpoy9q_k$ = function (
+    Call.prototype.evaluateFunction_gez3ba_k$ = function (
         symbolTable,
-        function_0,
-        argTable
+        function_0
     ) {
-        var tmp0_elvis_lhs = argTable;
-        var argTable_0 = tmp0_elvis_lhs == null ? symbolTable : tmp0_elvis_lhs;
         var tmp;
         if (function_0 instanceof EmbeddedFunction) {
             tmp = function_0.executeFunction_v9v8tp_k$(
@@ -8366,20 +8350,6 @@ var currentFileTable;
             }
         }
         return tmp_0;
-    };
-    Call.prototype.evaluateFunction$default_jzs6o3_k$ = function (
-        symbolTable,
-        function_0,
-        argTable,
-        $mask0,
-        $handler
-    ) {
-        if (!(($mask0 & 4) === 0)) argTable = null;
-        return this.evaluateFunction_gpoy9q_k$(
-            symbolTable,
-            function_0,
-            argTable
-        );
     };
     Call.$metadata$ = {
         simpleName: "Call",
@@ -8523,6 +8493,18 @@ var currentFileTable;
         symbolTable
     ) {
         resolveArguments(this, type, symbolTable);
+        var tmp = Utils_getInstance().parseOneNode_tdccb8_k$("before()");
+        var beforeNode = new Call(
+            tmp instanceof Invocation ? tmp : THROW_CCE()
+        );
+        var beforeResolving = type.getFunctionOrNull_p690c9_k$(beforeNode);
+        if (!(beforeResolving == null)) {
+            beforeNode.evaluateFunction_gez3ba_k$(symbolTable, beforeResolving);
+            Unit_getInstance();
+        }
+        if (type._get_assignments__50188043_tvpcb_k$().isEmpty_y1axqb_k$()) {
+            type.callAfter$default_vbnxx3_k$(symbolTable, false, 2, null);
+        }
         return symbolTable
             ._get_resolvingType__1126639278_imrsfi_k$()
             .equals(ResolvingMode_TYPE_getInstance())
@@ -9246,13 +9228,18 @@ var currentFileTable;
     function neq(_this__1828080292, $this, other) {
         return !eq(_this__1828080292, $this, other);
     }
-    function nullCoalesce($this, first, second) {
+    function nullCoalesce($this, symbolTable) {
+        var leftEvaluated = $this
+            ._get_left__802434852_d9qyp0_k$()
+            .evaluate_hfj3qo_k$(symbolTable);
         return equals(
-            first,
+            leftEvaluated,
             Utils_getInstance()._get_NULL__774226340_csycv8_k$()
         )
-            ? second
-            : first;
+            ? $this
+                  ._get_right__3576132917_bvz45n_k$()
+                  .evaluate_hfj3qo_k$(symbolTable)
+            : leftEvaluated;
     }
     function Operator(symbol, value, position, children) {
         Node.call(this, symbol, value, position, toMutableList(children));
@@ -9301,15 +9288,7 @@ var currentFileTable;
                 );
                 break;
             case "??":
-                tmp = nullCoalesce(
-                    this,
-                    this._get_left__802434852_d9qyp0_k$().evaluate_hfj3qo_k$(
-                        symbolTable
-                    ),
-                    this._get_right__3576132917_bvz45n_k$().evaluate_hfj3qo_k$(
-                        symbolTable
-                    )
-                );
+                tmp = nullCoalesce(this, symbolTable);
                 break;
             default:
                 var tmp_0 =
@@ -9359,6 +9338,9 @@ var currentFileTable;
                 break;
             case "List":
                 tmp = checked instanceof PList;
+                break;
+            case "Dictionary":
+                tmp = checked instanceof PDictionary;
                 break;
             case "Number":
                 tmp = checked instanceof PNumber;
@@ -10616,7 +10598,39 @@ var currentFileTable;
         );
     };
     Object_0.prototype.toString = function () {
-        return this._get_name__804168992_das4rk_k$() + "-Object";
+        var tmp$ret$0;
+        $l$block: {
+            var tmp0_isEmpty_0 =
+                this._get_fileTable__504497375_8cd4nz_k$()._get_filePath__151144490_2hzju2_k$();
+            tmp$ret$0 = charSequenceLength(tmp0_isEmpty_0) === 0;
+            break $l$block;
+        }
+        if (tmp$ret$0) throw Exception_init_$Create$("Empty fileTable name");
+        else {
+        }
+        var tmp;
+        var tmp_0 =
+            this._get_fileTable__504497375_8cd4nz_k$()._get_filePath__151144490_2hzju2_k$();
+        if (contains$default(tmp_0, "/", false, 2, null)) {
+            var tmp_1 =
+                this._get_fileTable__504497375_8cd4nz_k$()._get_filePath__151144490_2hzju2_k$();
+            tmp = first_1(
+                last_0(split$default(tmp_1, ["/"], false, 0, 6, null))
+            );
+        } else {
+            {
+                tmp = first_1(
+                    this._get_fileTable__504497375_8cd4nz_k$()._get_filePath__151144490_2hzju2_k$()
+                );
+            }
+        }
+        var fileLetter = tmp;
+        return (
+            this._get_name__804168992_das4rk_k$() +
+            "-" +
+            new Char(fileLetter) +
+            "O"
+        );
     };
     Object_0.prototype.getDebugId_sdwqy0_k$ = function () {
         return new Pair("Object", this.toString());
@@ -10684,6 +10698,17 @@ var currentFileTable;
             );
         }
         return null;
+    };
+    Object_0.prototype.resolveAllProperties_wubtih_k$ = function () {
+        var tmp0_iterator =
+            this._get_assignments__50188043_tvpcb_k$().iterator_jk1svi_k$();
+        while (tmp0_iterator.hasNext_bitz1p_k$()) {
+            var a = tmp0_iterator.next_20eer_k$();
+            this.getPropertyOrNull_191djg_k$(
+                a._get_name__804168992_das4rk_k$()
+            );
+            Unit_getInstance();
+        }
     };
     Object_0.prototype.getFunction_ken7yo_k$ = function (node, fileTable) {
         var tmp0_elvis_lhs = this.getFunctionOrNull_p690c9_k$(node);
@@ -11173,9 +11198,9 @@ var currentFileTable;
                 tmp$ret$3 = !tmp0_isNotEmpty_0.isEmpty_y1axqb_k$();
                 break $l$block_2;
             }
-            if (tmp$ret$3) {
+            if (tmp$ret$3)
                 return new Pair(current, first_0(current.assignments_1));
-            } else {
+            else {
             }
             var currentId = current.toString();
             if (
@@ -11249,6 +11274,130 @@ var currentFileTable;
         visited.addAll_oxxjjk_k$(currentlyVisited);
         Unit_getInstance();
         return null;
+    }
+    function afterAllBfs($this, visited, stack, symbolTable) {
+        var condition = Type$Companion$afterAllBfs$lambda(visited);
+        $l$loop: while (true) {
+            var tmp$ret$0;
+            $l$block: {
+                tmp$ret$0 = !stack.isEmpty_y1axqb_k$();
+                break $l$block;
+            }
+            if (!tmp$ret$0) {
+                break $l$loop;
+            }
+            var current = removeLast(stack);
+            var tmp;
+            if (current instanceof Type) {
+                tmp = !visited.contains_2ehdt1_k$(toString_0(current));
+            } else {
+                {
+                    tmp = false;
+                }
+            }
+            if (tmp) {
+                visited.add_1j60pz_k$(toString_0(current));
+                Unit_getInstance();
+                current.callAfter_cx3tt8_k$(symbolTable, true);
+                var tmp$ret$2;
+                $l$block_1: {
+                    var tmp0_filter_0 =
+                        current.properties_1._get_values__2516944425_tel787_k$();
+                    var tmp$ret$1;
+                    $l$block_0: {
+                        var tmp0_filterTo_0_1 = ArrayList_init_$Create$();
+                        var tmp0_iterator_1_2 =
+                            tmp0_filter_0.iterator_jk1svi_k$();
+                        while (tmp0_iterator_1_2.hasNext_bitz1p_k$()) {
+                            var element_2_3 = tmp0_iterator_1_2.next_20eer_k$();
+                            if (condition(element_2_3)) {
+                                tmp0_filterTo_0_1.add_1j60pz_k$(element_2_3);
+                                Unit_getInstance();
+                            }
+                        }
+                        tmp$ret$1 = tmp0_filterTo_0_1;
+                        break $l$block_0;
+                    }
+                    tmp$ret$2 = tmp$ret$1;
+                    break $l$block_1;
+                }
+                stack.addAll_oxxjjk_k$(tmp$ret$2);
+                Unit_getInstance();
+            } else {
+                var tmp_0;
+                if (isInterface(current, Containerable)) {
+                    tmp_0 = !visited.contains_2ehdt1_k$(
+                        current.getContainerId_75kvy2_k$()
+                    );
+                } else {
+                    {
+                        tmp_0 = false;
+                    }
+                }
+                if (tmp_0) {
+                    visited.add_1j60pz_k$(toString_0(current));
+                    Unit_getInstance();
+                    var tmp$ret$4;
+                    $l$block_3: {
+                        var tmp1_filter_0 = current.getCollection_xq05f0_k$();
+                        var tmp$ret$3;
+                        $l$block_2: {
+                            var tmp0_filterTo_0_1_0 = ArrayList_init_$Create$();
+                            var tmp0_iterator_1_2_0 =
+                                tmp1_filter_0.iterator_jk1svi_k$();
+                            while (tmp0_iterator_1_2_0.hasNext_bitz1p_k$()) {
+                                var element_2_3_0 =
+                                    tmp0_iterator_1_2_0.next_20eer_k$();
+                                if (condition(element_2_3_0)) {
+                                    tmp0_filterTo_0_1_0.add_1j60pz_k$(
+                                        element_2_3_0
+                                    );
+                                    Unit_getInstance();
+                                }
+                            }
+                            tmp$ret$3 = tmp0_filterTo_0_1_0;
+                            break $l$block_2;
+                        }
+                        tmp$ret$4 = tmp$ret$3;
+                        break $l$block_3;
+                    }
+                    stack.addAll_oxxjjk_k$(tmp$ret$4);
+                    Unit_getInstance();
+                } else {
+                }
+            }
+        }
+    }
+    function Type$Companion$afterAllBfs$lambda($visited) {
+        return function (it) {
+            var tmp;
+            var tmp_0;
+            if (isInterface(it, Containerable)) {
+                tmp_0 = !$visited.contains_2ehdt1_k$(
+                    it.getContainerId_75kvy2_k$()
+                );
+            } else {
+                {
+                    tmp_0 = false;
+                }
+            }
+            if (tmp_0) {
+                tmp = true;
+            } else {
+                {
+                    var tmp_1;
+                    if (it instanceof Type) {
+                        tmp_1 = !$visited.contains_2ehdt1_k$(toString_0(it));
+                    } else {
+                        {
+                            tmp_1 = false;
+                        }
+                    }
+                    tmp = tmp_1;
+                }
+            }
+            return tmp;
+        };
     }
     function Type_init_$Init$(
         name,
@@ -11378,6 +11527,12 @@ var currentFileTable;
         symbolTable._set_resolvingType__2046672930_ezepws_k$(
             ResolvingMode_FUNCTION_getInstance()
         );
+        var tmp$ret$2;
+        $l$block_1: {
+            tmp$ret$2 = LinkedHashSet_init_$Create$();
+            break $l$block_1;
+        }
+        afterAllBfs(this, tmp$ret$2, mutableListOf([root]), symbolTable);
         return root;
     };
     Companion_1.prototype.processAssignment_ahktbi_k$ = function (
@@ -11467,6 +11622,19 @@ var currentFileTable;
                         }
                     }
                 } else {
+                }
+                if (
+                    unresolved
+                        ._get_first__3232921377_hkbbvj_k$()
+                        .assignments_1.isEmpty_y1axqb_k$()
+                ) {
+                    var tmp = unresolved._get_first__3232921377_hkbbvj_k$();
+                    tmp.callAfter$default_vbnxx3_k$(
+                        symbolTable,
+                        false,
+                        2,
+                        null
+                    );
                 }
             }
         }
@@ -11790,6 +11958,9 @@ var currentFileTable;
             copy.functions_1.addAll_oxxjjk_k$(this.functions_1);
             Unit_getInstance();
         } else copy = null;
+        if (this instanceof Object_0) this.resolveAllProperties_wubtih_k$();
+        else {
+        }
         var tmp$ret$7;
         $l$block_6: {
             var tmp3_map_0 = this.properties_1;
@@ -11888,9 +12059,7 @@ var currentFileTable;
         }
     };
     Type.prototype.toString = function () {
-        if (this.index_1 === 0) {
-            return this.name_1;
-        }
+        if (this.index_1 === 0) return this.name_1;
         var tmp$ret$0;
         $l$block: {
             var tmp0_isEmpty_0 =
@@ -11898,9 +12067,8 @@ var currentFileTable;
             tmp$ret$0 = charSequenceLength(tmp0_isEmpty_0) === 0;
             break $l$block;
         }
-        if (tmp$ret$0) {
-            throw Exception_init_$Create$("Empty fileTable name");
-        } else {
+        if (tmp$ret$0) throw Exception_init_$Create$("Empty fileTable name");
+        else {
         }
         var tmp;
         var tmp_0 = this.fileTable_1._get_filePath__151144490_2hzju2_k$();
@@ -12022,6 +12190,26 @@ var currentFileTable;
     };
     Type.prototype.equals = function (other) {
         return this === other;
+    };
+    Type.prototype.callAfter_cx3tt8_k$ = function (symbolTable, all) {
+        var tmp = Utils_getInstance().parseOneNode_tdccb8_k$(
+            all ? "afterAll()" : "after()"
+        );
+        var afterNode = new Call(tmp instanceof Invocation ? tmp : THROW_CCE());
+        var afterResolving = this.getFunctionOrNull_p690c9_k$(afterNode);
+        if (!(afterResolving == null)) {
+            afterNode.evaluateFunction_gez3ba_k$(symbolTable, afterResolving);
+            Unit_getInstance();
+        }
+    };
+    Type.prototype.callAfter$default_vbnxx3_k$ = function (
+        symbolTable,
+        all,
+        $mask0,
+        $handler
+    ) {
+        if (!(($mask0 & 2) === 0)) all = false;
+        return this.callAfter_cx3tt8_k$(symbolTable, all);
     };
     Type.$metadata$ = {
         simpleName: "Type",
@@ -13182,13 +13370,9 @@ var currentFileTable;
                     1,
                     null
                 );
-                var functionResult =
-                    functionNode.evaluateFunction$default_jzs6o3_k$(
+                var functionResult = functionNode.evaluateFunction_gez3ba_k$(
                         tableForEvaluation,
-                        f,
-                        null,
-                        4,
-                        null
+                    f
                     );
                 tmp_0 = toString_0(functionResult);
             } else {
@@ -18239,6 +18423,11 @@ var currentFileTable;
             new Parser(assignment, "@NoFile").statements_3k22vw_k$()
         ).toNode_xahmvw_k$("@NoFile");
         return tmp instanceof Assignment ? tmp : THROW_CCE();
+    };
+    Utils.prototype.parseOneNode_tdccb8_k$ = function (node) {
+        return first(
+            new Parser(node, "@NoFile").statements_3k22vw_k$()
+        ).toNode_xahmvw_k$("@NoFile");
     };
     Utils.prototype.getIdent_dfe2u9_k$ = function (node, name, args) {
         return args.getIdentifier_f5yrxq_k$(createIdent(this, node, name));

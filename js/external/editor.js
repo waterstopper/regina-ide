@@ -452,20 +452,53 @@ require(["vs/editor/editor.main"], function () {
         id: "comment-selection-action-id",
 
         // A label of the action that will be presented to the user.
-        label: "Comment selection",
+        label: "Comment Selection",
 
         // An optional array of keybindings for the action.
-        keybindings: [
-            monaco.KeyMod.CtrlCmd | monaco.KeyCode.Slash
-        ],
+        keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Slash],
         precondition: null,
         keybindingContext: null,
         contextMenuGroupId: "navigation",
         contextMenuOrder: 1.5,
         run: function (ed) {
-            for(let i = ed.getSelection().startLineNumber; i <=ed.getSelection().endLineNumber; i++) {
-                ed.executeEdits("my-source", [{text: "//", range: new monaco.Range(i, 1, i, 1)}])
+            let isComment = true;
+            let arr = [];
+            let start = ed.getSelection().startLineNumber;
+            let end = ed.getSelection().endLineNumber;
+            for (let i = start; i <= end; i++) {
+                console.log(ed.getModel().getLineContent(i));
+                let match = ed
+                    .getModel()
+                    .getLineContent(i)
+                    .toString()
+                    .match(/^\s*\/\//g);
+                if (match == null) {
+                    isComment = false;
+                    arr.length = 0;
+                    break;
+                }
+                arr.push(match[0].toString().length);
             }
+            if (isComment)
+                for (let i = start; i <= end; i++) {
+                    console.log(arr[i]);
+                    ed.executeEdits("my-source", [
+                        {
+                            text: "",
+                            range: new monaco.Range(
+                                i,
+                                1,
+                                i,
+                                arr[i - start] + 1
+                            ),
+                        },
+                    ]);
+                }
+            else
+                for (let i = start; i <= end; i++)
+                    ed.executeEdits("my-source", [
+                        { text: "//", range: new monaco.Range(i, 1, i, 1) },
+                    ]);
         },
     });
 
