@@ -5919,6 +5919,10 @@ var currentFileTable;
         cycles,
         inProperty
     ) {
+        if (node instanceof Link)
+            changeInvocationsInLink($this, node, symbolTable, inProperty);
+        else {
+        }
         var iterator = node
             ._get_children__1387553196_my42wc_k$()
             .iterator_jk1svi_k$();
@@ -6094,14 +6098,9 @@ var currentFileTable;
                 }
             } else {
                 {
-                    var tmp4_iterator = child_0
-                        ._get_children__1387553196_my42wc_k$()
-                        .iterator_jk1svi_k$();
-                    while (tmp4_iterator.hasNext_bitz1p_k$()) {
-                        var linkChild = tmp4_iterator.next_20eer_k$();
                         changeInvocationType$default(
                             $this,
-                            linkChild,
+                        child_0,
                             symbolTable,
                             cycles,
                             false,
@@ -6112,7 +6111,6 @@ var currentFileTable;
                 }
             }
         }
-    }
     function changeInvocationType$default(
         $this,
         node,
@@ -6553,61 +6551,26 @@ var currentFileTable;
         var tmp0_subject = $this
             ._get_children__1387553196_my42wc_k$()
             .get_fkrdnv_k$(index);
-        if (tmp0_subject instanceof Call) {
-            if (findingUnresolved) {
-                var tmp = new NullValue();
-                return Optional_init_$Create$(tmp, false, 2, null);
-            }
-            var tmp_0 = $this
-                ._get_children__1387553196_my42wc_k$()
-                .get_fkrdnv_k$(index);
-            var function_0 = variable.getFunctionOrNull_p690c9_k$(
-                tmp_0 instanceof Call ? tmp_0 : THROW_CCE()
-            );
-            if (
-                function_0 == null
-                    ? $this.nullable_1.contains_2ehdt1_k$(index)
-                    : false
-            ) {
-                var tmp_1 = new NullValue();
-                return Optional_init_$Create$(tmp_1, false, 2, null);
-            }
-            if (function_0 == null) {
-                var tmp_2 = table
-                    .getFileTable_m3scuc_k$()
-                    ._get_filePath__151144490_2hzju2_k$();
-                var tmp_3 = $this
-                    ._get_children__1387553196_my42wc_k$()
-                    .get_fkrdnv_k$(index);
-                throw PositionalException_init_$Create$(
-                    "Variable does not contain function",
-                    tmp_2,
-                    tmp_3,
-                    null,
-                    0,
-                    24,
-                    null
-                );
-            }
-            var tmp_4 = resolveFunctionCall(
+        if (tmp0_subject instanceof Call)
+            return checkNextCall(
                 $this,
+                findingUnresolved,
+                variable,
                 index,
                 table,
-                initialTable,
-                function_0
+                initialTable
             );
-            return Optional_init_$Create$(tmp_4, false, 2, null);
-        } else {
+        else {
             if (tmp0_subject instanceof Identifier) {
-                var tmp_5;
+                var tmp;
                 if (variable instanceof Type) {
-                    tmp_5 = !(variable instanceof Object_0);
+                    tmp = !(variable instanceof Object_0);
                 } else {
                     {
-                        tmp_5 = false;
+                        tmp = false;
                     }
                 }
-                if (tmp_5) {
+                if (tmp) {
                     var assignment = variable.getLinkedAssignment_dmryla_k$(
                         $this,
                         index
@@ -6633,22 +6596,28 @@ var currentFileTable;
                         ? $this.nullable_1.contains_2ehdt1_k$(index)
                         : false
                 ) {
-                    var tmp_6 = new NullValue();
-                    return Optional_init_$Create$(tmp_6, false, 2, null);
+                    var tmp_0 = new NullValue();
+                    return Optional_init_$Create$(tmp_0, false, 2, null);
                 }
                 return Optional_init_$Create$(property, false, 2, null);
             } else {
                 if (tmp0_subject instanceof Index) {
-                    var indexToken = $this
+                    var tmp_1 = $this
                         ._get_children__1387553196_my42wc_k$()
-                        .get_fkrdnv_k$(index)
-                        ._get_left__802434852_d9qyp0_k$();
-                    $l$loop: while (true) {
-                        if (!(indexToken instanceof Index)) {
-                            break $l$loop;
-                        }
-                        indexToken =
-                            indexToken._get_left__802434852_d9qyp0_k$();
+                        .get_fkrdnv_k$(index);
+                    var indexToken = (
+                        tmp_1 instanceof Index ? tmp_1 : THROW_CCE()
+                    ).getDeepestLeft_7e2ut_k$();
+                    if (indexToken instanceof Call)
+                        return checkNextCall(
+                            $this,
+                            findingUnresolved,
+                            variable,
+                            index,
+                            table,
+                            initialTable
+                        );
+                    else {
                     }
                     var property_0 = variable.getPropertyOrNull_191djg_k$(
                         indexToken._get_value__3683422336_a43j40_k$()
@@ -6658,39 +6627,38 @@ var currentFileTable;
                             ? $this.nullable_1.contains_2ehdt1_k$(index)
                             : false
                     ) {
-                        var tmp_7 = new NullValue();
-                        return Optional_init_$Create$(tmp_7, false, 2, null);
+                        var tmp_2 = new NullValue();
+                        return Optional_init_$Create$(tmp_2, false, 2, null);
                     }
                     var tmp1_elvis_lhs = property_0;
                     if (tmp1_elvis_lhs == null) {
                         if (variable instanceof Type) {
-                            var tmp_8 =
+                            var tmp_3 =
                                 variable.getAssignment_r8m0ia_k$(indexToken);
                             return Optional_init_$Create$(
-                                tmp_8,
+                                tmp_3,
                                 false,
                                 2,
                                 null
                             );
                         } else {
                             if ($this.nullable_1.contains_2ehdt1_k$(index)) {
-                                var tmp_9 = new NullValue();
+                                var tmp_4 = new NullValue();
                                 return Optional_init_$Create$(
-                                    tmp_9,
+                                    tmp_4,
                                     false,
                                     2,
                                     null
                                 );
                             } else {
                                 {
-                                    var tmp_10 = table
+                                    var tmp_5 = initialTable
                                         .getFileTable_m3scuc_k$()
                                         ._get_filePath__151144490_2hzju2_k$();
-                                    var tmp_11 = indexToken;
                                     throw PositionalException_init_$Create$(
                                         "Property not found",
-                                        tmp_10,
-                                        tmp_11,
+                                        tmp_5,
+                                        indexToken,
                                         null,
                                         0,
                                         24,
@@ -6702,32 +6670,35 @@ var currentFileTable;
                         Unit_getInstance();
                     } else tmp1_elvis_lhs;
                     Unit_getInstance();
-                    var tmp_12 = Utils_getInstance();
-                    var tmp_13 = $this
+                    var tmp_6 = Utils_getInstance();
+                    var tmp_7 = $this
                         ._get_children__1387553196_my42wc_k$()
                         .get_fkrdnv_k$(index);
-                    var tmp_14 = tmp_12.toVariable_abd9s8_k$(
-                        (tmp_13 instanceof Index
-                            ? tmp_13
+                    var tmp_8 = tmp_6.toVariable_abd9s8_k$(
+                        (tmp_7 instanceof Index
+                            ? tmp_7
                             : THROW_CCE()
-                        ).evaluateIndex_a4vc9c_k$(table),
+                        ).evaluateIndexWithDeepestLeftProperty_qjgaue_k$(
+                            property_0,
+                            table
+                        ),
                         $this
                             ._get_children__1387553196_my42wc_k$()
                             .get_fkrdnv_k$(index)
                     );
-                    return Optional_init_$Create$(tmp_14, false, 2, null);
+                    return Optional_init_$Create$(tmp_8, false, 2, null);
                 } else {
                     {
-                        var tmp_15 = table
+                        var tmp_9 = initialTable
                             .getFileTable_m3scuc_k$()
                             ._get_filePath__151144490_2hzju2_k$();
-                        var tmp_16 = $this
+                        var tmp_10 = $this
                             ._get_children__1387553196_my42wc_k$()
                             .get_fkrdnv_k$(index);
                         throw PositionalException_init_$Create$(
                             "Unexpected token",
-                            tmp_15,
-                            tmp_16,
+                            tmp_9,
+                            tmp_10,
                             null,
                             0,
                             24,
@@ -6757,6 +6728,58 @@ var currentFileTable;
             variable,
             findingUnresolved
         );
+    }
+    function checkNextCall(
+        $this,
+        findingUnresolved,
+        variable,
+        index,
+        table,
+        initialTable
+    ) {
+        if (findingUnresolved) {
+            var tmp = new NullValue();
+            return Optional_init_$Create$(tmp, false, 2, null);
+        }
+        var tmp_0 = $this
+            ._get_children__1387553196_my42wc_k$()
+            .get_fkrdnv_k$(index);
+        var function_0 = variable.getFunctionOrNull_p690c9_k$(
+            tmp_0 instanceof Call ? tmp_0 : THROW_CCE()
+        );
+        if (
+            function_0 == null
+                ? $this.nullable_1.contains_2ehdt1_k$(index)
+                : false
+        ) {
+            var tmp_1 = new NullValue();
+            return Optional_init_$Create$(tmp_1, false, 2, null);
+        }
+        if (function_0 == null) {
+            var tmp_2 = initialTable
+                .getFileTable_m3scuc_k$()
+                ._get_filePath__151144490_2hzju2_k$();
+            var tmp_3 = $this
+                ._get_children__1387553196_my42wc_k$()
+                .get_fkrdnv_k$(index);
+            throw PositionalException_init_$Create$(
+                "Variable does not contain function",
+                tmp_2,
+                tmp_3,
+                null,
+                0,
+                24,
+                null
+            );
+        }
+        var tmp_4 = resolveFunctionCall(
+            $this,
+            index,
+            table,
+            initialTable,
+            function_0
+        );
+        return Optional_init_$Create$(tmp_4, false, 2, null);
     }
     function checkFirstVariable(
         $this,
@@ -6852,7 +6875,7 @@ var currentFileTable;
                 } else {
                     {
                         if (!canBeFile) {
-                            var tmp_4 = table
+                            var tmp_4 = initialTable
                                 .getFileTable_m3scuc_k$()
                                 ._get_filePath__151144490_2hzju2_k$();
                             var tmp_5 = $this
@@ -7092,6 +7115,13 @@ var currentFileTable;
             );
         }
     };
+    NullValue.prototype.getProperty_qi6v9p_k$ = function (node, fileTable) {
+        {
+            throw new NotImplementedError(
+                "An operation is not implemented: Not yet implemented"
+            );
+        }
+    };
     NullValue.prototype.getFunctionOrNull_p690c9_k$ = function (node) {
         {
             throw new NotImplementedError(
@@ -7304,11 +7334,40 @@ var currentFileTable;
         var tmp_5 = last_0(this._get_children__1387553196_my42wc_k$());
         if (tmp_5 instanceof Index) {
             var tmp_6 = last_0(this._get_children__1387553196_my42wc_k$());
-            (tmp_6 instanceof Index ? tmp_6 : THROW_CCE()).assign_9u530r_k$(
-                assignment,
-                currentParent,
+            var tokenIndex = (
+                tmp_6 instanceof Index ? tmp_6 : THROW_CCE()
+            ).getDeepestLeft_7e2ut_k$();
+            if (tokenIndex instanceof Call) {
+                var tmp_7 = symbolTable
+                    .getFileTable_m3scuc_k$()
+                    ._get_filePath__151144490_2hzju2_k$();
+                throw PositionalException_init_$Create$(
+                    "Call is prohibited on the left of the assignment",
+                    tmp_7,
+                    tokenIndex,
+                    null,
+                    0,
+                    24,
+                    null
+                );
+            } else {
+            }
+            var tmp_8 = last_0(this._get_children__1387553196_my42wc_k$());
+            (tmp_8 instanceof Index
+                ? tmp_8
+                : THROW_CCE()
+            ).assignWithIndexable_p9wfm1_k$(
+                currentParent.getProperty_qi6v9p_k$(
+                    tokenIndex,
+                    symbolTable.getFileTable_m3scuc_k$()
+                ),
+                symbolTable.changeVariable_uoiydg_k$(currentParent),
                 symbolTable,
-                value
+                assignment,
+                Utils_getInstance().toProperty_q8fusx_k$(
+                    value,
+                    assignment._get_right__3576132917_bvz45n_k$()
+                )
             );
         } else {
             currentParent.setProperty_tmx3oq_k$(
@@ -8553,11 +8612,7 @@ var currentFileTable;
             .iterator_jk1svi_k$();
         while (tmp0_iterator.hasNext_bitz1p_k$()) {
             var arg = tmp0_iterator.next_20eer_k$();
-            var found =
-                this._get_left__802434852_d9qyp0_k$().findUnassigned_h2swqb_k$(
-                    symbolTable,
-                    parent
-                );
+            var found = arg.findUnassigned_h2swqb_k$(symbolTable, parent);
             if (!(found == null)) {
                 return found;
             }
@@ -8616,11 +8671,64 @@ var currentFileTable;
                 tmp = false;
             }
         }
-        if (tmp) {
-            return res.getPValue_berniv_k$();
-        } else {
+        if (tmp) return res.getPValue_berniv_k$();
+        else {
         }
         return res;
+    };
+    Index.prototype.evaluateIndexWithDeepestLeftProperty_qjgaue_k$ = function (
+        prop,
+        symbolTable
+    ) {
+        var tmp;
+        var tmp_0 = this._get_left__802434852_d9qyp0_k$();
+        if (tmp_0 instanceof Index) {
+            var tmp_1 = Utils_getInstance();
+            var tmp_2 = this._get_left__802434852_d9qyp0_k$();
+            var tmp_3 = (
+                tmp_2 instanceof Index ? tmp_2 : THROW_CCE()
+            ).evaluateIndexWithDeepestLeftProperty_qjgaue_k$(prop, symbolTable);
+            tmp = tmp_1.toVariable$default_x99qtu_k$(tmp_3, null, 1, null);
+        } else {
+            {
+                tmp = prop;
+            }
+        }
+        var indexed = tmp;
+        var index =
+            this._get_right__3576132917_bvz45n_k$().evaluate_hfj3qo_k$(
+                symbolTable
+            );
+        var tmp0_subject = indexed;
+        var tmp_4;
+        if (isInterface(tmp0_subject, Indexable)) {
+            tmp_4 = indexed.get_xyyy8m_k$(
+                index,
+                this._get_right__3576132917_bvz45n_k$(),
+                symbolTable.getFileTable_m3scuc_k$()
+            );
+        } else {
+            {
+                var tmp_5 = listOf_0([
+                    getKClass(PList),
+                    getKClass(PDictionary),
+                    getKClass(PString),
+                ]);
+                var tmp_6 = symbolTable
+                    .getFileTable_m3scuc_k$()
+                    ._get_filePath__151144490_2hzju2_k$();
+                throw ExpectedTypeException_init_$Create$(
+                    tmp_5,
+                    tmp_6,
+                    this,
+                    null,
+                    false,
+                    24,
+                    null
+                );
+            }
+        }
+        return tmp_4;
     };
     Index.prototype.evaluateIndex_a4vc9c_k$ = function (symbolTable) {
         var indexed = Utils_getInstance().toVariable_abd9s8_k$(
@@ -8684,11 +8792,24 @@ var currentFileTable;
             ? symbolTable.changeVariable_uoiydg_k$(parent)
             : symbolTable;
         var indexable = Utils_getInstance().toVariable_abd9s8_k$(
-            this._get_left__802434852_d9qyp0_k$().evaluate_hfj3qo_k$(
-                assignTable
-            ),
+            this.getDeepestLeft_7e2ut_k$().evaluate_hfj3qo_k$(assignTable),
             this._get_left__802434852_d9qyp0_k$()
         );
+        this.assignWithIndexable_p9wfm1_k$(
+            indexable,
+            assignTable,
+            symbolTable,
+            assignment,
+            value
+        );
+    };
+    Index.prototype.assignWithIndexable_p9wfm1_k$ = function (
+        variable,
+        assignTable,
+        symbolTable,
+        assignment,
+        value
+    ) {
         var index = Utils_getInstance().toVariable_abd9s8_k$(
             this._get_right__3576132917_bvz45n_k$().evaluate_hfj3qo_k$(
                 assignTable
@@ -8696,14 +8817,30 @@ var currentFileTable;
             this._get_right__3576132917_bvz45n_k$()
         );
         var tmp;
-        if (isInterface(indexable, Indexable)) {
-            tmp = indexable.checkIndexType_1ovz24_k$(index);
+        var tmp_0 = this._get_left__802434852_d9qyp0_k$();
+        if (tmp_0 instanceof Index) {
+            var tmp_1 = this._get_left__802434852_d9qyp0_k$();
+            tmp = (
+                tmp_1 instanceof Index ? tmp_1 : THROW_CCE()
+            ).evaluateIndexWithDeepestLeftProperty_qjgaue_k$(
+                variable,
+                symbolTable
+            );
         } else {
             {
-                tmp = false;
+                tmp = variable;
             }
         }
-        if (tmp) {
+        var indexable = tmp;
+        var tmp_2;
+        if (isInterface(indexable, Indexable)) {
+            tmp_2 = indexable.checkIndexType_1ovz24_k$(index);
+        } else {
+            {
+                tmp_2 = false;
+            }
+        }
+        if (tmp_2) {
             indexable.set_g480bi_k$(
                 index,
                 value,
@@ -8713,13 +8850,13 @@ var currentFileTable;
             );
         } else {
             {
-                var tmp_0 = listOf_0([getKClass(PList), getKClass(PNumber)]);
-                var tmp_1 = symbolTable
+                var tmp_3 = listOf_0([getKClass(PList), getKClass(PNumber)]);
+                var tmp_4 = symbolTable
                     .getFileTable_m3scuc_k$()
                     ._get_filePath__151144490_2hzju2_k$();
                 throw ExpectedTypeException_init_$Create$(
-                    tmp_0,
-                    tmp_1,
+                    tmp_3,
+                    tmp_4,
                     this,
                     null,
                     true,
@@ -9397,7 +9534,7 @@ var currentFileTable;
                 var tmp_6;
                 var tmp_7 = $this._get_right__3576132917_bvz45n_k$();
                 if (tmp_7 instanceof Identifier) {
-                    tmp_6 = symbolTable.getType_93e8u9_k$(
+                    tmp_6 = symbolTable.getUncopiedTypeOrNull_j6ica_k$(
                         $this._get_right__3576132917_bvz45n_k$()
                     );
                 } else {
@@ -9442,9 +9579,9 @@ var currentFileTable;
                 }
 
                 if (tmp_11) {
-                    tmp_10 = checked
-                        ._get_assignments__50188043_tvpcb_k$()
-                        .isEmpty_y1axqb_k$();
+                    tmp_10 = !(
+                        checked._get_index__3322996031_g2optt_k$() === 0
+                    );
                 } else {
                     {
                         tmp_10 = false;
@@ -9452,10 +9589,7 @@ var currentFileTable;
                 }
 
                 if (tmp_10) {
-                    tmp_9 = type
-                        .getProperties_k8mbbr_k$()
-                        .getPValue_berniv_k$()
-                        .isEmpty_y1axqb_k$();
+                    tmp_9 = type._get_index__3322996031_g2optt_k$() === 0;
                 } else {
                     {
                         tmp_9 = false;
@@ -9525,7 +9659,9 @@ var currentFileTable;
         );
         return symbolTable
             .changeFile_n27o1t_k$(import_0)
-            .getType_93e8u9_k$(link._get_right__3576132917_bvz45n_k$());
+            .getUncopiedTypeOrNull_j6ica_k$(
+                link._get_right__3576132917_bvz45n_k$()
+            );
     }
     function TypeOperator(symbol, value, position, children) {
         Operator.call(this, symbol, value, position, children);
@@ -10468,6 +10604,13 @@ var currentFileTable;
     }
     Null.prototype.getPropertyOrNull_191djg_k$ = function (name) {
         return null;
+    };
+    Null.prototype.getProperty_qi6v9p_k$ = function (node, fileTable) {
+        {
+            throw new NotImplementedError(
+                "An operation is not implemented: Not yet implemented"
+            );
+        }
     };
     Null.prototype.getFunctionOrNull_p690c9_k$ = function (node) {
         var tmp = Companion_getInstance_0();
@@ -15177,6 +15320,153 @@ var currentFileTable;
         }
         return tmp;
     };
+    Primitive.prototype.getProperty_qi6v9p_k$ = function (node, fileTable) {
+        var tmp0_subject = node._get_value__3683422336_a43j40_k$();
+        var tmp;
+        switch (tmp0_subject) {
+            case "this":
+                tmp = this;
+                break;
+            case "properties":
+                tmp = this.getProperties_k8mbbr_k$();
+                break;
+            default:
+                var tmp1_safe_receiver = Companion_getInstance_8()
+                    .getAllProperties_tzh4vy_k$()
+                    .get_fkrdnv_k$(this.getIndex_wcnjmk_k$())
+                    .get_1mhr4y_k$(node._get_value__3683422336_a43j40_k$());
+                var tmp_0;
+                if (tmp1_safe_receiver == null) {
+                    tmp_0 = null;
+                } else {
+                    var tmp$ret$1;
+                    $l$block_0: {
+                        {
+                        }
+                        var tmp$ret$0;
+                        $l$block: {
+                            tmp$ret$0 = tmp1_safe_receiver(this);
+                            break $l$block;
+                        }
+                        tmp$ret$1 = tmp$ret$0;
+                        break $l$block_0;
+                    }
+                    tmp_0 = tmp$ret$1;
+                }
+
+                var tmp6_elvis_lhs = tmp_0;
+                var tmp_1;
+                if (tmp6_elvis_lhs == null) {
+                    var tmp_2;
+                    var containsArg = this.getIndex_wcnjmk_k$();
+                    if (2 <= containsArg ? containsArg <= 3 : false) {
+                        var tmp2_safe_receiver = Companion_getInstance_8()
+                            .getAllProperties_tzh4vy_k$()
+                            .get_fkrdnv_k$(1)
+                            .get_1mhr4y_k$(
+                                node._get_value__3683422336_a43j40_k$()
+                            );
+                        var tmp_3;
+                        if (tmp2_safe_receiver == null) {
+                            tmp_3 = null;
+                        } else {
+                            var tmp$ret$3;
+                            $l$block_2: {
+                                {
+                                }
+                                var tmp$ret$2;
+                                $l$block_1: {
+                                    tmp$ret$2 = tmp2_safe_receiver(this);
+                                    break $l$block_1;
+                                }
+                                tmp$ret$3 = tmp$ret$2;
+                                break $l$block_2;
+                            }
+                            tmp_3 = tmp$ret$3;
+                        }
+                        var tmp4_elvis_lhs = tmp_3;
+                        var tmp_4;
+                        if (tmp4_elvis_lhs == null) {
+                            var tmp3_safe_receiver = Companion_getInstance_8()
+                                .getAllProperties_tzh4vy_k$()
+                                .get_fkrdnv_k$(0)
+                                .get_1mhr4y_k$(
+                                    node._get_value__3683422336_a43j40_k$()
+                                );
+                            var tmp_5;
+                            if (tmp3_safe_receiver == null) {
+                                tmp_5 = null;
+                            } else {
+                                var tmp$ret$5;
+                                $l$block_4: {
+                                    {
+                                    }
+                                    var tmp$ret$4;
+                                    $l$block_3: {
+                                        tmp$ret$4 = tmp3_safe_receiver(this);
+                                        break $l$block_3;
+                                    }
+                                    tmp$ret$5 = tmp$ret$4;
+                                    break $l$block_4;
+                                }
+                                tmp_5 = tmp$ret$5;
+                            }
+                            tmp_4 = tmp_5;
+                        } else {
+                            tmp_4 = tmp4_elvis_lhs;
+                        }
+                        tmp_2 = tmp_4;
+                    } else {
+                        {
+                            var tmp5_safe_receiver = Companion_getInstance_8()
+                                .getAllProperties_tzh4vy_k$()
+                                .get_fkrdnv_k$(0)
+                                .get_1mhr4y_k$(
+                                    node._get_value__3683422336_a43j40_k$()
+                                );
+                            var tmp_6;
+                            if (tmp5_safe_receiver == null) {
+                                tmp_6 = null;
+                            } else {
+                                var tmp$ret$7;
+                                $l$block_6: {
+                                    {
+                                    }
+                                    var tmp$ret$6;
+                                    $l$block_5: {
+                                        tmp$ret$6 = tmp5_safe_receiver(this);
+                                        break $l$block_5;
+                                    }
+                                    tmp$ret$7 = tmp$ret$6;
+                                    break $l$block_6;
+                                }
+                                tmp_6 = tmp$ret$7;
+                            }
+                            tmp_2 = tmp_6;
+                        }
+                    }
+                    tmp_1 = tmp_2;
+                } else {
+                    tmp_1 = tmp6_elvis_lhs;
+                }
+
+                var tmp7_elvis_lhs = tmp_1;
+                var tmp_7;
+                if (tmp7_elvis_lhs == null) {
+                    throw new NotFoundException(
+                        node,
+                        fileTable._get_filePath__151144490_2hzju2_k$(),
+                        this
+                    );
+                } else {
+                    tmp_7 = tmp7_elvis_lhs;
+                }
+
+                tmp = tmp_7;
+                break;
+        }
+        return tmp;
+    };
     Primitive.prototype.getProperties_k8mbbr_k$ = function () {
         var res = toMutableMap(
             Companion_getInstance_8()
@@ -15441,6 +15731,38 @@ var currentFileTable;
             return tmp0_safe_receiver == null
                 ? null
                 : tmp0_safe_receiver.copyRoot_8d9kp5_k$();
+        };
+    }
+    function FileTable$getUncopiedType$lambda($node) {
+        return function (it) {
+            var tmp$ret$2;
+            $l$block_2: {
+                var tmp0_find_0 = it.types_1;
+                var tmp$ret$1;
+                $l$block_1: {
+                    var tmp0_iterator_1_1 = tmp0_find_0.iterator_jk1svi_k$();
+                    while (tmp0_iterator_1_1.hasNext_bitz1p_k$()) {
+                        var element_2_2 = tmp0_iterator_1_1.next_20eer_k$();
+                        var tmp$ret$0;
+                        $l$block: {
+                            tmp$ret$0 =
+                                element_2_2._get_name__804168992_das4rk_k$() ===
+                                $node._get_value__3683422336_a43j40_k$();
+                            break $l$block;
+                        }
+                        if (tmp$ret$0) {
+                            tmp$ret$1 = element_2_2;
+                            break $l$block_1;
+                        } else {
+                        }
+                    }
+                    tmp$ret$1 = null;
+                    break $l$block_1;
+                }
+                tmp$ret$2 = tmp$ret$1;
+                break $l$block_2;
+            }
+            return tmp$ret$2;
         };
     }
     function FileTable$getObjectOrNull$lambda($name) {
@@ -15773,34 +16095,11 @@ var currentFileTable;
         return (tmp == null ? true : tmp instanceof Type) ? tmp : THROW_CCE();
     };
     FileTable.prototype.getUncopiedType_3y44ec_k$ = function (node) {
-        var tmp$ret$2;
-        $l$block_2: {
-            var tmp0_find_0 = this.types_1;
-            var tmp$ret$1;
-            $l$block_1: {
-                var tmp0_iterator_1_1 = tmp0_find_0.iterator_jk1svi_k$();
-                while (tmp0_iterator_1_1.hasNext_bitz1p_k$()) {
-                    var element_2_2 = tmp0_iterator_1_1.next_20eer_k$();
-                    var tmp$ret$0;
-                    $l$block: {
-                        tmp$ret$0 =
-                            element_2_2._get_name__804168992_das4rk_k$() ===
-                            node._get_value__3683422336_a43j40_k$();
-                        break $l$block;
-                    }
-                    if (tmp$ret$0) {
-                        tmp$ret$1 = element_2_2;
-                        break $l$block_1;
-                    } else {
-                    }
-                }
-                tmp$ret$1 = null;
-                break $l$block_1;
-            }
-            tmp$ret$2 = tmp$ret$1;
-            break $l$block_2;
-        }
-        return tmp$ret$2;
+        var tmp = getFromFilesOrNull(
+            this,
+            FileTable$getUncopiedType$lambda(node)
+        );
+        return (tmp == null ? true : tmp instanceof Type) ? tmp : THROW_CCE();
     };
     FileTable.prototype.getObjectOrNull_5h3942_k$ = function (name) {
         var tmp = getFromFilesOrNull(

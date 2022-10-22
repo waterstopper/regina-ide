@@ -464,8 +464,7 @@ require(["vs/editor/editor.main"], function () {
             let start = ed.getSelection().startLineNumber;
             let end = ed.getSelection().endLineNumber;
             for (let i = start; i <= end; i++) {
-                console.log(ed.getModel().getLineContent(i));
-                let match = ed
+                const match = ed
                     .getModel()
                     .getLineContent(i)
                     .toString()
@@ -485,7 +484,7 @@ require(["vs/editor/editor.main"], function () {
                             text: "",
                             range: new monaco.Range(
                                 i,
-                                1,
+                                arr[i - start] - 1,
                                 i,
                                 arr[i - start] + 1
                             ),

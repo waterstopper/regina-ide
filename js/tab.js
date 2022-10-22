@@ -1,11 +1,4 @@
-import {
-    getBreakpointsList,
-    getBreakpointsIndex,
-    setBreakpointsList,
-    setBreakpointsIndex,
-} from "./debug.js";
-
-import { addBreakpointsToCode } from "./execution.js";
+import {addBreakpointsToCode} from './execution.js';
 
 /**
  * name: name to display in tab
@@ -92,11 +85,6 @@ class Tab {
     }
 }
 
-function moveToLineInTab(path, line) {}
-// localStorage.removeItem("generators/plant.rgn")
-// localStorage.removeItem("generators/house.rgn")
-// localStorage.removeItem("generators/animal.rgn")
-// localStorage.removeItem("main.js")
 console.log(localStorage);
 
 window.getFileContentByPath = async function (path) {

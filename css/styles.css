@@ -595,7 +595,8 @@ a {
     background: rgba(0, 0, 0, 0);
 }
 
-#description {
+#description,
+#error-description {
     position: absolute;
     width: 20%;
     background-color: var(--bg-color);
@@ -606,11 +607,13 @@ a {
     z-index: 4;
 }
 
-html[data-theme="light"] #description {
+html[data-theme="light"] #description,
+html[data-theme="light"] #error-description {
     box-shadow: 0px 0px 10px 5px var(--light-gray);
 }
 
-html[data-theme="dark"] #description {
+html[data-theme="dark"] #description,
+html[data-theme="dark"] #error-description {
     box-shadow: 0px 0px 10px 5px black;
 }
 

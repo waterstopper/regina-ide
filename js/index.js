@@ -72,18 +72,34 @@ fileMenu[2].onclick = () => {
     window.currentFile.parentElement.remove();
 };
 
+let errorTimeoutId = 0;
+
 function showWarning(spanId, time = 1500, additionalText = "") {
-    const span = document.getElementById(spanId);
-    span.innerText += additionalText;
-    span.style.display = "block";
-    setTimeout(() => {
-        span.style.display = "none";
-        span.innerText = span.innerText.substring(
-            0,
-            span.innerText.length - additionalText.length
-        );
+    //const span = document.getElementById(spanId);
+   // span.innerText += additionalText;
+   let descr = document.getElementById("error-description");
+    if (descr.style.display != "block") {
+        let descr = document.getElementById("error-description");
+        descr.getElementsByTagName("p")[1].innerHTML =
+            "<span style='margin-left:2em;'></span>" + errors[spanId];
+        descr.style.display = "block";
+        clearTimeout(errorTimeoutId);
+        errorTimeoutId = setTimeout(() => {
+          //  span.style.display = "none";
+            descr.style.display = "none";
+            // span.innerText = span.innerText.substring(
+            //     0,
+            //     span.innerText.length - additionalText.length
+            // );
     }, time);
+       // span.style.display = "block";
 }
+}
+
+document.getElementById("error-close").onclick = () => {
+    clearTimeout(errorTimeoutId);
+    document.getElementById("error-description").style.display = "none";
+};
 
 document.getElementById("show-settings").onclick = (e) => {
     document.getElementById("debug-panel").style.display = "none";
@@ -214,6 +230,7 @@ document.getElementById("hide-console").onclick = () => {
 };
 
 function hookConsole() {
+    if (true) return;
     console.stdlog = console.log;
     console.stderror = console.error;
     console.error = function () {
