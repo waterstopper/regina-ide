@@ -299,6 +299,10 @@ ul {
     margin: 0px;
 }
 
+ul.nested{
+    padding-inline-start: 20px;
+}
+
 /* Remove margins and padding from the parent ul */
 
 #file-tree,

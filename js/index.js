@@ -7,6 +7,39 @@ import {
 import { addTreeElement, deleteFile } from "./filetree.js";
 import { closeTab } from "./tab.js";
 
+let isKeyPressed = false;
+let isShiftPressed = false;
+window.addEventListener(
+    "keydown",
+    (event) => {
+        if (event.defaultPrevented || isKeyPressed) {
+            return; // Do nothing if the event was already processed
+        }
+        isKeyPressed = true;
+        event.preventDefault();
+    },
+    true
+);
+
+window.addEventListener(
+    "keyup",
+    (event) => {
+        if (event.defaultPrevented) {
+            return; // Do nothing if the event was already processed
+        }
+        //console.log(event);
+        switch (event.key) {
+            case "F9":
+                startExecution(true);
+                break;
+            default:
+                return; // Quit when this doesn't handle the key event.
+        }
+        event.preventDefault();
+    },
+    true
+);
+
 window.tabs = {};
 window.onbeforeunload = closingCode;
 function closingCode() {
@@ -70,14 +103,15 @@ fileMenu[2].onclick = () => {
     let path = window.currentFile.getAttribute("path");
     deleteFile(path.split("/"));
     window.currentFile.parentElement.remove();
+    window.currentFile = null;
 };
 
 let errorTimeoutId = 0;
 
 function showWarning(spanId, time = 1500, additionalText = "") {
     //const span = document.getElementById(spanId);
-   // span.innerText += additionalText;
-   let descr = document.getElementById("error-description");
+    // span.innerText += additionalText;
+    let descr = document.getElementById("error-description");
     if (descr.style.display != "block") {
         let descr = document.getElementById("error-description");
         descr.getElementsByTagName("p")[1].innerHTML =
@@ -85,15 +119,15 @@ function showWarning(spanId, time = 1500, additionalText = "") {
         descr.style.display = "block";
         clearTimeout(errorTimeoutId);
         errorTimeoutId = setTimeout(() => {
-          //  span.style.display = "none";
+            //  span.style.display = "none";
             descr.style.display = "none";
             // span.innerText = span.innerText.substring(
             //     0,
             //     span.innerText.length - additionalText.length
             // );
-    }, time);
-       // span.style.display = "block";
-}
+        }, time);
+        // span.style.display = "block";
+    }
 }
 
 document.getElementById("error-close").onclick = () => {
@@ -282,10 +316,11 @@ assignToDescribedElements(setHoverDescription);
 
 var canDescribe = false;
 
-let mainInput = document.getElementById("main-file") 
+let mainInput = document.getElementById("main-file");
 mainInput.oninput = (e) => {
-    mainInput.style.width = Math.max(mainInput.value.length, 6.5)+ "ch";
-}
+    mainInput.style.width = Math.max(mainInput.value.length, 6.5) + "ch";
+    localStorage.setItem("main-file", mainInput.value);
+};
 
 document.getElementById("help-toggle").oninput = (e) => {
     if (e.target.checked) {

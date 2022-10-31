@@ -16,7 +16,7 @@ function createTree() {
     deleteLibFiles();
     let fileSystem = JSON.parse(localStorage.getItem("layout"));
     console.log(fileSystem);
-    fetch("https://alex5041.github.io/reginafiles/layout.json")
+    fetch("https://llesha.github.io/reginafiles/layout.json")
         .then(function (response) {
             return response.text();
         })
@@ -130,8 +130,8 @@ function createFile(fileName = "myFile.rgn", folderName = "", parent) {
     file.ondblclick = () => {
         openTab(file.getAttribute("path"), file.getAttribute("lib"));
     };
-    if (parent != document.getElementById("file-tree"))
-        file.parentElement.style.marginLeft = "-20px";
+    // if (parent != document.getElementById("file-tree"))
+    //     file.parentElement.style.marginLeft = "-20px";
 
     file.parentElement.style.padding = "0px";
     let path = getPath(file);
@@ -162,8 +162,8 @@ function createFolder(name = "myFolder", folderName = "", parent) {
     let folder = createParent(tree);
     folder.innerText = name;
     folder.onclick = () => addFocusFunction(folder);
-    if (parent != document.getElementById("file-tree"))
-        folder.parentElement.style.marginLeft = "-20px";
+    // if (parent != document.getElementById("file-tree"))
+    //     folder.parentElement.style.marginLeft = "-20px";
     let path = getPath(folder);
     folder.setAttribute("path", path);
     return folder;
@@ -219,8 +219,8 @@ function addTreeElement(
     folderName = ""
 ) {
     let divInput = document.createElement("div");
-    if (parent != document.getElementById("file-tree"))
-        divInput.style.marginLeft = "-20px";
+    // if (parent != document.getElementById("file-tree"))
+    //     divInput.style.marginLeft = "-20px";
     let input = document.createElement("input");
     input.style.borderWidth = "0px";
     input.style.outline = "none";
@@ -305,7 +305,6 @@ function addFileToLayout(path, overwrite = false) {
             ? "1"
             : { isLib: "false", content: {} };
     else {
-        console.log("new");
         while (currentFolder[fileName] != null) fileName = nextName(fileName);
         currentFolder[fileName] = fileName.includes(".")
             ? "1"

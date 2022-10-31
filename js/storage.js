@@ -7,7 +7,7 @@
     files
     file tree files and their contents
 */
-import {createTree} from "./filetree.js"
+import { createTree } from "./filetree.js";
 
 var holdingReset = false;
 var interval = null;
@@ -20,9 +20,9 @@ document.getElementById("reset-all").onmousedown = () => {
         if (index == 0) {
             clearInterval(interval);
             document.getElementById("reset-all").innerText = "succesful!";
-            localStorage.clear()
-            location.reload()
-            setDefaults()
+            localStorage.clear();
+            location.reload();
+            setDefaults();
         } else document.getElementById("reset-all").innerText = "hold " + index + "...";
         index--;
     }, 1000);
@@ -65,6 +65,8 @@ function changeNumberInput(target, storageName, bounds) {
     else if (value > bounds[1]) value = bounds[1];
     target.value = value;
     localStorage.setItem(storageName, parseInt(value));
+    if (storageName == "consoleEntries")
+        window.maxConsoleEntries = parseInt(value);
 }
 
 function setDefaults() {
@@ -78,7 +80,7 @@ function setDefaults() {
     localStorage.setItem("leftSize", 33);
     localStorage.setItem("rightSize", 33);
     localStorage.setItem("consoleSize", 48);
-    localStorage.setItem("layout", "{}")
+    localStorage.setItem("layout", "{}");
     localStorage.setItem(
         "main.rgn",
         `
@@ -99,6 +101,7 @@ fun a() {
 function openSettings() {
     document.getElementById("console-entries").value =
         localStorage.getItem("consoleEntries");
+    window.maxConsoleEntries = parseInt(localStorage.getItem("consoleEntries"));
     document.getElementById("font-size").value =
         localStorage.getItem("fontSize");
     updateFontSize();
@@ -117,4 +120,4 @@ setDefaults();
 changeTheme(localStorage.getItem("theme"));
 openSettings();
 
-createTree()
+createTree();

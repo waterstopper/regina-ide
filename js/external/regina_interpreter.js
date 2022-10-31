@@ -14300,6 +14300,54 @@ var currentFileTable;
             return new PDouble(tmp$ret$0);
         };
     }
+    function PNumber$Companion$initializeEmbeddedNumberFunctions$lambda_13() {
+        return function (token, args) {
+            var tmp$ret$0;
+            $l$block: {
+                var tmp0_tan_0 = numberToDouble(
+                    Utils_getInstance()
+                        .getPNumber_l7npfb_k$(args, token, "this")
+                        .getPValue_berniv_k$()
+                );
+                tmp$ret$0 = Math.tan(tmp0_tan_0);
+                break $l$block;
+            }
+            return new PDouble(tmp$ret$0);
+        };
+    }
+    function PNumber$Companion$initializeEmbeddedNumberFunctions$lambda_14() {
+        return function (token, args) {
+            var tmp$ret$0;
+            $l$block: {
+                var tmp0_atan_0 = numberToDouble(
+                    Utils_getInstance()
+                        .getPNumber_l7npfb_k$(args, token, "this")
+                        .getPValue_berniv_k$()
+                );
+                tmp$ret$0 = Math.atan(tmp0_atan_0);
+                break $l$block;
+            }
+            return new PDouble(tmp$ret$0);
+        };
+    }
+    function PNumber$Companion$initializeEmbeddedNumberFunctions$lambda_15() {
+        return function (token, args) {
+            var y = Utils_getInstance().getPNumber_l7npfb_k$(args, token, "x");
+            Unit_getInstance();
+            var tmp$ret$0;
+            $l$block: {
+                var tmp0_atan2_0 = numberToDouble(
+                    Utils_getInstance()
+                        .getPNumber_l7npfb_k$(args, token, "this")
+                        .getPValue_berniv_k$()
+                );
+                var tmp1_atan2_0 = numberToDouble(y.getPValue_berniv_k$());
+                tmp$ret$0 = Math.atan2(tmp0_atan2_0, tmp1_atan2_0);
+                break $l$block;
+            }
+            return new PDouble(tmp$ret$0);
+        };
+    }
     function Companion_6() {
         Companion_instance_6 = this;
     }
@@ -14479,6 +14527,43 @@ var currentFileTable;
                     null
                 )
             );
+            var tmp_18 = Companion_getInstance_8();
+            tmp_18.setFunction_9hbg6v_k$(
+                n,
+                EmbeddedFunction_init_$Create$(
+                    "tan",
+                    null,
+                    null,
+                    PNumber$Companion$initializeEmbeddedNumberFunctions$lambda_13(),
+                    6,
+                    null
+                )
+            );
+            var tmp_19 = Companion_getInstance_8();
+            tmp_19.setFunction_9hbg6v_k$(
+                n,
+                EmbeddedFunction_init_$Create$(
+                    "atan",
+                    null,
+                    null,
+                    PNumber$Companion$initializeEmbeddedNumberFunctions$lambda_14(),
+                    6,
+                    null
+                )
+            );
+            var tmp_20 = Companion_getInstance_8();
+            var tmp_21 = listOf("x");
+            tmp_20.setFunction_9hbg6v_k$(
+                n,
+                EmbeddedFunction_init_$Create$(
+                    "atan2",
+                    tmp_21,
+                    null,
+                    PNumber$Companion$initializeEmbeddedNumberFunctions$lambda_15(),
+                    4,
+                    null
+                )
+            );
         };
     Companion_6.$metadata$ = {
         simpleName: "Companion",
@@ -14587,7 +14672,7 @@ var currentFileTable;
             var found = Utils_getInstance().getPString_ac00og_k$(
                 args,
                 token,
-                "index"
+                "found"
             );
             Unit_getInstance();
             var tmp = string.getPValue_berniv_k$();
