@@ -33,9 +33,21 @@ function stopReset() {
     document.getElementById('reset-all').innerText = 'do reset';
 }
 
+function saveResult() {
+    var svgData = document.getElementById("svg-result").getElementsByTagName("svg")[0].outerHTML;
+    var svgBlob = new Blob([svgData], {type:"image/svg+xml;charset=utf-8"});
+    var svgUrl = URL.createObjectURL(svgBlob);
+    var downloadLink = document.createElement("a");
+    downloadLink.href = svgUrl;
+    downloadLink.download = "result"+(new Date().getUTCMilliseconds())+".svg";
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+}
+
 document.getElementById('reset-all').onmouseup = () => stopReset();
 document.getElementById('reset-all').onmouseleave = () => stopReset();
-document.getElementById('save-button').onclick = () => autosave();
+document.getElementById('save-button').onclick = () => saveResult();
 
 document.getElementById('theme-button').onclick = () => {
     if (document.documentElement.getAttribute('data-theme') == 'dark') {
@@ -74,7 +86,6 @@ function setDefaults() {
     if (localStorage.getItem('firstTime') != null) return;
     localStorage.setItem('firstTime', false);
     localStorage.setItem('theme', 'light');
-    localStorage.setItem('autosaveSeconds', 3);
     localStorage.setItem('consoleEntries', 100);
     localStorage.setItem('fontSize', 14);
     localStorage.setItem('settingsSize', 48);
@@ -82,6 +93,7 @@ function setDefaults() {
     localStorage.setItem('rightSize', 33);
     localStorage.setItem('consoleSize', 48);
     localStorage.setItem('layout', '{}');
+    localStorage.setItem('main-file', "");
     localStorage.setItem(
         'main.rgn',
         `
@@ -98,6 +110,7 @@ fun a() {
 }`,
     );
 }
+// comment
 
 function openSettings() {
     document.getElementById('console-entries').value =
@@ -105,6 +118,7 @@ function openSettings() {
     window.maxConsoleEntries = parseInt(localStorage.getItem('consoleEntries'));
     document.getElementById('font-size').value =
         localStorage.getItem('fontSize');
+    document.getElementById("main-file").value =  localStorage.getItem("main-file")
     updateFontSize();
 }
 
