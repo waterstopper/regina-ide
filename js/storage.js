@@ -98,7 +98,7 @@ function setDefaults() {
         'main.rgn',
         `
 fun main() {
-    log("Hello, World!")
+    print("Hello, World!")
     t = a();
     test(t == 1)
 }
