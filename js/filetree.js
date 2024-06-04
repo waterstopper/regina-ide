@@ -47,7 +47,7 @@ function createTree() {
                 fileSystem,
                 true,
             );
-            openTab('main.rgn', false);
+            openTab('intro.rgn', false);
         })
         .catch((e) => {
             console.log('Could not load', e);
