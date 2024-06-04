@@ -30,7 +30,15 @@ function createTree() {
                 fileSystem['main.rgn'] = '1';
                 setFileContent(
                     'main.rgn',
-                    `fun main() {\\n\\tlog(\\"Hello, World!\\") \\n}`,
+                    `
+import generators.animal as animal
+import generators.flower as flower
+
+fun main() {
+    // two image generators created with Regina
+    // animal.main()
+    flower.main()
+}`,
                 );
                 localStorage.setItem('layout', JSON.stringify(fileSystem));
             }
