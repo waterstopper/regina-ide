@@ -97,16 +97,13 @@ function setDefaults() {
     localStorage.setItem(
         'main.rgn',
         `
-fun main() {
-    print("Hello, World!")
-    t = a();
-    test(t == 1)
-}
+import generators.animal as animal
+import generators.flower as flower
 
-fun a() {
-    thi ;
-    = 1
-    return thi
+fun main() {
+    // two image generators created with Regina
+    // animal.main()
+    flower.main()
 }`,
     );
 }
