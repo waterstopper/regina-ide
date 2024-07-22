@@ -5,7 +5,7 @@ async function getFile(path) {
     // lib file
     if (localStorage.getItem(path) == null) {
          let res=(await (
-                await fetch("https://llesha.github.io/reginafiles/" + path)
+                await fetch("https://waterstopper.github.io/reginafiles/" + path)
             ).text()
         ).toString();
         return res;
