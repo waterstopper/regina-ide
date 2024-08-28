@@ -16,7 +16,7 @@ function createTree() {
     deleteLibFiles();
     const fileSystem = JSON.parse(localStorage.getItem('layout'));
     console.log(fileSystem);
-    fetch('https://waterstopper.github.io/reginafiles/layout.json')
+    fetch('https://waterstopper.github.io/static/reginafiles/layout.json')
         .then(function(response) {
             return response.text();
         })
