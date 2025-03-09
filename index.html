@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -31,7 +31,7 @@
                 <span id="add-library-folders" style="display:none;color:var(--yellow); font-size: small;"><i
                         class="fa-solid fa-triangle-exclamation" style="color:var(--yellow)"></i> Cannot add to library
                     folders</span>
-                <ul id="file-tree" style="margin-left: 0px;">
+                <ul id="file-tree" style="margin-left: 0;">
                 </ul>
             </div>
             <div class="horizontal-resizer">
@@ -60,7 +60,7 @@
                             <div class='description'>leave blank => currently opened is starting</div>
                         </div>
                         <div class="grid-item">
-                            <input id="main-file" type="text"> </input>
+                            <input id="main-file" type="text"/>
                         </div>
                         <div class="grid-item">Theme
                             <div class='description'></div>
@@ -78,7 +78,7 @@
                             <div class='description'>qty before overflow</div>
                         </div>
                         <div class="grid-item">
-                            <input id="console-entries" type="number" min="0" max="1000"> </input>
+                            <input id="console-entries" type="number" min="0" max="1000"/>
                         </div>
                         <!-- <div class="grid-item">Autosave file changes on tab close/page reload
                             <div class='description'>if there is no internet, local files will be used</div>
@@ -187,7 +187,7 @@
         </p>
     </div>
     <div id="error-description" style="display: none;">
-        <p style="text-align: center; margin: 0px; margin-left: 20%; font-size: large; color:var(--red); 
+        <p style="text-align: center; margin: 0; margin-left: 20%; font-size: large; color:var(--red);
         font-weight: bold; display:inline-block; width: 60%;">- Error -
         </p><button id="error-close" style="float: right;">✕</button>
         <hr class="console-record-divider" noshade>
