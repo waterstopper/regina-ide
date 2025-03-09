@@ -99,7 +99,7 @@ window.getFileContentByPath = async function(path) {
     if (isLocal == null) {
         const res = (
             await (
-                await fetch('https://waterstopper.github.io/static/reginafiles/' + path)
+                await fetch('https://water.stopper.top/static/reginafiles/' + path)
             ).text()
         ).toString();
         if (
@@ -140,7 +140,7 @@ async function openTab(path, isLib) {
     if (isLib) {
         code = (
             await (
-                await fetch('https://waterstopper.github.io/static/reginafiles/' + path)
+                await fetch('https://water.stopper.top/static/reginafiles/' + path)
             ).text()
         ).toString();
     } else {
